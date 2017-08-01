@@ -36,7 +36,7 @@ print "Add package root to sys.path: %r" % package_root
 
 # If your documentation needs a minimal Sphinx version, state it here.
 # MW 2017-08-01: need this fix: https://github.com/sphinx-doc/sphinx/issues/3657
-needs_sphinx = '1.6'
+#needs_sphinx = '1.6'
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
