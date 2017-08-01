@@ -1,46 +1,49 @@
-# fabulist [![Build Status](https://travis-ci.org/mar10/fabulist.png?branch=master)](https://travis-ci.org/mar10/fabulist) [![Latest Version](https://img.shields.io/pypi/v/fabulist.svg)](https://pypi.python.org/pypi/fabulist/) [![Downloads](https://img.shields.io/pypi/dm/fabulist.svg)](https://pypi.python.org/pypi/fabulist/) [![License](https://img.shields.io/pypi/l/fabulist.svg)](https://pypi.python.org/pypi/fabulist/)
-
-Synchronize local directories with FTP servers.
-
-[ ![sample](teaser.png?raw=true) ](https://github.com/mar10/fabulist "Live demo")
-
-## Summary
-
-Synchronize local directories with FTP server.
-
-  * This is a command line tool...
-  * ... and a library for use in your Python projects
-  * Upload, download, and bi-directional synch mode
-  * Allows FTP-to-FTP and Filesystem-to-Filesystem synchronization as well
-  * Architecture is open to add other target types.
-
-#### Known limitations
-
-  * The FTP server must support the [MLSD command](http://tools.ietf.org/html/rfc3659).
-  * fabulist uses file size and modification dates to detect file changes.
-    This is efficient, but not as robust as CRC checksums could be.
-  * fabulist tries to detect conflicts (i.e. simultaneous modifications of 
-    local and remote targets) by storing last sync time and size in a separate
-    meta data file inside the local folders. This is not bullet proof and may
-    fail under some conditions.
-
-In short: fabulist is not (nor tries to be a replacement for) a distributed 
-version control system. Make sure you have backups.
+# Fabulist
+[![Powered by You](http://sapegin.github.io/powered-by-you/badge.svg)](http://sapegin.github.io/powered-by-you/)
+[![Build Status](https://travis-ci.org/mar10/fabulist.png?branch=master)](https://travis-ci.org/mar10/fabulist)
+[![Downloads](https://img.shields.io/pypi/dm/fabulist.svg)](https://pypi.python.org/pypi/fabulist/)
+[![License](https://img.shields.io/pypi/l/fabulist.svg)](https://raw.github.com/mar10/fabulist/master/LICENSE)
+[![Documentation Status](https://readthedocs.org/projects/fabulist/badge/?version=latest)](http://fabulist.readthedocs.org/en/latest/)
 
 
-## Quickstart
+> Generate meaningful test data based on string templates.
 
-[Python](http://www.python.org/download/ Python) 2.7+ or 3.3+ is required,
-[pip](http://www.pip-installer.org/) or
-[EasyInstall](http://pypi.python.org/pypi/setuptools#using-setuptools-and-easyinstall)
-recommended:
+## Usage
 
-```bash
-$ pip install fabulist --upgrade
-$ fabulist --help
+```
+$ pip install fabulist
 ```
 
+then
 
-## Documentation
+```py
+from fabulist import Fabulist
 
-[Read the Docs](http://fabulist.readthedocs.io/) for details.
+fab = Fabulist()
+
+templates = [
+    "$(Verb:ing) is better than $(verb:ing).",
+    "$(Noun:an) a day keeps the $(noun:plural) away.",
+    "If you want to $(verb) $(adv), $(verb) $(adv)!",
+    'Confucius says: "The one who wants to $(verb) must $(verb) $(adv) the $(noun)!"',
+    ]
+print("Fortune cookies:")
+for q in fab.generate_quotes(templates, count=10):
+    print("- ", q)
+```
+will produce something like
+```
+Fortune cookies:
+-  A statement a day keeps the airports away.
+-  Savoring is better than magnifying.
+-  If you want to sate divisively, disuse calmly!
+-  Praying is better than inspecting.
+-  Confucius says: "The one who wants to sterilize must inform miserably the possibility!"
+-  If you want to blur orderly, stride poorly!
+-  A cost a day keeps the gears away.
+-  Subtracting is better than worshipping.
+-  If you want to damage solely, discuss jealously!
+-  Confucius says: "The one who wants to vanish must swear terribly the punch!"
+```
+
+[Read The Docs](http://fabulist.readthedocs.org/en/latest/) for details.
