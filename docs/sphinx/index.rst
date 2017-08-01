@@ -12,7 +12,7 @@ Overview
 *Generate meaningful test data based on string templates.*
 
 :Project:   https://github.com/mar10/fabulist/
-:License:   `The MIT License <https://raw.github.com/mar10/fabulist/master/LICENSE>`_
+:License:   `The MIT License <https://github.com/mar10/fabulist/blob/master/LICENSE>`_
 :Author:    Martin Wendt
 :Version:   |version|
 :Date:      |today|
@@ -122,7 +122,7 @@ Read the `User Guide <user_guide.html>`_ for details.
 
 .. |lic_badge| image:: https://img.shields.io/pypi/l/fabulist.svg
 	 :alt: License
-	 :target: https://raw.github.com/mar10/fabulist/master/LICENSE
+	 :target: https://github.com/mar10/fabulist/blob/master/LICENSE
 
 .. |rtd_badge| image:: https://readthedocs.org/projects/fabulist/badge/?version=latest
 	 :target: http://fabulist.readthedocs.org/en/latest/

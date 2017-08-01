@@ -2,7 +2,7 @@
 [![Powered by You](http://sapegin.github.io/powered-by-you/badge.svg)](http://sapegin.github.io/powered-by-you/)
 [![Build Status](https://travis-ci.org/mar10/fabulist.png?branch=master)](https://travis-ci.org/mar10/fabulist)
 [![Downloads](https://img.shields.io/pypi/dm/fabulist.svg)](https://pypi.python.org/pypi/fabulist/)
-[![License](https://img.shields.io/pypi/l/fabulist.svg)](https://raw.github.com/mar10/fabulist/master/LICENSE)
+[![License](https://img.shields.io/pypi/l/fabulist.svg)](https://github.com/mar10/fabulist/blob/master/LICENSE)
 [![Documentation Status](https://readthedocs.org/projects/fabulist/badge/?version=latest)](http://fabulist.readthedocs.org/en/latest/)
 
 

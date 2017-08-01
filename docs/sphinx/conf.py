@@ -88,18 +88,23 @@ try:
     # print  "release", release
     del pkg_resources
 except pkg_resources.DistributionNotFound:
+    del pkg_resources
     print 'To build the documentation, The distribution information'
     print 'Has to be available.  Either install the package into your'
     print 'development environment or run "setup.py develop" to setup the'
     print 'metadata.  A virtualenv is recommended!'
-    # sys.exit(1)
-    # TODO: 2015-09-05: fails since last month: workaround like this:
-    # (Maybe a better solution here: https://github.com/google/oauth2client/commit/a39aa25091946e33b17b52cbe19b5b88d79a28b0)
-    g_dict = {}
-    exec(open("../../fabulist/__init__.py").read(), g_dict)
-    release = g_dict["__version__"]
-    del g_dict
-    print 'Using workaround (direc read): %s' % release
+    # g_dict = {}
+    # exec(open("../../fabulist/__init__.py").read(), g_dict)
+    # release = g_dict["__version__"]
+    # del g_dict
+    for line in open("../../fabulist/__init__.py", "rt"):
+        line = line.strip()
+        if line.startswith("__version__"):
+            _, release = line.split("=", 1)
+            release = release.strip().strip("\"'")
+            break
+    print 'Using workaround (direct read): %s' % release
+    assert release
 
 version = '.'.join(release.split('.')[:2])
 
