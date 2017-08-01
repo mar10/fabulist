@@ -66,7 +66,7 @@ now the ``fabulist`` package can be used in Python code::
 	'Equipment'
 	>>> fab.get_word("adj", "#positive")
 	'kind'
-	>>> fab.get_word("name", "mr:middle")
+	>>> fab.get_name("mr:middle")
 	'Mrs. Julia P. Hughes'
 	>>> fab.get_quote("Look, some $(noun:#animal:plural)!")
 	'Look, some manatees!'

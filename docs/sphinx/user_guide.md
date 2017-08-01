@@ -11,19 +11,25 @@ This code:
 	# Print a random noun:
 	print(fab.get_word("noun"):
 
-	# Print an random adjective, tagged 'positive':
+	# Print a random adjective, tagged 'positive':
 	print(fab.get_word("adj", "#positive"):
 
-	# Print three random terms:
-	for s in fab.generate_quotes("Look, a $(noun:#animal)!", 3):
+  # Print a random name, prefix with Mr./Mrs. and middle-initial:
+  print(fab.get_name("mr:middle"):
+
+	# Print three random terms, prefix with a/an:
+	for s in fab.generate_quotes("Look, $(noun:#animal:an)!", 3):
 			print(s)
 ```
 
 will produce something like this:
 
 ```
-  Look, a tiger!
-  Look, a gnat!
+  obligation
+  kind
+  Mrs. Julia P. Hughes
+  Look, a tiger
+  Look, an eagle!
   Look, a bug!
 ```
 

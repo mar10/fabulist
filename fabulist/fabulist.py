@@ -630,9 +630,10 @@ class Fabulist(object):
 
         return
 
-    # def get_quotes_list(self, template, count=1, dedupe=False):
-    #     return list(self.generate_quotes(template, count, dedupe))
-
     def get_quote(self, template):
         """Return a single random string."""
         return next(self.generate_quotes(template, count=1, dedupe=False))
+
+    def get_name(self, modifiers=None, context=None):
+        """Return a single name string."""
+        return self.get_word("name", modifiers, context)

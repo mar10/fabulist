@@ -28,6 +28,14 @@ class BasicTestSuite(unittest.TestCase):
         from .demo import demo_quotes
         demo_quotes()
 
+    def test_names(self):
+        name = self.fab.get_name()
+        assert len(name) > 2 and " " in name, "Names have first and last as default"
+        name = self.fab.get_name(":first")
+        assert not " " in name, "name:first does not include :last"
+        name = self.fab.get_name(":last")
+        assert not " " in name, "name:last does not include :first"
+
     def test_save(self):
         self.temp_path = tempfile.mktemp()
         wl = self.fab.list_map["adj"]
