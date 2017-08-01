@@ -26,6 +26,7 @@ on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 package_root = os.path.abspath('../../fabulist')
+package_root = os.path.abspath('../..')
 sys.path.insert(0, package_root)
 print "Add package root to sys.path: %r" % package_root
 for fn in os.listdir(package_root):
