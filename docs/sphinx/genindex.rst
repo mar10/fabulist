@@ -1,4 +1,4 @@
 Index
 =====
 
-.. comment:: used to include genndex in a tree
+..  used to include genindex in a tree

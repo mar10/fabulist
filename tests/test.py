@@ -36,6 +36,23 @@ class BasicTestSuite(unittest.TestCase):
         name = self.fab.get_name(":last")
         assert not " " in name, "name:last does not include :first"
 
+    def test_validations(self):
+        self.assertRaises(ValueError, 
+            self.fab.get_word, "unkonwn_type")
+        self.assertRaises(ValueError, 
+            self.fab.get_word, "noun", "unkonwn_mod")
+        self.assertRaises(ValueError, 
+            self.fab.get_word, "noun", "an:an")
+        self.assertRaises(ValueError, 
+            self.fab.get_word, "noun", "an:#animal:#animal")
+
+    def test_to_string(self):
+        s = "{}".format(self.fab.list_map["adj"])
+        assert s.startswith("AdjList(len=")
+        nl = self.fab.list_map["noun"]
+        s = "{}".format(fabulist.fabulist.Macro("noun", "an:plural:#animal", nl))
+        assert s == "$(noun:plural:an:#animal)"
+
     def test_save(self):
         self.temp_path = tempfile.mktemp()
         wl = self.fab.list_map["adj"]

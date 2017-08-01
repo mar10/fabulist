@@ -25,17 +25,18 @@ on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-package_root = os.path.abspath('../../fabulist')
+# package_root = os.path.abspath('../../fabulist')
 package_root = os.path.abspath('../..')
 sys.path.insert(0, package_root)
 print "Add package root to sys.path: %r" % package_root
-for fn in os.listdir(package_root):
-    print "-", fn
+# for fn in os.listdir(package_root):
+#     print "-", fn
 
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
-#needs_sphinx = '1.0'
+# MW 2017-08-01: need this fix: https://github.com/sphinx-doc/sphinx/issues/3657
+needs_sphinx = '1.6'
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
