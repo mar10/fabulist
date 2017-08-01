@@ -1,0 +1,48 @@
+# Fabulist TODO
+
+- Upload to PyPI
+
+- Improve Sphinx docs
+  -  use recommonmark and MD files
+
+- Push to GitHub
+  - enable travis hooks
+
+- Enable CI and RTD hooks
+
+
+- Antonym lookups
+  Example:
+    "$(verb:antonym)"
+
+  - verbs:
+    http://kidspicturedictionary.com/word-must-know/vocabulary/vocabulary-list-by-opposites-or-antonyms/
+  - adjectives:
+    http://kidspicturedictionary.com/english-through-pictures/dictionary-children/opposites-words/
+
+
+- Category filters
+  Example:
+    "$(noun:#animal)"
+
+  - verbs
+    https://www.myenglishteacher.eu/question/all-state-verbs-list/
+
+
+- Comparative/superlative
+  Example:
+    "$(adj:comp)", "$(adv:super)"
+
+  - adjectives:
+    http://www.enchantedlearning.com/grammar/partsofspeech/adjectives/comparatives.shtml
+  - adverbs:
+
+- Add supplemental / additional word list.
+  Data has same attribues as default word type, but the words are *not* used main tag
+  ```py
+  fab.noun_list.add_custom("band", [
+    {"lemma": "Nirwana", "plural": "-", "tags"},
+    ])
+    fab.get_quote("I like $(noun:#band).")
+    fab.get_quote("I like $(noun).")  # Results will NOT contain band names
+  ```

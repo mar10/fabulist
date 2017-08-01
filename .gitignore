@@ -12,6 +12,7 @@ env/
 build/
 develop-eggs/
 dist/
+docs/sphinx-build/
 downloads/
 eggs/
 .eggs/
@@ -99,3 +100,4 @@ ENV/
 
 # mypy
 .mypy_cache/
+.DS_Store

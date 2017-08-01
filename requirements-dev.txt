@@ -1,0 +1,11 @@
+-r requirements.txt
+#cx_Freeze
+pytest~=3.1
+pytest-cov~=2.5
+sphinx~=1.6
+sphinx_rtd_theme
+#sphinxcontrib-napoleon~=0.3
+recommonmark
+tox~=2.7
+twine
+virtualenv

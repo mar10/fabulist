@@ -1,0 +1,10 @@
+# Sample file that can be used with the tests/list_importer script.
+# The first non-comment line must contain WORDTYPE,TAGNAME
+# Empty lines are ignored
+# WORDTYPE: adj, adv, noun, or verb
+# TAGNAME:
+adj,positive
+
+adaptable
+adventurous
+affable
