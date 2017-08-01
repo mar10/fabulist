@@ -143,21 +143,15 @@ setup(name="fabulist",
       tests_require = tests_require,
       packages = ["fabulist"],
 
-    #   py_modules = [
-#                    "ez_setup",
-                    # ],
-      # See also MANIFEST.in
      package_data={"fabulist": ["data/*.txt"]},
-#      include_package_data = True, # TODO: PP
       zip_safe = False,
       extras_require = {},
-#      test_suite = "test.test_flow",
       cmdclass = {"test": ToxCommand,
                   "sphinx": SphinxCommand,
                   },
-      entry_points = {
-          "console_scripts" : ["fabulist = fabulist.fabulist:run"],
-          },
+      # entry_points = {
+      #     "console_scripts" : ["fabulist = fabulist.fabulist:run"],
+      #     },
       executables = executables,
       options = {"build_exe": build_exe_options,
                  "bdist_msi": bdist_msi_options,

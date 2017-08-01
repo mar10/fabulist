@@ -4,4 +4,11 @@ Index
 ..  used to include genindex in a tree
 
 
-#### 
+
+NOTE: this file was temproarlily removed/renamed, because Sphinx seems to have 
+      a problem with genindex files and epubs:
+
+          https://github.com/sphinx-doc/sphinx/issues/3657
+
+      This should be fixed with Sphinx 1.6(?)
+      but RTD uses Sphinx 1.5.3 (as of 2017-08-01)
