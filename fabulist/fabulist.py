@@ -151,13 +151,15 @@ class Macro(object):
             res.append("={}".format(self.var_name))
         return "$({})".format(":".join(res))
 
-# -------------------------------------------------------------------------------------------------
-# _Wordlist
-# -------------------------------------------------------------------------------------------------
 
+# -------------------------------------------------------------------------------------------------
+# _WordList
+# -------------------------------------------------------------------------------------------------
+class _WordList(object):
+    """Common base class for all word lists.
 
-class _Wordlist(object):
-    """Base class for all word lists.
+    This class is not instantiated directly, but provides common implementations for reading,
+    writing and processing of word list data.
 
     Args:
         path (str): Location of dictionary csv file.
@@ -256,7 +258,7 @@ class _Wordlist(object):
         """Return a random entry dict, according to modifiers.
 
         Args:
-            macro (fabulist.Macro)
+            macro (:class:`Macro`)
         """
         if macro.word_type != "name":
             assert macro.word_type == self.word_type
@@ -268,7 +270,11 @@ class _Wordlist(object):
         return entry
 
     def apply_macro(self, macro, entry):
-        """Return a word-form for an entry dict, according to modifiers."""
+        """Return a word-form for an entry dict, according to modifiers.
+
+        Args:
+            macro (:class:`Macro`)
+        """
         # print("apply_macro", macro, entry)
         if macro.word_type != "name":
             assert macro.word_type == self.word_type
@@ -292,7 +298,11 @@ class _Wordlist(object):
         self.key_list = list(self.data.keys())
 
     def add_entry(self, entry):
-        """Add single entry dictionary."""
+        """Add single entry dictionary.
+
+        Args:
+            entry (dict):
+        """
         lemma = entry["lemma"]
         self.data[lemma] = entry
         self._process_entry(lemma, entry)
@@ -302,7 +312,11 @@ class _Wordlist(object):
                 self.tag_map[tag].add(lemma)
 
     def load(self, path=None):
-        """Load and add list of entries from text file."""
+        """Load and add list of entries from text file.
+
+        Args:
+            path (str, optional): path to CSV file. Defaults to `self.path`
+        """
         if path is None:
             path = self.path
 
@@ -339,13 +353,17 @@ class _Wordlist(object):
                 fs.write(",".join(line) + "\n")
         return
 
+
 # -------------------------------------------------------------------------------------------------
 # AdjList
 # -------------------------------------------------------------------------------------------------
+class AdjList(_WordList):
+    """Implement a collection of adjectives.
 
-
-class AdjList(_Wordlist):
-
+    Args:
+        path (str): Path to CSV source file (loaded on demand or when :meth:`_WordList.load`)
+            is called.
+    """
     word_type = "adj"
     csv_format = ("lemma", "comp", "super", "antonym", "tags")
     computable_modifiers = frozenset(("comp", "super"))
@@ -360,8 +378,13 @@ class AdjList(_Wordlist):
 # -------------------------------------------------------------------------------------------------
 # AdvList
 # -------------------------------------------------------------------------------------------------
-class AdvList(_Wordlist):
+class AdvList(_WordList):
+    """Implement a collection of adverbs.
 
+    Args:
+        path (str): Path to CSV source file (loaded on demand or when :meth:`_WordList.load`)
+            is called.
+    """
     word_type = "adv"
     csv_format = ("lemma", "comp", "super", "antonym", "tags")
     computable_modifiers = frozenset(("comp", "super"))
@@ -376,8 +399,11 @@ class AdvList(_Wordlist):
 # -------------------------------------------------------------------------------------------------
 # FirstnameList
 # -------------------------------------------------------------------------------------------------
-class FirstnameList(_Wordlist):
+class FirstnameList(_WordList):
+    """List of first names, tagged by gender.
 
+    Internally used by :py:class:`NameList`, not intended to be instantiated directly.
+    """
     csv_format = ("lemma", "tags")
 
     def __init__(self, path):
@@ -394,8 +420,12 @@ class FirstnameList(_Wordlist):
 # -------------------------------------------------------------------------------------------------
 # LastnameList
 # -------------------------------------------------------------------------------------------------
-class LastnameList(_Wordlist):
+class LastnameList(_WordList):
+    """List of last names.
 
+    Note:
+        Internally used by :py:class:`NameList`, not intended to be instantiated directly.
+    """
     csv_format = ("lemma", )
 
     def __init__(self, path):
@@ -405,8 +435,19 @@ class LastnameList(_Wordlist):
 # -------------------------------------------------------------------------------------------------
 # NameList
 # -------------------------------------------------------------------------------------------------
-class NameList(_Wordlist):
+class NameList(_WordList):
+    """Implement a virtual collection of person names.
 
+    Internally uses :class:`FirstnameList` and :class:`LastnameList` to generate different
+    variants.
+
+    Args:
+        path (str): Path to CSV source file (loaded on demand or when :meth:`_WordList.load`)
+            is called.
+    Attributes:
+        firstname_list (list[FirstnameList]):
+        lastname_list (list[LastnameList]):
+    """
     word_type = "name"
     csv_format = None
     computable_modifiers = frozenset()
@@ -486,8 +527,13 @@ class NameList(_Wordlist):
 # -------------------------------------------------------------------------------------------------
 # NounList
 # -------------------------------------------------------------------------------------------------
-class NounList(_Wordlist):
+class NounList(_WordList):
+    """Implement a collection of nouns.
 
+    Args:
+        path (str): Path to CSV source file (loaded on demand or when :meth:`_WordList.load`)
+            is called.
+    """
     word_type = "noun"
     csv_format = ("lemma", "plural", "tags")
     computable_modifiers = frozenset(("plural", ))
@@ -502,8 +548,13 @@ class NounList(_Wordlist):
 # -------------------------------------------------------------------------------------------------
 # VerbList
 # -------------------------------------------------------------------------------------------------
-class VerbList(_Wordlist):
+class VerbList(_WordList):
+    """Implement a collection of verbs.
 
+    Args:
+        path (str): Path to CSV source file (loaded on demand or when :meth:`_WordList.load`)
+            is called.
+    """
     word_type = "verb"
     csv_format = ("lemma", "past", "pp", "s", "ing", "tags")
     computable_modifiers = frozenset(("pp", "s", "ing"))
@@ -522,7 +573,7 @@ class Fabulist(object):
     """Random string factory.
 
     Attributes:
-        list_map (list of :obj:_WordList)
+        list_map (list of :class:_WordList)
     """
     def __init__(self):
         root = os.path.dirname(__file__)
