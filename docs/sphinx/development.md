@@ -60,6 +60,17 @@ $ twine upload
 
 ## Data Model and File Format
 
+### Word List Entries
+
+Word lists are represented as `_WordList` class instance which have a `key_list` attibute.
+ consist of entry dictionaries:
+```py
+{"lemma":}
+```
+
+
+### Word List Files
+
 Empty lines and lines starting with '#' are ignored.
 Attributes are comma separated. Multi-value attributes are separated by '|'.
 Attributes should be omitted if they can be generated using standard rules (e.g. plural of 'cat' is 'cats').
@@ -73,3 +84,7 @@ blood,-,
 cat,,animal|pet
 ...
 ```
+
+### Lorem Ipsum Files
+
+TODO

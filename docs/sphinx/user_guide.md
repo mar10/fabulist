@@ -18,7 +18,7 @@ print(fab.get_word("adj", "#positive"):
 print(fab.get_name("mr:middle"):
 
 # Print three random terms, prefix with a/an:
-for s in fab.generate_quotes("Look, $(noun:#animal:an)!", 3):
+for s in fab.generate_quotes("Look, $(noun:an:#animal)!", 3):
     print(s)
 ```
 
@@ -72,7 +72,7 @@ Compliments:
 -  You have very good fingers.
 Blessings:
 -  May your scripts express joyfulliest.
--  May your motors dip incorrectliest.
+-  May your motors dip correctliest.
 -  May your wheels punish zestiliest.
 Fortune cookies:
 -  Confucius says: "The one who wants to inflate must greet coaxingly the communication!"
@@ -102,46 +102,47 @@ Templates are plain strings with embedded macros.
 Macros are formatted like `$(...)` and contain a word-type and optionally one or more
 modifiers, separated by colons (":").
 
-<kbd>$(type[:modifier]*)</kbd>
+`$(type[:modifier]*)`
 
-For example <kbd>$(noun)</kbd> or <kbd>$(noun:plural:#animal)</kbd>.<br>
+For example `$(noun)` or `$(noun:plural:#animal)`.<br>
 These macros can be embedded into strings and will be replaced by random variations:
 `"Look at the beautiful $(noun:plural:#animal)!"`
 
-Supported Word Types:
+
+### Supported Word Types
 
 - `adj`: Adjective<br>
-  Modifiers: `comp`, `super`, `antonym`.<br>
-  Tags: `positive`, `negative`
+  Word-form modifiers: `comp`, `super`, `antonym`.<br>
+  Tags: `#negative`, `#positive`
 - `adv`: Adverb<br>
-  Modifiers: `comp`, `super`, `antonym`.<br>
-  Tags: `positive`, `negative`
+  Word-form modifiers: `comp`, `super`, `antonym`.<br>
+  Tags: `#degree`, `#manner`, `#negative`, `#place`, `#positive`, `#time`
 - `name`: Name<br>
-  Modifiers: `mr`, `first`, `last`, `middle`<br>
-  Tags: `f`, `m`<br>
-  Use tags to select a gender, e.g. <kbd>$(name:#f)</kbd> for female.
+  Word-form modifiers: `mr`, `first`, `last`, `middle`<br>
+  Tags: `#f`, `#m`<br>
+  Use tags to select a gender, e.g. `$(name:#f)` for female.
 - `noun` Noun<br>
-  Modifiers: `plural`<br>
+  Word-form modifiers: `plural`<br>
   Tags: `animal`
 - `verb`: Verb<br>
-  Modifiers: `ing`, `past`, `pp`, `s`<br>
-  Tags:
+  Word-form modifiers: `ing`, `past`, `pp`, `s`<br>
+  Tags: -
 - `@<num>`: Reference<br>
   A special type to reference another macro in the template
   (see `:=<num>` modifier below)
 
-Use uppercase word-type name for capitalized results, e.g. `Noun`.
+**NOTE:** Use uppercase word-type name for capitalized results, e.g. `$(Noun)`.
+
+**NOTE:** The `:antonym` modifier is not yet implemented.
 
 
 ## Modifiers
 
-Common modifiers:
+### Word Form Modifiers
 
-- `:an`
-  Prepend "a " or "an "<br>
-  $(noun) => "essay", $(noun:an) => "an essay"
-- `:antonym`<br>
-  (Not yet implemented: need to update the verb lists)
+By default, words are generated in their base form ('lemma').
+At most one word-type modifier may be added to change this:
+
 - `:comp` Comparative (adj, adv)<br>
   $(adv) => "fast", $(adj:comp) => "faster"
 - `:ing` (verbs only)<br>
@@ -156,22 +157,39 @@ Common modifiers:
   $(verb) => "bash", $(verb:s) => "bashes"
 - `:super` superlative (adj, adv)<br>
   $(adj) => "big", $(adj:super) => "biggest"
-- `:#<tags>`<br>
-  Only allow results tagged with this category.
-  Pass multiple tags separated by '|':
-  $(noun:#animal), $(verb:#posession|emotion)
-  Note that first names are tagged with 'f' and/or 'm' for female/male:
-  $(name:#m) => "John Doe"
-- `:=<num>`
-  Save result for back-reference using `@<num>`.
-  "One $(noun:=1) is good, but two $(@1:plural) are better."
 
-Modifiers for names:
+
+### Additional Modifiers
+
+These modifiers can used in addition to one word-type-modifier:
+
+- `:an`<br>
+  Prepend "a " or "an "<br>
+  $(noun) => "essay", $(noun:an) => "an essay"
+- `:antonym`<br>
+  Adverbs and adjectives only: Use the opposite word. This is especially useful in combination
+  with back-references:<br>
+  `"Don't be $(adj:=1). Be $(@1:antonym) instead!"`<br>
+  (**NOTE:** Not yet implemented!)
+- `:#<tags>`<br>
+  Only allow results tagged with this category.<br>
+  Pass multiple tags separated by '|', e.g.:<br>
+  `$(noun:#animal)`, `$(adv:#manner|positive)`<br>
+  Note that first names are tagged with `#f` and/or `#m` for female/male:<br>
+  $(name:#m) => "John Doe"
+- `:=<num>`<br>
+  Store result for back-reference using `@<num>`.<br>
+  `"One $(noun:=1) is good, but two $(@1:plural) are better."`
+
+
+### Modifiers for Names
+
+These modifiers are available for names only:
 
 - `:first` only use first name<br>
   $(name) => "Diana Chapman", $(name:first) => "Diana"
 - `:last` only use last name<br>
-  $(name) => "Diana Chapman", $(name:first) => "Diana"
+  $(name) => "Diana Chapman", $(name:last) => "Chapman"
 - `:middle` generate a middle initial<br>
   $(name) => "Diana Chapman", $(name:middle) => "Diana S. Chapman"
 - `:mr` prepend "Mr." or "Mrs."<br>
@@ -182,8 +200,9 @@ Modifiers for names:
   $(name) => "Diana Chapman", $(name:title) => "Dr. Diana Chapman"
 -->
 
-Use `m` or `f` tags to restrict to male/female names:
+**NOTE:** If neither `:first` nor `:last` is given, it is assumed that both parts are requested.
 
+**NOTE:**  Use `#m` or `#f` tags to restrict to male/female names:<br>
 $(name:#m) => "George Clarkson", $(name:first:#f) => Cindy
 
 
@@ -220,4 +239,16 @@ data = [
 for d in data:
   fab.noun_list.add_entry(d)
 fab.update_data()
+```
+
+
+## Generating Blind Text
+
+In addition to the above functionalities, Fabulist also features some methods to produce
+blind text, also known as [Lorem Ipsum](https://en.wikipedia.org/wiki/Lorem_ipsum)
+
+```py
+fab = Fabulist()
+for s in fab.get_lorem_sentences(3):
+    print(s)
 ```

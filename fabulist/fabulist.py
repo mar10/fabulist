@@ -12,6 +12,9 @@ import random
 import re
 import sys
 
+from .lorem_ipsum import LoremGenerator
+
+
 # Find `$(TYPE)` or `$(TYPE:MODIFIERS)`
 rex_macro = re.compile("\$\(\s*(@?\w+)\s*(\:[^\)]*)?\s*\)")
 
@@ -251,7 +254,8 @@ class _WordList(object):
                 matching.update(self.tag_map[tag])
             else:
                 raise ValueError(
-                    "{} has no entries for tag '{}'".format(self.__class__.__name__, tag))
+                    "{} has no entries for tag '{}' (expected {})"
+                    .format(self.__class__.__name__, tag, self.tag_map.keys()))
         return list(matching)
 
     def get_random_entry(self, macro):
@@ -577,11 +581,13 @@ class Fabulist(object):
     """
     def __init__(self):
         root = os.path.dirname(__file__)
+        data_folder = os.path.join(root, "data")
+        self.lorem = LoremGenerator(data_folder)
         self.list_map = {
-            "adj": AdjList(os.path.join(root, "data/adj_list.txt")),
-            "adv":  AdvList(os.path.join(root, "data/adv_list.txt")),
-            "noun": NounList(os.path.join(root, "data/noun_list.txt")),
-            "verb": VerbList(os.path.join(root, "data/verb_list.txt")),
+            "adj": AdjList(os.path.join(data_folder, "adj_list.txt")),
+            "adv": AdvList(os.path.join(data_folder, "adv_list.txt")),
+            "noun": NounList(os.path.join(data_folder, "noun_list.txt")),
+            "verb": VerbList(os.path.join(data_folder, "verb_list.txt")),
             "name": NameList(None),
             }
 
@@ -688,3 +694,91 @@ class Fabulist(object):
     def get_name(self, modifiers=None, context=None):
         """Return a single name string."""
         return self.get_word("name", modifiers, context)
+
+    def generate_lorem_words(self, count, dialect="default", entropy=3, keep_first=False):
+        """Yield <count> random sentences.
+
+        Args:
+            count (int):
+                Number of words.
+            dialect (str, optional):
+                For example "default", "pulp", "trappatoni". Pass `None` to pick a random dialect.
+                Default: "default" (i.e. lorem-ipsum).
+            entropy (int, optional):
+                0: iterate words from original text
+                1: pick a random paragraph, then use it literally
+                2: pick a random sentence, then use it literally
+                3: pick random words
+                Default: 3.
+            keep_first (bool, optional):
+                Always return the words of the first sentence as first result.
+                Default: False.
+        Yields:
+            <count> random words
+        """
+        res = self.lorem.generate_words(count, dialect, entropy, keep_first)
+        return res
+
+    def generate_lorem_sentences(
+            self, count, dialect="default", entropy=2, keep_first=False,
+            words_per_sentence=(3, 15)):
+        """Yield <count> random sentences.
+
+        Args:
+            count (int):
+                Number of sentences.
+            dialect (str, optional):
+                For example "default", "pulp", "trappatoni". Pass `None` to pick a random dialect.
+                Default: "default" (i.e. lorem-ipsum).
+            entropy (int):
+                0: iterate sentences from original text
+                1: pick a random paragraph, then use it literally
+                2: pick a random sentence, then use it literally
+                3: pick random words
+                Default: 2.
+            keep_first (bool, optional):
+                Always return the first sentence as first result.
+                Default: False.
+            words_per_sentence (tuple(int, int), optional):
+                Tuple with (min, max) number of words per sentence.
+                This argument is only used for entropy=3.
+                Default: (3, 15).
+        Yields:
+            <count> random sentences
+        """
+        res = self.lorem.generate_sentences(
+            count, dialect, entropy, keep_first, words_per_sentence)
+        return res
+
+    def generate_lorem_paragraphs(
+            self, count, dialect="default", entropy=2, keep_first=False,
+            words_per_sentence=(3, 15), sentences_per_para=(2, 6)):
+        """Generate a number of paragraphs, made up from random sentences.
+
+        Args:
+            count (int):
+                Number of paragraphs.
+            dialect (str, optional):
+                For example "default", "pulp", "trappatoni". Pass `None` to pick a random dialect.
+                Default: "default".
+            keep_first (bool, optional):
+                Always return the first sentence as first result. Default: False.
+            entropy (int):
+                0: iterate sentences from original text
+                1: pick a random paragraph, then use it literally
+                2: pick a random sentence, then use it literally
+                3: pick random words
+                Default: 2.
+            words_per_sentence (tuple(int, int), optional):
+                Tuple with (min, max) number of words per sentence.
+                This argument is only used for entropy=3.
+                Default: (3, 15).
+            sentences_per_para (tuple(int, int), optional):
+                Tuple with (min, max) number of sentences per paragraph.
+                Default: (2, 6).
+        Yields:
+            <count> random paragraphs
+        """
+        res = self.lorem.generate_paragraphs(
+            count, dialect, entropy, keep_first, words_per_sentence, sentences_per_para)
+        return res
