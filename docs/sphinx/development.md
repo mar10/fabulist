@@ -33,8 +33,6 @@ If you plan to debug or contribute, install to run directly from the source:
 	$ python setup.py develop
 	$ python setup.py test
 
-The use of `virtualenv <https://virtualenv.pypa.io/en/latest/>`_ is recommended.
-
 
 ## How to Contribute
 

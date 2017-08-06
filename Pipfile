@@ -3,6 +3,6 @@ url = "https://pypi.python.org/simple"
 verify_ssl = true
 
 [packages]
-PyInstaller = "==3.2"
-colorama = "==0.3.3"
-distribute = "==0.7.3"
+#PyInstaller = "==3.2"
+#colorama = "==0.3.3"
+#distribute = "==0.7.3"
