@@ -1,4 +1,5 @@
-# lorem ipsum
+# Lorem ipsum
+# See http://fabulist.readthedocs.io/en/latest/development.html#data-model-and-file-format
 
 Eine wunderbare Heiterkeit hat meine ganze Seele eingenommen, gleich den süßen Frühlingsmorgen, die ich mit ganzem Herzen genieße.
 Ich bin allein und freue mich meines Lebens in dieser Gegend, die für solche Seelen geschaffen ist wie die meine.

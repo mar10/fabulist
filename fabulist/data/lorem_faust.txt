@@ -1,0 +1,203 @@
+# Lorem ipsum
+# See http://fabulist.readthedocs.io/en/latest/development.html#data-model-and-file-format
+
+# Faust. Eine Tragödie. von Goethe.
+
+# Zueignung.
+
+Ihr naht euch wieder, schwankende Gestalten!
+Die früh sich einst dem trüben Blick gezeigt.
+Versuch’ ich wohl euch diesmal fest zu halten?
+Fühl’ ich mein Herz noch jenem Wahn geneigt?
+
+Ihr drängt euch zu! nun gut, so mögt ihr walten,
+Wie ihr aus Dunst und Nebel um mich steigt;
+Mein Busen fühlt sich jugendlich erschüttert
+Vom Zauberhauch der euren Zug umwittert.
+
+Ihr bringt mit euch die Bilder froher Tage,
+
+Und manche liebe Schatten steigen auf;
+Gleich einer alten, halbverklungnen Sage,
+Kommt erste Lieb’ und Freundschaft mit herauf;
+Der Schmerz wird neu, es wiederholt die Klage
+Des Lebens labyrinthisch irren Lauf,
+
+Und nennt die Guten, die, um schöne Stunden
+Vom Glück getäuscht, vor mir hinweggeschwunden.
+---
+Sie hören nicht die folgenden Gesänge,
+Die Seelen, denen ich die ersten sang,
+Zerstoben ist das freundliche Gedränge,
+
+Verklungen ach! der erste Wiederklang.
+Mein Lied[1] ertönt der unbekannten Menge,
+Ihr Beyfall selbst macht meinem Herzen bang,
+Und was sich sonst an meinem Lied erfreuet,
+Wenn es noch lebt, irrt in der Welt zerstreuet.
+
+Und mich ergreift ein längst entwöhntes Sehnen
+Nach jenem stillen, ernsten Geisterreich,
+Es schwebet nun, in unbestimmten Tönen,
+Mein lispelnd Lied, der Aeolsharfe gleich,
+Ein Schauer faßt mich, Thräne folgt den Thränen,
+
+Das strenge Herz es fühlt sich mild und weich;
+Was ich besitze seh’ ich wie im weiten,
+Und was verschwand wird mir zu Wirklichkeiten.
+---
+# .............................................................................
+# Prolog im Himmel.
+# Raphael.
+Die Sonne tönt, nach alter Weise,
+In Brudersphären Wettgesang,
+Und ihre vorgeschriebne Reise
+Vollendet sie mit Donnergang.
+Ihr Anblick giebt den Engeln Stärke,
+Wenn keiner sie ergründen mag.
+Die unbegreiflich hohen Werke
+Sind herrlich wie am ersten Tag.
+---
+# Gabriel.
+Und schnell und unbegreiflich schnelle
+Dreht sich umher der Erde Pracht;
+Es wechselt Paradieses-Helle
+Mit tiefer schauervoller Nacht;
+Es schäumt das Meer in breiten Flüssen
+Am tiefen Grund der Felsen auf,
+Und Fels und Meer wird fortgerissen
+In ewig schnellem Sphärenlauf.
+---
+# Michael
+Und Stürme brausen um die Wette
+Vom Meer aufs Land vom Land aufs Meer,
+Und bilden wüthend eine Kette
+Der tiefsten Wirkung rings umher.
+Da flammt ein blitzendes Verheeren
+Dem Pfade vor des Donnerschlags.
+Doch deine Boten, Herr, verehren
+Das sanfte Wandeln deines Tags.
+---
+# Zu Drey.
+Der Anblick giebt den Engeln Stärke
+Da keiner dich ergründen mag,
+Und alle deine hohen Werke
+Sind herrlich wie am ersten Tag.
+---
+# Mephistopheles.
+Da du, o Herr, dich einmal wieder nahst
+Und fragst wie alles sich bey uns befinde,
+Und du mich sonst gewöhnlich gerne sahst;
+So siehst du mich auch unter dem Gesinde.
+Verzeih, ich kann nicht hohe Worte machen,
+Und wenn mich auch der ganze Kreis verhöhnt;
+Mein Pathos brächte dich gewiß zum lachen,
+Hättst du dir nicht das Lachen abgewöhnt.
+Von Sonn’ und Welten weiß ich nichts zu sagen,
+Ich sehe nur wie sich die Menschen plagen.
+Der kleine Gott der Welt bleibt stets von gleichem Schlag,
+Und ist so wunderlich als wie am ersten Tag.
+Ein wenig besser würd’ er leben,
+Hättst du ihm nicht den Schein des Himmelslichts gegeben;
+Er nennts Vernunft und braucht’s allein
+Nur thierischer als jedes Thier zu seyn.
+Er scheint mir, mit Verlaub von Ew. Gnaden,
+Wie eine der langbeinigen Cicaden,
+Die immer fliegt und fliegend springt
+Und gleich im Gras ihr altes Liedchen singt;
+Und läg’ er nur noch immer in dem Grase!
+In jeden Quark begräbt er seine Nase.
+---
+# Der Herr.
+Hast du mir weiter nichts zu sagen?
+Kommst du nur immer anzuklagen?
+Ist auf der Erde ewig dir nichts recht?
+---
+# Mephistopheles.
+Nein Herr! ich find’ es dort, wie immer, herzlich schlecht.
+Die Menschen dauern mich in ihren Jammertagen,
+Ich mag sogar die Armen selbst nicht plagen.
+---
+# Der Herr.
+Kennst du den Faust?
+---
+# Mephistopheles.
+ Den Doctor?
+---
+# Der Herr.
+Meinen Knecht!
+---
+# Mephistopheles.
+Fürwahr! er dient euch auf besondre Weise.
+Nicht irdisch ist des Thoren Trank noch Speise.
+Ihn treibt die Gährung in die Ferne,
+Er ist sich seiner Tollheit halb bewußt;
+Vom Himmel fordert er die schönsten Sterne,
+Und von der Erde jede höchste Lust,
+Und alle Näh’ und alle Ferne
+Befriedigt nicht die tiefbewegte Brust.
+---
+# Der Herr.
+Wenn er mir jetzt auch nur verworren dient;
+So werd’ ich ihn bald in die Klarheit führen.
+Weiß doch der Gärtner, wenn das Bäumchen grünt,
+Daß Blüt’ und Frucht die künft’gen Jahre zieren.
+---
+# Mephistopheles.
+Was wettet ihr? den sollt ihr noch verlieren!
+Wenn ihr mir die Erlaubniß gebt
+Ihn meine Straße sacht zu führen.
+---
+# Der Herr.
+So lang’ er auf der Erde lebt,
+So lange sey dir’s nicht verboten.
+Es irrt der Mensch so lang er strebt.
+---
+# Mephistopheles.
+Da dank’ ich euch; denn mit den Todten
+Hab’ ich mich niemals gern befangen.
+Am meisten lieb’ ich mir die vollen frischen Wangen.
+Für einen Leichnam bin ich nicht zu Haus;
+Mir geht es wie der Katze mit der Maus.
+---
+# Der Herr.
+Nun gut, es sey dir überlassen!
+Zieh diesen Geist von seinem Urquell ab,
+Und führ’ ihn, kannst du ihn erfassen,
+Auf deinem Wege mit herab,
+Und steh’ beschämt, wenn du bekennen mußt:
+Ein guter Mensch, in seinem dunkeln Drange,
+Ist sich des rechten Weges wohl bewußt.
+---
+# Mephistopheles.
+Schon gut! nur dauert es nicht lange.
+Mir ist für meine Wette gar nicht bange.
+Wenn ich zu meinem Zweck gelange,
+Erlaubt ihr mir Triumph aus voller Brust.
+Staub soll er fressen, und mit Lust,
+Wie meine Muhme, die berühmte Schlange.
+---
+# Der Herr.
+Du darfst auch da nur frey erscheinen;
+Ich habe deines gleichen nie gehaßt.
+Von allen Geistern die verneinen
+Ist mir der Schalk am wenigsten zur Last.
+Des Menschen Thätigkeit kann allzu leicht erschlaffen,
+Er liebt sich bald die unbedingte Ruh;
+Drum geb’ ich gern ihm den Gesellen zu,
+Der reizt und wirkt, und muß, als Teufel, schaffen.
+Doch ihr, die ächten Göttersöhne,
+
+Erfreut euch der lebendig reichen Schöne!
+Das Werdende, das ewig wirkt und lebt,
+Umfaß’ euch mit der Liebe holden Schranken,
+Und was in schwankender Erscheinung schwebt,
+Befestiget mit dauernden Gedanken.
+
+Der Himmel schließt, die Erzengel vertheilen sich,
+---
+# Mephistopheles allein.
+Von Zeit zu Zeit seh’ ich den Alten gern,
+Und hüte mich mit ihm zu brechen.
+Es ist gar hübsch von einem großen Herrn
+So menschlich mit dem Teufel selbst zu sprechen.

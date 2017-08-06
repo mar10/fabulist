@@ -12,11 +12,10 @@ Overview
 *Generate meaningful test data based on string templates.*
 
 :Project:   https://github.com/mar10/fabulist/
-:License:   `The MIT License <https://github.com/mar10/fabulist/blob/master/LICENSE>`_
-:Author:    Martin Wendt
-:Version:   |version|
-:Date:      |today|
+:Version:   |version|, |today|
 
+.. :License:   `The MIT License <https://github.com/mar10/fabulist/blob/master/LICENSE>`_
+.. :Author:    Martin Wendt
 
 .. toctree::
 	 :hidden:
@@ -35,7 +34,7 @@ Overview
 Status
 ======
 
-This is hobby project in its early phase. I am not planning to invest vast efforts here,
+This is a hobby project in its early phase. I am not planning to invest vast efforts here,
 but I am curious to get your feedback.
 
 
@@ -47,7 +46,16 @@ Features
   word form (*'ing'-form*, *comparative*, *plural*, ...),
   or tag (*#animal*, *#positive*, ...)
 * Generate random names
-* (**TODO**) Generate random texts (lorem et al)
+* Generate blind text (lorem-ipsum et al)
+
+.. note::
+	Unlike other libraries, Fabulist focuses on generating strings with a pseudo-semantic,
+	by supporting a simple grammar. This allows to display text that is more adopted (and fun) in a
+	given context.
+
+	However, if you are looking for technical test data like email-addresses or credit-card numbers,
+	have a look at `Faker <https://github.com/joke2k/faker>`_,
+	`mimesis <https://github.com/lk-geimfari/mimesis>`_, and others.
 
 
 Quickstart
@@ -100,6 +108,18 @@ will produce something like::
 	-  Subtracting is better than worshipping.
 	-  If you want to damage solely, discuss jealously!
 	-  Confucius says: "The one who wants to vanish must swear terribly the punch!"
+
+Need some blind text?
+::
+
+	fab.get_lorem_paragraph(3, dialect="pulp", entropy=1)
+
+returns a paragraph with 3 sentences:
+::
+
+	 Do you see any Teletubbies in here? Do you see a slender plastic tag clipped to my shirt with my name printed on it?
+	 Do you see a little Asian child with a blank expression on his face sitting outside on a mechanical
+	 helicopter that shakes when you put quarters in it?
 
 Read the `User Guide <user_guide.html>`_ for details.
 

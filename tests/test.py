@@ -62,54 +62,103 @@ class BasicTestSuite(unittest.TestCase):
         wl.save_as(self.temp_path)
         assert os.path.getsize(self.temp_path) > 1000
 
+    def test_lorem_sentence(self):
+        fab = self.fab
+
+        res = fab.get_lorem_sentence(entropy=0)
+        assert res.startswith("Lorem ipsum")
+
+        res = fab.get_lorem_sentence(entropy=1)
+        assert res[0].isupper() and res[-1] == "."
+
+        res = fab.get_lorem_sentence(entropy=2)
+        assert res[0].isupper() and res[-1] == "."
+
+        res = fab.get_lorem_sentence(10)
+        assert res[0].isupper() and res[-1] == "."
+        assert res.count(" ") == 9
+
+        res = fab.get_lorem_sentence(dialect="pulp", entropy=0)
+        assert res == "Do you see any Teletubbies in here?"
+
+    def test_lorem_paragraph(self):
+        fab = self.fab
+
+        res = fab.get_lorem_paragraph(3, entropy=0)
+        assert res.startswith("Lorem ipsum")
+        assert res.count(".") == 3
+
+        res = fab.get_lorem_paragraph(3, entropy=1)
+        assert res.count(".") == 3
+
+        res = fab.get_lorem_paragraph(3, entropy=2, keep_first=True)
+        assert res.startswith("Lorem ipsum")
+        assert res.count(".") == 3
+
+        res = fab.get_lorem_paragraph(3, entropy=3, keep_first=True)
+        assert res.startswith("Lorem ipsum")
+        assert res.count(".") == 3
+
+    def test_lorem_text(self):
+        fab = self.fab
+
+        res = fab.get_lorem_text(3, keep_first=True, entropy=3)
+        assert res.count("\n") == 2
+        assert res.startswith("Lorem ipsum")
+
 
 class LoremTestSuite(unittest.TestCase):
-    """Test lorem-ipsium generator."""
+    """Test LoremGenerator and LoremDialect."""
     def setUp(self):
         self.fab = fabulist.Fabulist()
+        self.lorem = self.fab.lorem
 
     def tearDown(self):
-        self.fab = None
+        self.lorem = None
 
     def test_validations(self):
         with self.assertRaises(ValueError):
-            res = list(self.fab.generate_lorem_words(2, dialect="unknown_dialect"))
+            res = list(self.lorem.generate_words(2, dialect="unknown_dialect"))
 
     def test_words(self):
-        lorem = self.fab.lorem._get_lorem("default")
+        lorem = self.lorem
+        dialect = lorem._get_lorem("ipsum")
 
-        res = list(self.fab.generate_lorem_words(3, entropy=0))
+        res = list(lorem.generate_words(3, entropy=0))
         assert len(res) == 3
-        assert lorem.sentences[0].lower().startswith(res[0])
-        res = list(self.fab.generate_lorem_words(3, entropy=1))
+        assert dialect.sentences[0].lower().startswith(res[0])
+
+        res = list(self.lorem.generate_words(3, entropy=1))
         assert len(res) == 3
-        res = list(self.fab.generate_lorem_words(3, entropy=2))
+
+        res = list(self.lorem.generate_words(3, entropy=2))
         assert len(res) == 3
-        res = list(self.fab.generate_lorem_words(3, entropy=3))
+
+        res = list(self.lorem.generate_words(3, entropy=3))
         assert len(res) == 3
 
     def test_sentences(self):
-        res = list(self.fab.generate_lorem_sentences(3, entropy=0))
+        res = list(self.lorem.generate_sentences(3, entropy=0))
         assert len(res) == 3
         assert res[0].startswith("Lorem ipsum")
 
-        res = list(self.fab.generate_lorem_sentences(3, entropy=2, keep_first=True))
+        res = list(self.lorem.generate_sentences(3, entropy=2, keep_first=True))
         assert len(res) == 3
         assert res[0].startswith("Lorem ipsum")
 
-        res = list(self.fab.generate_lorem_sentences(3, keep_first=True, words_per_sentence=(3, 10)))
+        res = list(self.lorem.generate_sentences(3, keep_first=True, words_per_sentence=(3, 10)))
         assert len(res) == 3
         assert res[0].startswith("Lorem ipsum")
 
-        res = list(self.fab.generate_lorem_sentences(3, entropy=3, keep_first=True))
+        res = list(self.lorem.generate_sentences(3, entropy=3, keep_first=True))
         assert len(res) == 3
 
     def test_paragraphs(self):
-        res = list(self.fab.generate_lorem_paragraphs(3, entropy=0))
+        res = list(self.lorem.generate_paragraphs(3, entropy=0))
         assert len(res) == 3
         assert res[0].startswith("Lorem ipsum")
 
-        res = list(self.fab.generate_lorem_paragraphs(3, entropy=2, keep_first=True))
+        res = list(self.lorem.generate_paragraphs(3, entropy=2, keep_first=True))
         assert len(res) == 3
         assert res[0].startswith("Lorem ipsum")
 

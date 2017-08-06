@@ -21,8 +21,6 @@ rex_macro = re.compile("\$\(\s*(@?\w+)\s*(\:[^\)]*)?\s*\)")
 # -------------------------------------------------------------------------------------------------
 # Helper Functions
 # -------------------------------------------------------------------------------------------------
-
-
 def get_default_word_form(word_form, lemma, entry):
     """Use standard rules to compute a word form for a given lemma.
 
@@ -577,7 +575,8 @@ class Fabulist(object):
     """Random string factory.
 
     Attributes:
-        list_map (list of :class:_WordList)
+        list_map (list): Dictionary with one :class:`_WordList` entry per word-type.
+        lorem (:class:`fabulist.lorem_ipsum.LoremGenerator`):
     """
     def __init__(self):
         root = os.path.dirname(__file__)
@@ -695,15 +694,18 @@ class Fabulist(object):
         """Return a single name string."""
         return self.get_word("name", modifiers, context)
 
-    def generate_lorem_words(self, count, dialect="default", entropy=3, keep_first=False):
-        """Yield <count> random sentences.
+    def get_lorem_words(self, count, dialect="ipsum", entropy=3, keep_first=False):
+        """Return a list of random words.
+
+        See also :class:`fabulist.lorem_ipsum.LoremGenerator` for more flexible and efficient
+        generators (accessible as :attr:`Fabulist.lorem`).
 
         Args:
             count (int):
                 Number of words.
             dialect (str, optional):
-                For example "default", "pulp", "trappatoni". Pass `None` to pick a random dialect.
-                Default: "default" (i.e. lorem-ipsum).
+                For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a random dialect.
+                Default: "ipsum" (i.e. lorem-ipsum).
             entropy (int, optional):
                 0: iterate words from original text
                 1: pick a random paragraph, then use it literally
@@ -713,23 +715,53 @@ class Fabulist(object):
             keep_first (bool, optional):
                 Always return the words of the first sentence as first result.
                 Default: False.
-        Yields:
-            <count> random words
+        Returns:
+            (list[str]):
         """
         res = self.lorem.generate_words(count, dialect, entropy, keep_first)
-        return res
+        return list(res)
 
-    def generate_lorem_sentences(
-            self, count, dialect="default", entropy=2, keep_first=False,
-            words_per_sentence=(3, 15)):
-        """Yield <count> random sentences.
+    def get_lorem_sentence(self, word_count=(3, 15), dialect="ipsum", entropy=3):
+        """Return a random sentence.
+
+        See also :class:`fabulist.lorem_ipsum.LoremGenerator` for more flexible and efficient
+        generators (accessible as :attr:`Fabulist.lorem`).
 
         Args:
-            count (int):
-                Number of sentences.
+            word_count (int or tuple(min, max), optional):
+                Tuple with (min, max) number of words per sentence.
+                This argument is only used for entropy=3.
+                Default: (3, 15).
             dialect (str, optional):
-                For example "default", "pulp", "trappatoni". Pass `None` to pick a random dialect.
-                Default: "default" (i.e. lorem-ipsum).
+                For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a random dialect.
+                Default: "ipsum" (i.e. lorem-ipsum).
+            entropy (int):
+                0: use first sentence from original text
+                1: pick a random paragraph, then use the first sentence
+                2: pick a random sentence
+                3: mix random words
+                Default: 3.
+        Returns:
+            str: One random sentence.
+        """
+        res = self.lorem.generate_sentences(
+            1, dialect, entropy, keep_first=False, words_per_sentence=word_count)
+        return next(res)
+
+    def get_lorem_paragraph(
+            self, sentence_count=(2, 6), dialect="ipsum", entropy=2, keep_first=False,
+            words_per_sentence=(3, 15)):
+        """Return a random paragraph.
+
+        See also :class:`fabulist.lorem_ipsum.LoremGenerator` for more flexible and efficient
+        generators (accessible as :attr:`Fabulist.lorem`).
+
+        Args:
+            sentence_count (int or tuple(min, max)):
+                Number of sentences. Default: (2, 6).
+            dialect (str, optional):
+                For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a random dialect.
+                Default: "ipsum" (i.e. lorem-ipsum).
             entropy (int):
                 0: iterate sentences from original text
                 1: pick a random paragraph, then use it literally
@@ -739,28 +771,33 @@ class Fabulist(object):
             keep_first (bool, optional):
                 Always return the first sentence as first result.
                 Default: False.
-            words_per_sentence (tuple(int, int), optional):
-                Tuple with (min, max) number of words per sentence.
+            words_per_sentence (int or tuple(min, max), optional):
+                Number of words per sentence.
                 This argument is only used for entropy=3.
                 Default: (3, 15).
-        Yields:
-            <count> random sentences
+        Returns:
+            str: One paragraph made of random sentences.
         """
-        res = self.lorem.generate_sentences(
-            count, dialect, entropy, keep_first, words_per_sentence)
-        return res
+        res = self.lorem.generate_paragraphs(
+            1, dialect, entropy, keep_first, words_per_sentence, sentence_count)
+        return next(res)
 
-    def generate_lorem_paragraphs(
-            self, count, dialect="default", entropy=2, keep_first=False,
+    def get_lorem_text(
+            self, para_count, dialect="ipsum", entropy=2, keep_first=False,
             words_per_sentence=(3, 15), sentences_per_para=(2, 6)):
         """Generate a number of paragraphs, made up from random sentences.
 
+        Paragraphs are seperated by newline ("\\n").
+
+        See also :class:`fabulist.lorem_ipsum.LoremGenerator` for more flexible and efficient
+        generators (accessible as :attr:`Fabulist.lorem`).
+
         Args:
-            count (int):
+            para_count (int or tuple(min, max)):
                 Number of paragraphs.
             dialect (str, optional):
-                For example "default", "pulp", "trappatoni". Pass `None` to pick a random dialect.
-                Default: "default".
+                For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a random dialect.
+                Default: "ipsum".
             keep_first (bool, optional):
                 Always return the first sentence as first result. Default: False.
             entropy (int):
@@ -776,9 +813,9 @@ class Fabulist(object):
             sentences_per_para (tuple(int, int), optional):
                 Tuple with (min, max) number of sentences per paragraph.
                 Default: (2, 6).
-        Yields:
-            <count> random paragraphs
+        Returns:
+            String
         """
         res = self.lorem.generate_paragraphs(
-            count, dialect, entropy, keep_first, words_per_sentence, sentences_per_para)
-        return res
+            para_count, dialect, entropy, keep_first, words_per_sentence, sentences_per_para)
+        return "\n".join(res)

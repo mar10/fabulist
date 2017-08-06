@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 (c) 2017 Martin Wendt; see https://github.com/mar10/fabulist
+
 Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 """
 from __future__ import print_function
@@ -9,6 +10,13 @@ from __future__ import print_function
 import os
 # from pprint import pprint
 import random
+
+
+def _get_count(int_or_range):
+    """Return random int for given range (or int if a simple value was passed)."""
+    if type(int_or_range) is int:
+        return int_or_range
+    return random.randint(*int_or_range)
 
 
 # -------------------------------------------------------------------------------------------------
@@ -162,10 +170,26 @@ class LoremGenerator(object):
             lorem.load()
         return lorem
 
-    def generate_words(self, count, dialect="default", entropy=3, keep_first=False):
-        """Generate a sequence of words.
+    def generate_words(self, count, dialect="ipsum", entropy=3, keep_first=False):
+        """Yield <count> random sentences.
 
-        See :meth:`fabulist.fabulist.Fabulist.generate_lorem_words` for details.
+        Args:
+            count (int):
+                Number of words.
+            dialect (str, optional):
+                For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a random dialect.
+                Default: "ipsum" (i.e. lorem-ipsum).
+            entropy (int, optional):
+                0: iterate words from original text
+                1: pick a random paragraph, then use it literally
+                2: pick a random sentence, then use it literally
+                3: pick random words
+                Default: 3.
+            keep_first (bool, optional):
+                Always return the words of the first sentence as first result.
+                Default: False.
+        Yields:
+            <count> random words
         """
         lorem = self._get_lorem(dialect)
         if entropy == 3:
@@ -188,11 +212,31 @@ class LoremGenerator(object):
         return
 
     def generate_sentences(
-            self, count, dialect="default", entropy=2, keep_first=False,
+            self, count, dialect="ipsum", entropy=2, keep_first=False,
             words_per_sentence=(3, 15)):
-        """Generate a sequence of sentences.
+        """Yield <count> random sentences.
 
-        See :meth:`fabulist.fabulist.Fabulist.generate_lorem_sentences` for details.
+        Args:
+            count (int):
+                Number of sentences.
+            dialect (str, optional):
+                For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a random dialect.
+                Default: "ipsum" (i.e. lorem-ipsum).
+            entropy (int):
+                0: iterate sentences from original text
+                1: pick a random paragraph, then iterate sentences
+                2: pick a random sentence
+                3: mix random words
+                Default: 2.
+            keep_first (bool, optional):
+                Always return the first sentence as first result.
+                Default: False.
+            words_per_sentence (int or tuple(min, max), optional):
+                Number of words per sentence.
+                This argument is only used for entropy=3.
+                Default: (3, 15).
+        Yields:
+            <count> random sentences
         """
         lorem = self._get_lorem(dialect)
         if entropy == 3:
@@ -206,17 +250,12 @@ class LoremGenerator(object):
                     "entropy=3 requires words_per_sentence arg: int or a tuple(min, max)")
 
             for _ in range(count):
-                if type(words_per_sentence) is int:
-                    n_words = words_per_sentence
-                else:
-                    n_words = random.randrange(words_per_sentence[0], words_per_sentence[1]+1)
-                    # print("rr", words_per_sentence, "=>", n_words)
-
+                n_words = _get_count(words_per_sentence)
                 sentence = random.sample(lorem.words, n_words)
                 sentence = " ".join(sentence).capitalize() + "."
                 yield sentence
             return
-        # entropy = 0..2: use sentences from
+        # entropy = 0..2: use sentences from original text
         for i, s in enumerate(lorem._generate_sentences(keep_first=keep_first, entropy=entropy)):
             if i >= count:
                 break
@@ -224,17 +263,36 @@ class LoremGenerator(object):
         return
 
     def generate_paragraphs(
-            self, count, dialect="default", entropy=2, keep_first=False,
+            self, count, dialect="ipsum", entropy=2, keep_first=False,
             words_per_sentence=(3, 15), sentences_per_para=(2, 6)):
-        """Yield a sequence of paragraphs, made up of one or more sentences each.
+        """Generate a number of paragraphs, made up from random sentences.
 
-        See :meth:`fabulist.fabulist.Fabulist.generate_lorem_paragraphs` for details.
+        Args:
+            count (int):
+                Number of paragraphs.
+            dialect (str, optional):
+                For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a random dialect.
+                Default: "ipsum".
+            keep_first (bool, optional):
+                Always return the first sentence as first result. Default: False.
+            entropy (int):
+                0: iterate original text
+                1: pick a random paragraph, then use it literally
+                2: mix a random sentences
+                3: mix random words
+                Default: 2.
+            words_per_sentence (int or tuple(min, max), optional):
+                Number of words per sentence.
+                This argument is only used for entropy=3.
+                Default: (3, 15).
+            sentences_per_para (int or tuple(min, max), optional):
+                Number of sentences per paragraph.
+                Default: (2, 6).
+        Yields:
+            <count> random paragraphs
         """
         for _ in range(count):
-            if type(sentences_per_para) is int:
-                n_sents = sentences_per_para
-            else:
-                n_sents = random.randrange(sentences_per_para[0], sentences_per_para[1]+1)
+            n_sents = _get_count(sentences_per_para)
             para = self.generate_sentences(
                 n_sents, dialect, entropy, keep_first, words_per_sentence)
             para = " ".join(para)

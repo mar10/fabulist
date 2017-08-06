@@ -1,4 +1,5 @@
-# lorem ipsum
+# Lorem ipsum
+# See http://fabulist.readthedocs.io/en/latest/development.html#data-model-and-file-format
 
 Es gibt im Moment in diese Mannschaft, oh, einige Spieler vergessen ihnen Profi was sie sind.
 Ich lese nicht sehr viele Zeitungen, aber ich habe gehört viele Situationen.

@@ -1,14 +1,5 @@
 # Fabulist TODO
 
-- Upload to PyPI
-
-- Improve Sphinx docs
-  -  use recommonmark and MD files
-
-- Push to GitHub
-  - enable travis hooks
-
-- Enable CI and RTD hooks
 
 
 - Antonym lookups
