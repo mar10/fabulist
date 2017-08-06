@@ -106,6 +106,10 @@ class BasicTestSuite(unittest.TestCase):
         assert res.count("\n") == 2
         assert res.startswith("Lorem ipsum")
 
+    def test_lorem_demo(self):
+        from .demo_lorem import demo_lorem
+        demo_lorem()
+
 
 class LoremTestSuite(unittest.TestCase):
     """Test LoremGenerator and LoremDialect."""
