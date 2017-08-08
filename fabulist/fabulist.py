@@ -18,6 +18,7 @@ from .lorem_ipsum import LoremGenerator
 # Find `$(TYPE)` or `$(TYPE:MODIFIERS)`
 rex_macro = re.compile("\$\(\s*(@?\w+)\s*(\:[^\)]*)?\s*\)")
 
+
 # -------------------------------------------------------------------------------------------------
 # Helper Functions
 # -------------------------------------------------------------------------------------------------
@@ -25,11 +26,11 @@ def get_default_word_form(word_form, lemma, entry):
     """Use standard rules to compute a word form for a given lemma.
 
     Args:
-        word_form (str): 'plural',
-        lemma (str):
-        entry (dict):
+        word_form (str): Requested wor form, e.g. 'plural', 'ing', ...
+        lemma (str): The word's base form.
+        entry (dict): Word's data as stored in `_WordList.data`.
     Returns:
-        str:
+        str: The computed word form.
     """
     word = lemma
     if word_form == "comp":
@@ -77,14 +78,15 @@ class ApplyTemplateError(RuntimeError):
 # Macro
 # -------------------------------------------------------------------------------------------------
 class Macro(object):
-    """Macro with type, modifiers, tags, and references.
+    """Parses and represents a macro with type, modifiers, tags, and references.
 
     Note:
         Internal use only.
     Args:
-        word_type (str): "adj", "noun", ...
-        modifiers (str): "plural:an"
-        word_list (:obj:_WordList):
+        word_type (str): The word type, e.g. "adj", "noun", ...
+        modifiers (str): E.g. "plural:an"
+        word_list (_WordList): The associated :class:`_WordList` instance,
+            e.g. `AdvList` for word_type `adj`.
     Examples:
         $(TYPE:MODS:#foo|bar:=NUM)
     """
@@ -159,23 +161,34 @@ class Macro(object):
 class _WordList(object):
     """Common base class for all word lists.
 
-    This class is not instantiated directly, but provides common implementations for reading,
-    writing and processing of word list data.
+    Note:
+        This class is not instantiated directly, but provides common implementations for reading,
+        writing and processing of word list data.
 
     Args:
         path (str): Location of dictionary csv file.
     Attributes:
-        path (str):
-        data (dict):
-        key_list (list):
-        tag_map (dict):
+        path (str): Location of dictionary csv file.
+        data (dict): Maps word lemmas to dicts of word data (i.e. word-forms).
+        key_list (list): List of all known word lemmas.
+        tag_map (dict): Maps tag names to sets of word lemmas.
     """
     word_type = None
+    """str: Type of word list (e.g. 'adj', 'adv', ...). Set by derived classes."""
     csv_format = None
+    """tuple: Ordered list of CSV file columns (e.g. ('lemma', 'plural', 'tags')).
+    Set by derived classes."""
     computable_modifiers = frozenset()
+    """frozenset: Set of word forms that can potentially be computed from a lemma
+    (e.g. {'ing', 's', ...}). Set by derived classes."""
     form_modifiers = None
+    """frozenset: Set of supported word form modifiers (e.g. {'plural'}).
+    Set by derived classes."""
     extra_modifiers = None
+    """frozenset: Set of supported additional modifiers (e.g. {'an'}). Set by derived classes."""
     all_modifiers = None
+    """frozenset: Set of all supported modifiers (word-form and additional).
+    Set by derived classes."""
 
     def __init__(self, path):
         self.path = path
@@ -192,14 +205,14 @@ class _WordList(object):
         return s
 
     def _process_entry(self, lemma, entry):
-        """Expand empty values ("") if they are computable."""
+        """Expand empty values ("") if they are computable. """
         for modifier in self.computable_modifiers:
             # e.g. "super", "plural", ...
             if entry.get(modifier) is None:
                 entry[modifier] = get_default_word_form(modifier, lemma, entry)
 
     def _un_process_entry(self, lemma, entry):
-        """Squash values to "" if they are re-computable."""
+        """Squash values to `None` if they are re-computable."""
         for modifier in self.computable_modifiers:
             # e.g. "super", "plural", ...
             if (entry.get(modifier)
@@ -260,7 +273,9 @@ class _WordList(object):
         """Return a random entry dict, according to modifiers.
 
         Args:
-            macro (:class:`Macro`)
+            macro (:class:`Macro`): A parsed template macro.
+        Returns:
+            dict: A random entry from :attr:`key_list`.
         """
         if macro.word_type != "name":
             assert macro.word_type == self.word_type
@@ -272,10 +287,13 @@ class _WordList(object):
         return entry
 
     def apply_macro(self, macro, entry):
-        """Return a word-form for an entry dict, according to modifiers.
+        """Return a word-form for an entry dict, according to macro modifiers.
 
         Args:
-            macro (:class:`Macro`)
+            macro (:class:`Macro`): The parsed macro instance.
+            entry (dict): Dict of word forms as stored in :attr:`data`.
+        Returns:
+            str: The requested word form.
         """
         # print("apply_macro", macro, entry)
         if macro.word_type != "name":
@@ -300,10 +318,20 @@ class _WordList(object):
         self.key_list = list(self.data.keys())
 
     def add_entry(self, entry):
-        """Add single entry dictionary.
+        """Add a single entry to the word list.
+
+        The `entry` argument should have the same keys as the current CSV file format
+        (see :attr:`csv_format`).
+        If `entry` values are omitted or `None`, they are passed to :meth:`_process_entry`
+        in order to compute a default.
+        If `entry` values are set to `False`, they are considered 'not available'. For example
+        There is no `plural` form of 'information'.
+
+        Callers should also call :meth:`update_data` later, to make sure that :attr:`key_list`
+        is up-to-date.
 
         Args:
-            entry (dict):
+            entry (dict): Word data.
         """
         lemma = entry["lemma"]
         self.data[lemma] = entry
@@ -316,8 +344,14 @@ class _WordList(object):
     def load(self, path=None):
         """Load and add list of entries from text file.
 
+        Normally, we don't have to call this method explicitly, because entries are loaded
+        lazily on demand.
+        It may be useful however to add supplemental word  lists however.
+
+        This method also calls :meth:`update_data`.
+
         Args:
-            path (str, optional): path to CSV file. Defaults to `self.path`
+            path (str, optional): path to CSV file. Defaults to :attr:`path`.
         """
         if path is None:
             path = self.path
@@ -328,7 +362,15 @@ class _WordList(object):
         # print("Loaded {}".format(self))
 
     def save_as(self, path):
-        """Write current data to text file."""
+        """Write current data to a text file.
+
+        The resulting CSV file has the format as defined in :attr:`csv_format`.
+        For better compression, word forms that are computable are stored as empty strings ('').
+        Comments from the original file are retained at the top.
+
+        Args:
+            path (str): path to CSV file.
+        """
         self.update_data()
         with open(path, "wt") as fs:
             for line in self.file_comments:
@@ -350,7 +392,7 @@ class _WordList(object):
                             value = ""
                         elif value is False:
                             value = "-"
-                        # TODO: also write "" if value can be reconstructed
+
                     line.append(value)
                 fs.write(",".join(line) + "\n")
         return
@@ -596,7 +638,17 @@ class Fabulist(object):
             word_list.load()
 
     def get_word(self, word_type, modifiers=None, context=None):
-        """Return a random word."""
+        """Return a random word.
+
+        Args:
+            word_type (str): For example 'adj', 'adv', 'name', 'noun', 'verb'.
+            modifiers (str, optional):
+                Additional modifiers, separated by ':'. Default: "".
+            context (dict, optional):
+                Used internally to cache template results for back-references.
+        Returns:
+            str: A random word of the requested type and form.
+        """
         if context is None:
             context = {}
         ref_map = context.setdefault("ref_map", {})
@@ -647,11 +699,17 @@ class Fabulist(object):
         """Return a generator for random strings.
 
         Args:
-            template (string | string[]):
-            count (int):
-            dedupe (bool | set):
-        Returns:
-            Generator
+            template (str | str[]):
+                A string template with embedded macros, e.g. "Hello $(name:mr)!".
+                If a list of strings are passed, a random template is chosen.
+            count (int, optional):
+                Number of results to generate. Default: 1.
+            dedupe (bool | set, optional):
+                Pass `True` to prevent duplicate results. If a `set` instance is passed, it
+                will be used to add and check for generated entries.
+                Default: False.
+        Yields:
+            str: Random variants of `template`.
         """
         if dedupe is True:
             dedupe = set()
@@ -687,11 +745,32 @@ class Fabulist(object):
         return
 
     def get_quote(self, template):
-        """Return a single random string."""
+        """Return a single random string.
+
+        This is a convenience variant of :meth:`generate_quotes`.
+
+        Args:
+            template (str | str[]):
+                A string template with embedded macros, e.g. "Hello $(name:mr)!".
+                If a list of strings are passed, a random template is chosen.
+        Returns:
+            str: A random variant of `template`.
+        """
         return next(self.generate_quotes(template, count=1, dedupe=False))
 
     def get_name(self, modifiers=None, context=None):
-        """Return a single name string."""
+        """Return a single name string.
+
+        This is a convenience variant of :meth:`get_word` with word_type="name".
+
+        Args:
+            modifiers (str, optional):
+                Additional modifiers, separated by ':'. Default: "".
+            context (dict, optional):
+                Used internally to cache template results for back-references.
+        Returns:
+            str: A random name of the requested form.
+        """
         return self.get_word("name", modifiers, context)
 
     def get_lorem_words(self, count, dialect="ipsum", entropy=3, keep_first=False):
@@ -716,13 +795,13 @@ class Fabulist(object):
                 Always return the words of the first sentence as first result.
                 Default: False.
         Returns:
-            (list[str]):
+            list[str]:
         """
         res = self.lorem.generate_words(count, dialect, entropy, keep_first)
         return list(res)
 
     def get_lorem_sentence(self, word_count=(3, 15), dialect="ipsum", entropy=3):
-        """Return a random sentence.
+        """Return one random sentence.
 
         See also :class:`fabulist.lorem_ipsum.LoremGenerator` for more flexible and efficient
         generators (accessible as :attr:`Fabulist.lorem`).
@@ -751,7 +830,7 @@ class Fabulist(object):
     def get_lorem_paragraph(
             self, sentence_count=(2, 6), dialect="ipsum", entropy=2, keep_first=False,
             words_per_sentence=(3, 15)):
-        """Return a random paragraph.
+        """Return one random paragraph.
 
         See also :class:`fabulist.lorem_ipsum.LoremGenerator` for more flexible and efficient
         generators (accessible as :attr:`Fabulist.lorem`).
@@ -787,7 +866,7 @@ class Fabulist(object):
             words_per_sentence=(3, 15), sentences_per_para=(2, 6)):
         """Generate a number of paragraphs, made up from random sentences.
 
-        Paragraphs are seperated by newline ("\\n").
+        Paragraphs are seperated by newline.
 
         See also :class:`fabulist.lorem_ipsum.LoremGenerator` for more flexible and efficient
         generators (accessible as :attr:`Fabulist.lorem`).
@@ -814,7 +893,7 @@ class Fabulist(object):
                 Tuple with (min, max) number of sentences per paragraph.
                 Default: (2, 6).
         Returns:
-            String
+            str: Text made of one or more paragraphs.
         """
         res = self.lorem.generate_paragraphs(
             para_count, dialect, entropy, keep_first, words_per_sentence, sentences_per_para)

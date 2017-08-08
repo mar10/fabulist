@@ -1,11 +1,12 @@
 -r requirements.txt
+
 #cx_Freeze
-pytest~=3.1
 pytest-cov~=2.5
-sphinx~=1.6
-sphinx_rtd_theme
-#sphinxcontrib-napoleon~=0.3
+pytest~=3.1
 recommonmark
+sphinx_rtd_theme
+sphinx~=1.6
 tox~=2.7
 twine
 virtualenv
+wheel

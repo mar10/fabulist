@@ -38,7 +38,7 @@ If you plan to debug or contribute, install to run directly from the source:
 
 Work in a virtual environment. I recommend to use [pipenv](https://github.com/kennethreitz/pipenv)
 to make this easy.
-Create and active the virtual environment:
+Create and activate the virtual environment:
 ```
 $ cd /path/fabulist
 $ pipenv shell
@@ -51,7 +51,7 @@ $ python setup.py sphinx
 Make a release:
 ```
 $ python setup.py test
-$ python setup.py sdist bdist_wheel
+$ python setup.py bdist_wheel
 $ twine upload
 ```
 

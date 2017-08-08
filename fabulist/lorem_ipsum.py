@@ -171,7 +171,7 @@ class LoremGenerator(object):
         return lorem
 
     def generate_words(self, count, dialect="ipsum", entropy=3, keep_first=False):
-        """Yield <count> random sentences.
+        """Yield <count> random words.
 
         Args:
             count (int):
@@ -189,7 +189,7 @@ class LoremGenerator(object):
                 Always return the words of the first sentence as first result.
                 Default: False.
         Yields:
-            <count> random words
+            str: Random word.
         """
         lorem = self._get_lorem(dialect)
         if entropy == 3:
@@ -236,7 +236,7 @@ class LoremGenerator(object):
                 This argument is only used for entropy=3.
                 Default: (3, 15).
         Yields:
-            <count> random sentences
+            str: Random sentence.
         """
         lorem = self._get_lorem(dialect)
         if entropy == 3:
@@ -289,7 +289,7 @@ class LoremGenerator(object):
                 Number of sentences per paragraph.
                 Default: (2, 6).
         Yields:
-            <count> random paragraphs
+            str: Random paragraph.
         """
         for _ in range(count):
             n_sents = _get_count(sentences_per_para)
