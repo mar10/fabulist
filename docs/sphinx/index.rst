@@ -50,7 +50,7 @@ Features
 
 .. note::
 	Unlike other libraries, Fabulist focuses on generating strings with a pseudo-semantic,
-	by supporting a simple grammar. This allows to display text that is more adopted (and fun) in a
+	by supporting a simple grammar. This allows to display text that is more apposite (and fun) in a
 	given context.
 
 	However, if you are looking for technical test data like email-addresses or credit-card numbers,
@@ -128,7 +128,7 @@ Read the `User Guide <user_guide.html>`_ for details.
 	 :alt: Build Status
 	 :target: http://sapegin.github.io/powered-by-you/
 
-.. |travis_badge| image:: https://travis-ci.org/mar10/fabulist.png?branch=master
+.. |travis_badge| image:: https://travis-ci.org/mar10/fabulist.svg?branch=master
 	 :alt: Build Status
 	 :target: https://travis-ci.org/mar10/fabulist
 
@@ -145,7 +145,7 @@ Read the `User Guide <user_guide.html>`_ for details.
 	 :target: https://github.com/mar10/fabulist/blob/master/LICENSE
 
 .. |rtd_badge| image:: https://readthedocs.org/projects/fabulist/badge/?version=latest
-	 :target: http://fabulist.readthedocs.org/en/latest/
+	 :target: http://fabulist.readthedocs.io/
 	 :alt: Documentation Status
 
 .. |nbsp| unicode:: 0xA0

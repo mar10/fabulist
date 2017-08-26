@@ -101,3 +101,6 @@ ENV/
 # mypy
 .mypy_cache/
 .DS_Store
+.project
+.pydevproject
+.settings/org.eclipse.core.resources.prefs
