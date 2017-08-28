@@ -9,7 +9,7 @@
 Overview
 ########
 
-*Generate meaningful test data based on string templates.*
+*Generate random strings that make sense.*
 
 :Project:   https://github.com/mar10/fabulist/
 :Version:   |version|, |today|
@@ -41,12 +41,12 @@ but I am curious to get your feedback.
 Features
 ========
 
-* Create random words, terms, or sentences based on templates
+* Create random words, terms, or sentences based on templates.
 * Pick words by word type (*noun*, *adj*, ...),
   word form (*'ing'-form*, *comparative*, *plural*, ...),
-  or tag (*#animal*, *#positive*, ...)
-* Generate random names
-* Generate blind text (lorem-ipsum et al)
+  or tag (*#animal*, *#positive*, ...).
+* Generate random names.
+* Generate blind text (lorem-ipsum et al).
 
 .. note::
 	Unlike other libraries, Fabulist focuses on generating strings with a pseudo-semantic,
@@ -117,9 +117,10 @@ Need some blind text?
 returns a paragraph with 3 sentences:
 ::
 
-	 Do you see any Teletubbies in here? Do you see a slender plastic tag clipped to my shirt with my name printed on it?
-	 Do you see a little Asian child with a blank expression on his face sitting outside on a mechanical
-	 helicopter that shakes when you put quarters in it?
+	 Do you see any Teletubbies in here? Do you see a slender plastic tag clipped to my shirt with
+     my name printed on it?
+	 Do you see a little Asian child with a blank expression on his face sitting outside on a
+     mechanical helicopter that shakes when you put quarters in it?
 
 Read the `User Guide <user_guide.html>`_ for details.
 

@@ -112,7 +112,7 @@ setup(name="fabulist",
       maintainer = "Martin Wendt",
       maintainer_email = "fabulist@wwwendt.de",
       url = "https://github.com/mar10/fabulist",
-      description = "Generate meaningful test data based on template strings.",
+      description = "Generate random strings that make sense.",
       long_description = readme, #+ "\n\n" + changes,
 
         #Development Status :: 2 - Pre-Alpha

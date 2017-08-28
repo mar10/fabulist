@@ -152,7 +152,7 @@ At most one word-form modifier may be added to change this:
   $(verb) => "run", $(verb:ing) => "running"
 - `:past` past form (verbs only)<br>
   $(verb) => "arise", $(verb:past) => "arose"
-- `:plural` (nouns only)
+- `:plural` (nouns only)<br>
   $(noun) => "injury", $(noun:plural) => "injuries"
 - `:pp` past perfect form (verbs only)<br>
   $(verb) => "arise", $(verb:pp) => "arisen"
@@ -188,7 +188,7 @@ These modifiers can used in addition to one word-form modifier:
 ### Modifiers for Names
 
 Names are produced by the [`Fabulist.get_name()`](fabulist_module.html#fabulist.fabulist.Fabulist.get_name)
-method.
+method or using a `$(name)` macro.
 
 These modifiers are available for names only:
 
