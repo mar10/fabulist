@@ -2,6 +2,7 @@
 """
 from .context import fabulist
 
+
 def demo_lorem():
     fab = fabulist.Fabulist()
 

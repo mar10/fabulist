@@ -695,7 +695,7 @@ class Fabulist(object):
 
         return res
 
-    def generate_quotes(self, template, count=1, dedupe=False):
+    def generate_quotes(self, template, count=None, dedupe=False):
         """Return a generator for random strings.
 
         Args:
@@ -703,7 +703,8 @@ class Fabulist(object):
                 A string template with embedded macros, e.g. "Hello $(name:mr)!".
                 If a list of strings are passed, a random template is chosen.
             count (int, optional):
-                Number of results to generate. Default: 1.
+                Number of results to generate. Pass None for infinite.
+                Default: None.
             dedupe (bool | set, optional):
                 Pass `True` to prevent duplicate results. If a `set` instance is passed, it
                 will be used to add and check for generated entries.
@@ -714,16 +715,16 @@ class Fabulist(object):
         if dedupe is True:
             dedupe = set()
 
-        done = 0
-        loop = 0
-        max_loop = max(1000, 10*count)
-        while done < count:
-            loop += 1
-            if loop > max_loop:
-                print(
-                    "Max loop count ({}) exceeded: produced {}/{} strings."
-                    .format(max_loop, done, count, file=sys.stderr))
-                break
+        i = 0
+        fail = 0  # Prevent infinite loops
+        max_fail = max(1000, 10*count) if count else 1000
+        while count is None or i < count:
+            fail += 1
+            if fail > max_fail:
+                msg = "Max fail count ({}) exceeded: produced {}/{} strings.".format(
+                        max_fail, i, count, file=sys.stderr)
+                raise RuntimeError(msg)
+
             if isinstance(template, (list, tuple)):
                 t = random.choice(template)
             else:
@@ -739,8 +740,9 @@ class Fabulist(object):
                 if q in dedupe:
                     continue
                 dedupe.add(q)
-            done += 1
             yield q
+            i += 1
+            fail = 0  # Reset skip counter
 
         return
 
@@ -773,15 +775,16 @@ class Fabulist(object):
         """
         return self.get_word("name", modifiers, context)
 
-    def get_lorem_words(self, count, dialect="ipsum", entropy=3, keep_first=False):
+    def get_lorem_words(self, count=None, dialect="ipsum", entropy=3, keep_first=False):
         """Return a list of random words.
 
         See also :class:`fabulist.lorem_ipsum.LoremGenerator` for more flexible and efficient
         generators (accessible as :attr:`Fabulist.lorem`).
 
         Args:
-            count (int):
-                Number of words.
+            count (int, optional):
+                Number of words. Pass None for infinite.
+                Default: None.
             dialect (str, optional):
                 For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a random dialect.
                 Default: "ipsum" (i.e. lorem-ipsum).

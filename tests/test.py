@@ -6,6 +6,7 @@ import unittest
 
 from .context import fabulist
 
+
 class BasicTestSuite(unittest.TestCase):
     """Basic test cases."""
     def setUp(self):
@@ -32,21 +33,21 @@ class BasicTestSuite(unittest.TestCase):
         name = self.fab.get_name()
         assert len(name) > 2 and " " in name, "Names have first and last as default"
         name = self.fab.get_name(":first")
-        assert not " " in name, "name:first does not include :last"
+        assert " " not in name, "name:first does not include :last"
         name = self.fab.get_name(":last")
-        assert not " " in name, "name:last does not include :first"
+        assert " " not in name, "name:last does not include :first"
 
     def test_validations(self):
-        self.assertRaises(ValueError,
-            self.fab.get_word, "unkonwn_type")
-        self.assertRaises(ValueError,
-            self.fab.get_word, "noun", "unkonwn_mod")
-        self.assertRaises(ValueError,
-            self.fab.get_word, "noun", "an:an")
-        self.assertRaises(ValueError,
-            self.fab.get_word, "noun", "an:#animal:#animal")
-        self.assertRaises(ValueError,
-            self.fab.get_word, "noun", "#unknown_tag")
+        with self.assertRaises(ValueError):
+            self.fab.get_word("unkonwn_type")
+        with self.assertRaises(ValueError):
+            self.fab.get_word("noun", "unkonwn_mod")
+        with self.assertRaises(ValueError):
+            self.fab.get_word("noun", "an:an")
+        with self.assertRaises(ValueError):
+            self.fab.get_word("noun", "an:#animal:#animal")
+        with self.assertRaises(ValueError):
+            self.fab.get_word("noun", "#unknown_tag")
 
     def test_to_string(self):
         s = "{}".format(self.fab.list_map["adj"])
@@ -110,6 +111,18 @@ class BasicTestSuite(unittest.TestCase):
         from .demo_lorem import demo_lorem
         demo_lorem()
 
+    def test_infinite(self):
+        # We can produce endless quotes
+        for i, quote in enumerate(self.fab.generate_quotes("$(noun)", count=None, dedupe=False)):
+            if i > 5000:
+                break
+
+        # but dedupe may raise RuntimeError
+        with self.assertRaises(RuntimeError):
+            for i, s in enumerate(self.fab.generate_quotes("$(noun)", count=None, dedupe=True)):
+                if i > 5000:
+                    break
+
 
 class LoremTestSuite(unittest.TestCase):
     """Test LoremGenerator and LoremDialect."""
@@ -122,7 +135,7 @@ class LoremTestSuite(unittest.TestCase):
 
     def test_validations(self):
         with self.assertRaises(ValueError):
-            res = list(self.lorem.generate_words(2, dialect="unknown_dialect"))
+            list(self.lorem.generate_words(2, dialect="unknown_dialect"))
 
     def test_words(self):
         lorem = self.lorem
@@ -165,6 +178,12 @@ class LoremTestSuite(unittest.TestCase):
         res = list(self.lorem.generate_paragraphs(3, entropy=2, keep_first=True))
         assert len(res) == 3
         assert res[0].startswith("Lorem ipsum")
+
+    def test_infinite(self):
+        # Words are flowing out like endless rain into a paper cup...
+        for i, word in enumerate(self.lorem.generate_words()):
+            if i > 1000:
+                break
 
 
 if __name__ == '__main__':

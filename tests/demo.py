@@ -2,6 +2,7 @@
 """
 from .context import fabulist
 
+
 def demo_quotes():
     fab = fabulist.Fabulist()
 
@@ -28,7 +29,7 @@ def demo_quotes():
 
     print("Introduction:")
     template = ("Friends call me $(name:#m:first:=1), you can call me $(@1:mr:middle).\n" +
-            "  May I introduce you to my wife $(name:#f:mr:first) $(@1:last)?")
+                "  May I introduce you to my wife $(name:#f:mr:first) $(@1:last)?")
     for q in fab.generate_quotes(template, count=3):
         print("-", q)
 
