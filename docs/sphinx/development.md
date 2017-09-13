@@ -60,21 +60,64 @@ $ twine upload
 
 ### Word List Entries
 
-Word lists are represented as `_WordList` class instance which have a `key_list` attibute.
- consist of entry dictionaries:
+Word lists are represented per word type as objects (derived from the common `_WordList` base class).<br>
+A word list knows its CSV format and provides methods to load, save, and access data.<br>
+The main attributes are
+
+<dl>
+  <dt>key_list</dt>
+  <dd>A list of all known words in their base form (aka 'lemma').</dd>
+  <dt>data</dt>
+  <dd>A dictionary of additional data per lemma, stored as *word entry* dictionary.</dd>
+  <dt>tag_map</dt>
+  <dd>A dictionary of lemma-sets per tag.</dd>
+</dl>
+
+Word entries contain information about one single word. For example a word entry for a *noun* may look like this:
 ```py
-{"lemma":}
+{"lemma": "alpaca",
+ "plural": "alpacas",
+ "tags": {"animal"},  # A set of tag names or None
+ }
 ```
+**Note:** Nouns without plural form store `"plural": False`.
+
+A word entry for a *verb* may look like this:
+```py
+{"lemma": "strive",
+ "past": "strove",
+ "pp": "striven",    # past perfect form
+ "s": "strives",     # -s form
+ "ing": "striving",  # -ing form
+ "tags": None,       # A set of tag names or None
+ }
+```
+
+A word entry for an *adjective* may look like this:
+```py
+{"lemma": "bad",
+ "comp": "worse",       # comparative
+ "super": "worst",      # superlative
+ "antonym": "good",     # antonym or None
+ "tags": {"negative"},  # A set of tag names or None
+ }
+```
+**Note:** Incomparable adjectives / adverbs (e.g. 'pregnant') store `"comp": False`.
 
 
 ### Word List Files
 
-Empty lines and lines starting with '#' are ignored.
-Attributes are comma separated. Multi-value attributes are separated by '|'.
-Attributes should be omitted if they can be generated using standard rules (e.g. plural of 'cat' is 'cats').
-An attribute value of '-' can be used to prevent this value (e.g. 'blood' has no plural form).
+Word lists are provided as plain text files in CSV format:
 
-Example:
+  - File name is `<word-type>_list.txt`.
+  - Use UTF-8 encoding.
+  - Empty lines and lines starting with '#' are ignored.
+  - Attributes are comma separated.
+  - Multi-value attributes are separated by '|'.
+  - Attributes should be omitted if they can be generated using standard rules (e.g. plural of 'cat' is 'cats').
+  - An attribute value of '-' is used to prevent this value (e.g. 'blood' has no plural form).
+
+Example from `noun_list.txt`:
 ```
 # Noun list
 # lemma | plural | tags
@@ -85,4 +128,29 @@ cat,,animal|pet
 
 ### Lorem Ipsum Files
 
-TODO
+Blind text sources are stored as plain text files.
+
+- File name is `lorem_<dialect>.txt`.
+- Use UTF-8 encoding.
+- One sentence per line.
+- Paragraphs are separated by a line containing of three hyphens (`---`).
+
+**Note:** Sentences and paragraphs are considered by API methods depending on the `entropy` argument.
+
+Example from `lorem_ipsum.txt`:
+```
+# Lorem ipsum
+# Opera sine nomine scripta
+
+Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.
+Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+---
+Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse
+...
+```
+
+## Name Lists
+
+The name generator is implemented by the `NameList` class, which is virtual implementation that internally uses a `FirstnameList` and a `LastnameList` class.
+The name pools are stored in `firstname_list.txt` and `lastname_list.txt` respectively. First names also use the tags `f`and `m` to denote female and/or male gender.
