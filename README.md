@@ -46,5 +46,5 @@ Fortune cookies:
 -  Confucius says: "The one who wants to vanish must swear terribly the punch!"
 ```
 
-See also the [Introduction Slides](docs/intro_slides.html) 
+See also the [Introduction Slides](https://cdn.jsdelivr.net/gh/mar10/fabulist/docs/intro_slides.html) 
 and [Read The Docs](http://fabulist.readthedocs.org/en/latest/) for details.
