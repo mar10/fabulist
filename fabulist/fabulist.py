@@ -47,6 +47,8 @@ def get_default_word_form(word_form, lemma, entry):
         # Should be part of the word-list instead
         if word[-1] in ("s", "x", "z"):
             word += "es"
+        elif word[-1] in ("y", ):
+            word = word[:-1] + "ies"
         elif len(word) >= 3 and word[-2:] in ("ss", "sh", "ch"):
             word += "es"
         else:
