@@ -122,7 +122,8 @@ returns a paragraph with 3 sentences:
 	 Do you see a little Asian child with a blank expression on his face sitting outside on a
      mechanical helicopter that shakes when you put quarters in it?
 
-Read the `User Guide <user_guide.html>`_ for details.
+See also the `Intro Slides <intro_slides.html>`_
+and Read the `User Guide <user_guide.html>`_ for details.
 
 
 .. |powered_badge| image:: https://sapegin.github.io/powered-by-you/badge.svg

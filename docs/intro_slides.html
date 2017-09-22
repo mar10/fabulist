@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fabulist Introduction</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif);
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body {
+        font-family: 'Droid Serif';
+      }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: 400;
+        margin-bottom: 0.4em;
+      }
+      .remark-slide-content { font-size: 1.6em; }
+      .remark-slide-content h1 { font-size: 2.5em; }
+      .remark-slide-content h2 { font-size: 1.8em; }
+      .remark-slide-content h3 { font-size: 1.4em; }
+      .remark-slide-content small { font-size: 0.5em; }
+      .remark-slide-content kbd {
+        font-size: 1.6em;
+        padding: 0 3px;
+        border: thin solid gray;
+        border-radius: 3px;
+      }
+      .remark-slide-content blockquote p {
+        padding: 0 10px;
+        border-left: 0.3em solid #e7e8e2;
+        color: #666;
+      }
+
+      .footnote {
+        font-size: small;
+        position: absolute;
+        left: 2em;
+        bottom: 1em;
+      }
+      .logo {
+        position: absolute;
+        right: 1em;
+        top: 0.1em;
+        width: 70px;
+      }
+      p {
+        -webkit-margin-before: 0.2em;
+        -webkit-margin-after: 0.4em;
+      }
+
+/*      li p { line-height: 1.7em; }*/
+      li { margin-bottom:  0.4em; }
+      .red { color: #fa0000; }
+      .large { font-size: 3em; }
+      a, a > code {
+        color: rgb(249, 38, 114);
+        text-decoration: none;
+      }
+      code {
+        background: #e7e8e2;
+        border-radius: 5px;
+      }
+      .remark-code, .remark-inline-code {
+        font-family: 'Ubuntu Mono';
+        font-size: 0.8em;
+      }
+      .remark-code-line-highlighted     { background-color: #373832; }
+      #slideshow .slide .content code {
+        font-size: 1.2em;
+      }
+      #slideshow .slide .content pre code {
+        font-size: 1.4em;
+        padding: 20px;
+      }
+      .inverse {
+        background: #272822;
+        color: #777872;
+        text-shadow: 0 0 20px #333;
+      }
+      .inverse h1, .inverse h2 {
+        color: #f3f3f3;
+        line-height: 0.8em;
+      }
+
+      /* Two-column layout */
+      .left-column {
+        width: 35%;
+        height: 92%;
+        float: left;
+        padding-top: 0.4em;
+      }
+      .right-column {
+        width: 55%;
+        float: right;
+        padding-top: 0.4em;
+      }
+      .remark-slide-content { background-size: contain; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: center, middle
+
+# Introduction to Fabulist
+
+> Random strings that make *sense*.
+
+https://github.com/mar10/fabulist/
+
+<p>
+  <small>(Hit <kbd>H</kbd>-key for help.)</small>
+</p>
+.footnote[ [Fabulist](https://github.com/mar10/fabulist/) &copy; 2017 Martin Wendt]
+
+---
+
+class: center, middle, inverse
+
+#Fabulist - what and why?
+
+---
+
+class:left
+
+# What is Fabulist?
+
+Fabulist is an open source library written in Python that can
+
+--
+  1. Generate random sentences based on custom patterns.
+
+--
+  2. Generate random names.
+
+--
+  3. Generate blind text (*lorem ipsum* et al).
+
+---
+
+# Why?
+
+Use Fabulist to
+
+--
+  * Create test data that is apposite to a given context.
+
+--
+  * Create texts that are more fun than<br>
+    *"asdf asdf"* or *"lorem ipsum dolor sit amet"*.
+
+---
+
+class: center, middle, inverse
+
+##Examples
+
+---
+
+## Example
+
+Generate quotes from a template string:
+
+```python
+from fabulist import Fabulist
+
+fab = Fabulist()
+
+print fab.get_quote("$(Verb) $(noun)")
+```
+
+may produce something like
+
+--
+```bash
+Order boyfriend
+```
+
+---
+
+## Example
+
+Generate a sequence of unique random strings using a generator:
+
+```python
+template = "$(Noun) $(verb:s) $(adv:#negative)"
+for q in fab.generate_quotes(template, count=1000, dedupe=True):
+    print(q)
+```
+
+may produce something like
+
+--
+```bash
+Pension succeeds fiercely
+Philosophy approaches outrageously
+Delay integrates incorrectly
+Problem implicates unwillingly
+Relative surveys outrageously
+Agreement absorbs hatefully
+Environment falls unfavorably
+Anybody squeezes hopelessly
+Hyena tosses obnoxiously
+Light values kookily
+Personality horrifies ridiculously
+...
+```
+
+---
+
+## Example
+
+Pass multiple template strings to mix more variants:
+
+```python
+from fabulist import Fabulist
+
+fab = Fabulist()
+
+templates = [
+    "$(Verb) $(noun)",
+    "Provide $(adj:#positive) $(noun:plural)",
+    ]
+for q in fab.generate_quotes(templates, count=5):
+    print(q)
+```
+
+may produce something like
+
+--
+```bash
+Provide favorite locks
+Tremble ice
+Provide superior noses
+Provide enormous economies
+Open crazy
+```
+
+---
+
+## Example: Person Names
+
+```python
+>>> from fabulist import Fabulist
+>>> fab = Fabulist()
+>>> fab.get_name()
+'Isaac Skinner'
+>>> fab.get_name("#f")
+'Lisa Hart'
+>>> fab.get_name("#f:mr")
+'Mrs. Pippa Walker'
+>>> fab.get_name("mr:middle:#m")
+'Mr. Frank N. Glover'
+```
+
+--
+Names can also be embeded in templates
+```py
+template = ("My name is $(name:mr:middle)")
+for q in fab.generate_quotes(template, count=3):
+    print(q)
+```
+
+```bash
+My name is Mr. Paul M. Mathis
+My name is Mr. Carl Howard
+My name is Mrs. Felicity S. Lyman
+```
+
+---
+
+## Example: Passwords
+
+Mix fabulist templates with standard Python formatting
+```python
+import random
+
+template = "$(adj)-$(noun:#animal)-{idx:04d}"
+for q in fab.generate_quotes(template, count=3):
+    q = q.format(idx=random.randint(0, 9999))
+    print(q)
+```
+may produce something like
+
+--
+
+```bash
+woozy-reindeer-5638
+svelte-caribou-7290
+cultivated-ant-7906
+```
+
+---
+
+## Example: Fortune Cookies
+
+```python
+from fabulist import Fabulist
+
+fab = Fabulist()
+
+templates = [
+    "$(Verb:ing) is better than $(verb:ing).",
+    "$(Noun:an) a day keeps the $(noun:plural) away.",
+    "If you want to $(verb) $(adv), $(verb) $(adv)!",
+    'Confucius says: "The one who wants to $(verb) must $(verb) $(adv) the $(noun)!"',
+    ]
+
+for q in fab.generate_quotes(templates, count=5):
+    print(q)
+```
+may produce something like
+
+--
+
+```bash
+A statement a day keeps the airports away.
+Praying is better than inspecting.
+Confucius says: "The one who wants to sterilize must inform miserably the possibility!"
+If you want to blur orderly, stride poorly!
+Confucius says: "The one who wants to vanish must swear terribly the punch!"
+```
+
+---
+
+class: center, middle, inverse
+
+## Blind Text
+
+---
+
+## Blind Text
+
+Fabulist talks *Lorem Ipsum* in multiple dialects:
+
+```python
+from fabulist import Fabulist
+
+fab = Fabulist()
+
+q = fab.get_lorem_paragraph(dialect="pulp", entropy=1)
+print(q)
+```
+
+may produce something like
+
+--
+```
+Do you see any Teletubbies in here? Do you see a slender plastic tag
+clipped to my shirt with my name printed on it?
+Do you see a little Asian child with a blank expression on his face
+sitting outside on a mechanical helicopter that shakes when you put
+quarters in it? No? Well, that's what you see at a toy store.
+```
+
+---
+
+class: center, middle, inverse
+
+## What Next?
+
+---
+
+# Install
+
+```bash
+$ pip install fabulist
+```
+
+and
+[Read the docs...](http://fabulist.readthedocs.io/en/latest/)
+
+### Credits
+
+This slides are made with [remark](https://github.com/gnab/remark).
+
+
+ </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create({
+        // Enable or disable counting of incremental slides in the slide counting
+        countIncrementalSlides: false
+      });
+    </script>
+<!--
+    <script src="mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+-->
+  </body>
+</html>

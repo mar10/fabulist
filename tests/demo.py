@@ -52,11 +52,19 @@ def demo_quotes():
         print("- ", q)
 
     print("Functions:")
-    for q in fab.generate_quotes(["$(Verb) $(noun)", "Provide $(adj:#positive) $(noun:plural)"], count=3):
+    templates = [
+        "$(Verb) $(noun)",
+        "Provide $(adj:#positive) $(noun:plural)",
+        ]
+    for q in fab.generate_quotes(templates, count=3):
         print("- ", q)
 
     print("Potential failures:")
-    for q in fab.generate_quotes(["$(Noun) does not $(verb) $(adv:#positive).", "$(Noun) $(verb:s) $(adv:#negative)"], count=3):
+    templates = [
+        "$(Noun) does not $(verb) $(adv:#positive)",
+        "$(Noun) $(verb:s) $(adv:#negative)"
+    ]
+    for q in fab.generate_quotes(templates, count=3):
         print("- ", q)
 
     print("Causes:")
