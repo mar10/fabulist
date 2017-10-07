@@ -120,7 +120,7 @@ https://github.com/mar10/fabulist/
 
 class: center, middle, inverse
 
-#Fabulist - what and why?
+# Fabulist - what and why?
 
 ---
 
@@ -149,14 +149,14 @@ Use Fabulist to
   * Create test data that is apposite to a given context.
 
 --
-  * Create texts that are more fun than<br>
+  * Create texts that are more fun to read than<br>
     *"asdf asdf"* or *"lorem ipsum dolor sit amet"*.
 
 ---
 
 class: center, middle, inverse
 
-##Examples
+## Examples
 
 ---
 
@@ -322,6 +322,18 @@ Praying is better than inspecting.
 Confucius says: "The one who wants to sterilize must inform miserably the possibility!"
 If you want to blur orderly, stride poorly!
 Confucius says: "The one who wants to vanish must swear terribly the punch!"
+```
+
+---
+
+## Example: Back-References
+
+A generated term may be re-used in a sentence. Use the `=NUM` macro to assign an entry
+to a variable and use `@NUM` to reference it in the same template:
+
+```python
+>>>fab.get_quote("One $(noun:=1) is good, but two $(@1:plural) are better.")
+'One salad is good, but two salads are better.'
 ```
 
 ---
