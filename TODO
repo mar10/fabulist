@@ -29,7 +29,7 @@
   - adverbs:
 
 - Add supplemental / additional word list.
-  Data has same attribues as default word type, but the words are *not* used main tag
+  Data has same attributes as default word type, but the words are *not* used main tag
   ```py
   fab.noun_list.add_custom("band", [
     {"lemma": "Nirwana", "plural": "-", "tags"},

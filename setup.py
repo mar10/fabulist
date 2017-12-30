@@ -5,7 +5,7 @@ from __future__ import print_function
 import os
 import sys
 
-from setuptools import setup, find_packages, Command
+from setuptools import setup, Command
 from setuptools.command.test import test as TestCommand
 
 from fabulist import __version__
@@ -17,6 +17,7 @@ class ToxCommand(TestCommand):
         TestCommand.finalize_options(self)
         self.test_args = []
         self.test_suite = True
+
     def run_tests(self):
         # Import here, cause outside the eggs aren't loaded
         import tox
@@ -39,7 +40,7 @@ class SphinxCommand(Command):
 
     def run(self):
         import subprocess
-        sourcedir = os.path.join("docs", "sphinx")
+        # sourcedir = os.path.join("docs", "sphinx")
         outdir = os.path.join("docs", "sphinx-build")
         res = subprocess.call("sphinx-build -b html docs/sphinx docs/sphinx-build", shell=True)
         if res:
@@ -49,19 +50,19 @@ class SphinxCommand(Command):
 
 
 try:
-  readme = open("readme_pypi.rst", "rt").read()
+    readme = open("readme_pypi.rst", "rt").read()
 except IOError:
-  readme = "(readme_pypi.rst not found. Running from tox/setup.py test?)"
+    readme = "(readme_pypi.rst not found. Running from tox/setup.py test?)"
 
 
 try:
-    from cx_Freeze import setup, Executable
+    from cx_Freeze import setup, Executable  # noqa
     executables = [
         Executable(script="fabulist/fabulist.py",
                    base=None,
-                   targetName= "fabulist.exe",
+                   targetName="fabulist.exe",
                    # icon= "doc/logo.ico",
-                   shortcutName= "fabulist",
+                   shortcutName="fabulist",
                    )
          ]
 except ImportError:
@@ -77,8 +78,7 @@ except ImportError:
 #     os.environ.setdefault("HOME", os.environ.get("HOMEPATH", ""))
 #     print("Initializing HOME environment variable to '{}'".format(os.environ["HOME"]))
 
-install_requires = [#"colorama",
-                    ]
+install_requires = []
 tests_require = ["pytest",
                  "pytest-cov",
                  "tox",
@@ -98,62 +98,60 @@ bdist_msi_options = {
     "upgrade_code": "{69D828C9-7AA2-4822-901E-0BA7E6D1EBE3}",
     "add_to_path": True,
     # TODO: configure target dir
-#   "initial_target_dir": r"[ProgramFilesFolder]\%s\%s" % (company_name, product_name),
+    # "initial_target_dir": r"[ProgramFilesFolder]\%s\%s" % (company_name, product_name),
     # TODO: configure shortcuts:
     # http://stackoverflow.com/a/15736406/19166
     }
 
 
 setup(name="fabulist",
-      version = __version__,
-      author = "Martin Wendt",
-      author_email = "fabulist@wwwendt.de",
-      # copyright = "(c) 2017 Martin Wendt",
-      maintainer = "Martin Wendt",
-      maintainer_email = "fabulist@wwwendt.de",
-      url = "https://github.com/mar10/fabulist",
-      description = "Generate random strings that make sense.",
-      long_description = readme, #+ "\n\n" + changes,
+      version=__version__,
+      author="Martin Wendt",
+      author_email="fabulist@wwwendt.de",
+      # copyright="(c) 2017 Martin Wendt",
+      maintainer="Martin Wendt",
+      maintainer_email="fabulist@wwwendt.de",
+      url="https://github.com/mar10/fabulist",
+      description="Generate random strings that make sense.",
+      long_description=readme,  # + "\n\n" + changes,
 
-        #Development Status :: 2 - Pre-Alpha
-        #Development Status :: 3 - Alpha
-        #Development Status :: 4 - Beta
-        #Development Status :: 5 - Production/Stable
+      # Development Status :: 2 - Pre-Alpha
+      # Development Status :: 3 - Alpha
+      # Development Status :: 4 - Beta
+      # Development Status :: 5 - Production/Stable
 
-      classifiers = ["Development Status :: 4 - Beta",
-                     "Environment :: Console",
-                     "Intended Audience :: Information Technology",
-                     "Intended Audience :: Developers",
-                     "License :: OSI Approved :: MIT License",
-                     "Operating System :: OS Independent",
-                     "Programming Language :: Python :: 2",
-                     "Programming Language :: Python :: 2.7",
-                     "Programming Language :: Python :: 3",
-                     "Programming Language :: Python :: 3.3",
-                     "Programming Language :: Python :: 3.4",
-                     "Programming Language :: Python :: 3.5",
-                     "Programming Language :: Python :: 3.6",
-                     "Topic :: Software Development :: Libraries :: Python Modules",
-                     "Topic :: Utilities",
-                     ],
-      keywords = "python test-data word-list generator",
-      license = "The MIT License",
-      install_requires = install_requires,
-      setup_requires = setup_requires,
-      tests_require = tests_require,
-      packages = ["fabulist"],
-
-     package_data={"fabulist": ["data/*.txt"]},
-      zip_safe = False,
-      extras_require = {},
-      cmdclass = {"test": ToxCommand,
-                  "sphinx": SphinxCommand,
-                  },
+      classifiers=["Development Status :: 4 - Beta",
+                   "Environment :: Console",
+                   "Intended Audience :: Information Technology",
+                   "Intended Audience :: Developers",
+                   "License :: OSI Approved :: MIT License",
+                   "Operating System :: OS Independent",
+                   "Programming Language :: Python :: 2",
+                   "Programming Language :: Python :: 2.7",
+                   "Programming Language :: Python :: 3",
+                   "Programming Language :: Python :: 3.4",
+                   "Programming Language :: Python :: 3.5",
+                   "Programming Language :: Python :: 3.6",
+                   "Topic :: Software Development :: Libraries :: Python Modules",
+                   "Topic :: Utilities",
+                   ],
+      keywords="python test-data word-list generator mock",
+      license="The MIT License",
+      install_requires=install_requires,
+      setup_requires=setup_requires,
+      tests_require=tests_require,
+      packages=["fabulist"],
+      package_data={"fabulist": ["data/*.txt"]},
+      zip_safe=False,
+      extras_require={},
+      cmdclass={"test": ToxCommand,
+                "sphinx": SphinxCommand,
+                },
       # entry_points = {
       #     "console_scripts" : ["fabulist = fabulist.fabulist:run"],
       #     },
-      executables = executables,
-      options = {"build_exe": build_exe_options,
-                 "bdist_msi": bdist_msi_options,
-                 }
+      executables=executables,
+      options={"build_exe": build_exe_options,
+               "bdist_msi": bdist_msi_options,
+               }
       )
