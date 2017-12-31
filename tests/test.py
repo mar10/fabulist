@@ -37,6 +37,25 @@ class BasicTestSuite(unittest.TestCase):
         name = self.fab.get_name(":last")
         assert " " not in name, "name:last does not include :first"
 
+    def test_numbers(self):
+        for _ in range(100):
+            num = self.fab.get_quote("$(num)")
+            assert 0 <= int(num) <= 99, "Default number: 0..99"
+
+            num = self.fab.get_quote("$(num:-9,-1)")
+            assert len(num) == 2
+            assert num[0] == "-"
+
+            num = self.fab.get_quote("$(num:1,999,3)")
+            assert 1 <= int(num) <= 999, "Default number: 1..999"
+            assert len(num) == 3, "Zeropadding"
+
+            num = self.fab.get_quote("$(num:1,9,3)")
+            assert 1 <= int(num) <= 9, "Default number: 1..9"
+            assert len(num) == 3, "Zeropadding"
+            assert num[0] == num[1] == "0"
+        return
+
     def test_validations(self):
         with self.assertRaises(ValueError):
             self.fab.get_word("unkonwn_type")

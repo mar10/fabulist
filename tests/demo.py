@@ -18,6 +18,10 @@ def demo_quotes():
     for q in fab.generate_quotes("$(adj)-$(noun:#animal)", count=3):
         print("- ", q)
 
+    print("Passwords:")
+    for q in fab.generate_quotes("$(Adj)-$(Noun)-$(num:1,9999,4)", count=3):
+        print("- ", q)
+
     print("Compare:")
     for q in fab.generate_quotes("One $(noun:=1) may be $(adj:=2), but two $(@1:plural) are $(@2:comp).", count=3):
         print("- ", q)

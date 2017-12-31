@@ -639,6 +639,44 @@ class Fabulist(object):
         for word_list in self.list_map.values():
             word_list.load()
 
+    def get_number(self, modifiers=None, context=None):
+        """Return a string-formatted random number.
+
+        Args:
+            modifiers (str, optional):
+                Additional modifiers, separated by ':'. Default: "0,99,2".
+
+            context (dict, optional):
+                Used internally to cache template results for back-references.
+        Returns:
+            str: A random number matching in the requested range.
+        Examples:
+            fab.get_number("0,999,3")
+        """
+        if modifiers is None:
+            modifiers = "0,99,2"
+        parts = modifiers.lstrip(":").split(":")
+        try:
+            assert len(parts) == 1
+            parts = parts[0]
+            parts = [int(p) for p in parts.split(",")]
+            if len(parts) == 1:
+                min, max, width = 0, parts[0], 0
+            elif len(parts) == 2:
+                min, max, width = parts[0], parts[1], 0
+            else:
+                min, max, width = parts
+            # print("parts", min, max, width)
+        except Exception:
+            raise ValueError(
+                "`int` modifier must be formatted like '[min,]max[,width]': '{}'"
+                .format(modifiers))
+        num = random.randrange(min, max)
+        # if width:
+        #     return "{num:0{width}}".format(num=num, width=width)
+        # return "{num}".format(num=num)
+        return "{}".format(num).zfill(width)
+
     def get_word(self, word_type, modifiers=None, context=None):
         """Return a random word.
 
@@ -668,6 +706,9 @@ class Fabulist(object):
             word = word_list.apply_macro(macro, entry)
             return word
 
+        if word_type == "num":
+            return self.get_number(modifiers, context)
+
         word_list = self.list_map.get(word_type.lower())
         if not word_list:
             raise ValueError("Invalid word type: '{}'".format(word_type))
@@ -684,7 +725,7 @@ class Fabulist(object):
         return word
 
     def _format_quote(self, template):
-        assert type(template) is str
+        # assert type(template) is str
         res = template
         context = {}
         # TODO: pre-compile & cache the template somehow:

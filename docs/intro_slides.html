@@ -277,6 +277,26 @@ My name is Mrs. Felicity S. Lyman
 
 ## Example: Passwords
 
+The 'num' word type generates random numbers within a given a´range and zero-padded.
+```python
+template = "$(Adj)-$(Noun)-$(num:1,9999,4)"
+for q in fab.generate_quotes(template, count=3):
+    print(q)
+```
+may produce something like
+
+--
+
+```bash
+Frugal-Work-8811
+Woozy-Satisfaction-3112
+Grand-Tap-6928
+```
+
+---
+
+## Example: Mix With Python 'format()' Syntax
+
 Mix fabulist templates with standard Python formatting
 ```python
 import random

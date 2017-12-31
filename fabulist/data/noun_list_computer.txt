@@ -1,6 +1,6 @@
 # Additional Noun list
 # This list can be imported by fabulist using
-#   fab.load_additional("noun", "animals")
+#   fab.load_additional("noun", "computer")
 
 algorithm
 analog

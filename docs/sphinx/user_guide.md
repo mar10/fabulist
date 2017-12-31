@@ -120,10 +120,6 @@ These macros can be embedded into template strings and will be replaced by rando
 - `adv`: Adverb<br>
   Word-form modifiers: `comp`, `super`, `antonym`.<br>
   Tags: `#degree`, `#manner`, `#negative`, `#place`, `#positive`, `#time`
-- `name`: Name<br>
-  Word-form modifiers: `mr`, `first`, `last`, `middle`<br>
-  Tags: `#f`, `#m`<br>
-  Use tags to select a gender, e.g. `$(name:#f)` for female.
 - `noun` Noun<br>
   Word-form modifiers: `plural`<br>
   Tags: `animal`
@@ -134,9 +130,14 @@ These macros can be embedded into template strings and will be replaced by rando
   A special type to reference another macro in the template
   (see `:=<num>` modifier below)
 
-**NOTE:** Use uppercase word-type name for capitalized results, e.g. `$(Noun)`.
-
+**NOTE:** Use uppercase word-type name for capitalized results, e.g. `$(Noun)`.<br>
 **NOTE:** The `:antonym` modifier is not yet implemented.
+
+**Special Word Types:**
+- `name`: Generate person names<br>
+  See *Modifiers for Names* below.
+- `num`: Generate random numbers<br>
+  See *Modifiers for Numbers* below.
 
 
 ## Modifiers
@@ -210,6 +211,22 @@ These modifiers are available for names only:
 
 **NOTE:**  Use `#m` or `#f` tags to restrict to male/female names:<br>
 $(name:#m) => "George Clarkson", $(name:first:#f) => Cindy
+
+
+### Modifiers for Numbers
+
+Random numbers within a given range are produced by the
+[`Fabulist.get_number()`](fabulist_module.html#fabulist.fabulist.Fabulist.get_number)
+method or using a `$(num)` macro.
+
+The `num` word type only accepts on modifier with a special syntax:
+
+- `$(num:min,max,width)`, e.g.<br>
+  $(num:1,999,3) => "042"
+- `$(num:min,max)`<br>
+  $(num:1,999) => "42"
+- `$(num:max)`<br>
+ $(num:999) => "42"
 
 
 ## Tips & Tricks
