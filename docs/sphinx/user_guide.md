@@ -138,6 +138,8 @@ These macros can be embedded into template strings and will be replaced by rando
   See *Modifiers for Names* below.
 - `num`: Generate random numbers<br>
   See *Modifiers for Numbers* below.
+- `pick`: Generate random value from a selection<br>
+  See *Modifiers for Choices* below.
 
 
 ## Modifiers
@@ -227,6 +229,26 @@ The `num` word type only accepts on modifier with a special syntax:
   $(num:1,999) => "42"
 - `$(num:max)`<br>
  $(num:999) => "42"
+
+
+### Modifiers for Choices
+
+Random numbers within a given range are produced by the
+[`Fabulist.get_choice()`](fabulist_module.html#fabulist.fabulist.Fabulist.get_choice)
+method or using a `$(pick)` macro.
+
+`$(pick:CHOICES)` where *CHOICES* may be a
+
+- A comma separated list of strings:<br>
+  $(pick:foo,bar,baz) => "bar"
+- A single string of characters<br>
+  $(pick:abc) => "c"
+
+Special characters can be escaped by a backslash ('\'):<br>
+$(pick:!#\:) => "\"
+
+**NOTE:** It is recommended to use the raw string syntax (`r"..."`) to ensure that the backslash is always passed correctly:<br>
+`get_quote(r"$(pick:!#\:)")`
 
 
 ## Tips & Tricks

@@ -37,6 +37,18 @@ class BasicTestSuite(unittest.TestCase):
         name = self.fab.get_name(":last")
         assert " " not in name, "name:last does not include :first"
 
+    def test_pick(self):
+        for _ in range(100):
+            val = self.fab.get_quote("$(pick:foo,bar,b\,az)")
+            assert val in ("foo", "bar", "b,az"), "Pick value"
+
+            val = self.fab.get_quote("$(pick:abc)")
+            assert val in ("a", "b", "c"), "Pick character"
+
+            val = self.fab.get_quote("$(pick:!\\,\\:)")
+            assert val in ("!", ",", ":"), "Pick special character"
+        return
+
     def test_numbers(self):
         for _ in range(100):
             num = self.fab.get_quote("$(num)")

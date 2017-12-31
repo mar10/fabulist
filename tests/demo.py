@@ -19,7 +19,7 @@ def demo_quotes():
         print("- ", q)
 
     print("Passwords:")
-    for q in fab.generate_quotes("$(Adj)-$(Noun)-$(num:1,9999,4)", count=3):
+    for q in fab.generate_quotes(r"$(Adj)-$(Noun)-$(num:1,9999,4)$(pick:\:\,$%?!)", count=10):
         print("- ", q)
 
     print("Compare:")

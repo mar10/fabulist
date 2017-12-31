@@ -1,6 +1,7 @@
 ## 1.2.0 / Unreleased
 
 * Add `num` word type.
+* Add `pick` word type.
 * Add lorem_tao  dialect.
 
 ## 1.1.1 / 2017-09-22

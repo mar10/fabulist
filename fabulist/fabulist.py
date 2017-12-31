@@ -643,8 +643,11 @@ class Fabulist(object):
         """Return a string-formatted random number.
 
         Args:
-            modifiers (str, optional):
-                Additional modifiers, separated by ':'. Default: "0,99,2".
+            modifiers (str):
+                Additional modifiers, separated by ':'.
+                Only one modifier is accepted with a comma separated list of min, max, and
+                width.
+                Example: "0,99,2".
 
             context (dict, optional):
                 Used internally to cache template results for back-references.
@@ -669,13 +672,51 @@ class Fabulist(object):
             # print("parts", min, max, width)
         except Exception:
             raise ValueError(
-                "`int` modifier must be formatted like '[min,]max[,width]': '{}'"
+                "`num` modifier must be formatted like '[min,]max[,width]': '{}'"
                 .format(modifiers))
         num = random.randrange(min, max)
-        # if width:
-        #     return "{num:0{width}}".format(num=num, width=width)
-        # return "{num}".format(num=num)
         return "{}".format(num).zfill(width)
+
+    def get_choice(self, modifiers, context=None):
+        """Return a random entry from a list of values.
+
+        Args:
+            modifiers (str):
+                Additional modifiers, separated by ':'.
+                Only one modifier is accepted with a comma separated list of choices.
+                If a single string is passed (i.e. no comma), one random character is returned.
+                Use a backslash to escape comma or colons.
+
+            context (dict, optional):
+                Used internally to cache template results for back-references.
+        Returns:
+            str: A randomly selected value.
+        Examples:
+            fab.get_choice("foo,bar,baz")
+            fab.get_choice("$%?!")
+            fab.get_choice("$%?!\\:\\,")
+        """
+        try:
+            modifiers = modifiers.lstrip(":")
+            # Split by ':' but not '\:'
+            modifier_list = re.split(r"(?<!\\):", modifiers)
+            modifier_list = [m.replace("\:", ":") for m in modifier_list]
+            assert len(modifier_list) == 1
+            choices = modifier_list[0]
+            # print("ch2", modifiers, modifier_list, choices)
+            # Split by ',' but not '\,'
+            choices = re.split(r"(?<!\\),", choices)
+            if len(choices) == 1 and len(choices[0]) > 1:
+                # Only one string was passed: use single characters
+                choices = choices[0].replace("\,", ",")
+                choices = tuple(choices)
+            else:
+                choices = [p.strip().replace("\,", ",") for p in choices]
+        except Exception:
+            raise ValueError(
+                "`pick` modifier must be formatted like 'value[,value]*': '{}'"
+                .format(modifiers))
+        return random.choice(choices)
 
     def get_word(self, word_type, modifiers=None, context=None):
         """Return a random word.
@@ -708,6 +749,8 @@ class Fabulist(object):
 
         if word_type == "num":
             return self.get_number(modifiers, context)
+        elif word_type == "pick":
+            return self.get_choice(modifiers, context)
 
         word_list = self.list_map.get(word_type.lower())
         if not word_list:

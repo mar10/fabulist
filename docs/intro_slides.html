@@ -277,9 +277,11 @@ My name is Mrs. Felicity S. Lyman
 
 ## Example: Passwords
 
-The 'num' word type generates random numbers within a given a´range and zero-padded.
+The 'num' word type generates random numbers within a given a´range and zero-padded.<br>
+The 'pick' allows to inject words or characters from a list of options.
+
 ```python
-template = "$(Adj)-$(Noun)-$(num:1,9999,4)"
+template = r"$(Adj)-$(Noun)-$(num:1,9999,4)$(pick:\:\,$%?!)"
 for q in fab.generate_quotes(template, count=3):
     print(q)
 ```
