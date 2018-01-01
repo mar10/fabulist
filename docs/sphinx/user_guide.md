@@ -228,7 +228,7 @@ The `num` word type only accepts on modifier with a special syntax:
 - `$(num:min,max)`<br>
   $(num:1,999) => "42"
 - `$(num:max)`<br>
- $(num:999) => "42"
+  $(num:999) => "42"
 
 
 ### Modifiers for Choices
@@ -244,8 +244,8 @@ method or using a `$(pick)` macro.
 - A single string of characters<br>
   $(pick:abc) => "c"
 
-Special characters can be escaped by a backslash ('\'):<br>
-$(pick:!#\:) => "\"
+Special characters can be escaped by a backslash:<br>
+`$(pick:!#\,\:) => ","`
 
 **NOTE:** It is recommended to use the raw string syntax (`r"..."`) to ensure that the backslash is always passed correctly:<br>
 `get_quote(r"$(pick:!#\:)")`

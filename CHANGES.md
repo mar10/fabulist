@@ -1,4 +1,4 @@
-## 1.2.0 / Unreleased
+## 1.2.0 / 2018-01-01
 
 * Add `num` word type.
 * Add `pick` word type.
