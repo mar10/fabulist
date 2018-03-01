@@ -27,7 +27,7 @@ def demo_quotes():
         print("- ", q)
 
     print("Names:")
-    template = ("My name is $(name:mr:middle)")
+    template = "My name is $(name:mr:middle)"
     for q in fab.generate_quotes(template, count=3):
         print("-", q)
 

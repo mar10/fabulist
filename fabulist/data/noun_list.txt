@@ -245,7 +245,7 @@ chemical,,
 chemistry,,
 chest,,
 chicken,,animal
-child,,
+child,children,
 childhood,,
 chimpanzee,,animal
 chinchilla,,animal
