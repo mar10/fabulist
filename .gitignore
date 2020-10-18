@@ -105,4 +105,4 @@ ENV/
 .pydevproject
 .settings/org.eclipse.core.resources.prefs
 .idea/
-.vscode/settings.json
+.vscode/
