@@ -34,9 +34,9 @@ def get_default_word_form(word_form, lemma, entry):
     """
     word = lemma
     if word_form == "comp":
-        if word[-1] in ("e", ):
+        if word[-1] in ("e",):
             word += "r"
-        elif word[-1] in ("y", ):
+        elif word[-1] in ("y",):
             word = word[:-1] + "ier"
         else:
             word += "er"
@@ -47,7 +47,7 @@ def get_default_word_form(word_form, lemma, entry):
         # Should be part of the word-list instead
         if word[-1] in ("s", "x", "z"):
             word += "es"
-        elif word[-1] in ("y", ):
+        elif word[-1] in ("y",):
             word = word[:-1] + "ies"
         elif len(word) >= 3 and word[-2:] in ("ss", "sh", "ch"):
             word += "es"
@@ -55,9 +55,9 @@ def get_default_word_form(word_form, lemma, entry):
             word += "s"
 
     elif word_form == "super":
-        if word[-1] in ("e", ):
+        if word[-1] in ("e",):
             word += "st"
-        elif word[-1] in ("y", ):
+        elif word[-1] in ("y",):
             word = word[:-1] + "iest"
         else:
             word += "est"
@@ -92,6 +92,7 @@ class Macro(object):
     Examples:
         $(TYPE:MODS:#foo|bar:=NUM)
     """
+
     def __init__(self, word_type, modifiers, word_list):
         self.word_type = word_type.lower()  #: lowercase word type ('adv', 'adj', ...)
         self.word_form = None
@@ -110,7 +111,8 @@ class Macro(object):
                     # Tag filter
                     if has_tags:
                         raise ValueError(
-                            "Only one `:#TAGLIST` entry is allowed in macro modifiers.")
+                            "Only one `:#TAGLIST` entry is allowed in macro modifiers."
+                        )
                     has_tags = True
                     for tag in m[1:].split("|"):
                         tag = tag.strip()
@@ -121,7 +123,8 @@ class Macro(object):
                     # Variable assignment
                     if self.var_name:
                         raise ValueError(
-                            "Only one `:=NUM` assignment entry is allowed in macro modifiers.")
+                            "Only one `:=NUM` assignment entry is allowed in macro modifiers."
+                        )
                     self.var_name = "@{:d}".format(int(m[1:]))
                 elif m:
                     # Modifier
@@ -131,8 +134,10 @@ class Macro(object):
                         # Word-form modifier ('plural', 'pp', 's', 'ing', ...)
                         if self.word_form:
                             raise ValueError(
-                                "Only one word-form modifier is allowed '{}'."
-                                .format("', '".join(word_list.form_modifiers)))
+                                "Only one word-form modifier is allowed '{}'.".format(
+                                    "', '".join(word_list.form_modifiers)
+                                )
+                            )
                         self.word_form = m
                     elif m in word_list.extra_modifiers:
                         # Additional modifier ('an', 'mr', ...)
@@ -175,6 +180,7 @@ class _WordList(object):
         key_list (list): List of all known word lemmas.
         tag_map (dict): Maps tag names to sets of word lemmas.
     """
+
     word_type = None
     """str: Type of word list (e.g. 'adj', 'adv', ...). Set by derived classes."""
     csv_format = None
@@ -203,7 +209,8 @@ class _WordList(object):
 
     def __str__(self):
         s = "{}(len={}, tags:{})".format(
-            self.__class__.__name__, len(self.key_list), ", ".join(self.tag_map.keys()))
+            self.__class__.__name__, len(self.key_list), ", ".join(self.tag_map.keys())
+        )
         return s
 
     def _process_entry(self, lemma, entry):
@@ -217,8 +224,9 @@ class _WordList(object):
         """Squash values to `None` if they are re-computable."""
         for modifier in self.computable_modifiers:
             # e.g. "super", "plural", ...
-            if (entry.get(modifier)
-                    and entry[modifier] == get_default_word_form(modifier, lemma, entry)):
+            if entry.get(modifier) and entry[modifier] == get_default_word_form(
+                modifier, lemma, entry
+            ):
                 entry[modifier] = None
 
     def _iter_file(self, path):
@@ -235,7 +243,9 @@ class _WordList(object):
 
             entry = {}
             fields = line.split(",")
-            assert len(fields) == len(csv_format), "token count mismatch in {}".format(line)
+            assert len(fields) == len(csv_format), "token count mismatch in {}".format(
+                line
+            )
             for idx, name in enumerate(csv_format):
                 value = fields[idx].strip()
                 if name == "tags":
@@ -267,8 +277,10 @@ class _WordList(object):
                 matching.update(self.tag_map[tag])
             else:
                 raise ValueError(
-                    "{} has no entries for tag '{}' (expected {})"
-                    .format(self.__class__.__name__, tag, self.tag_map.keys()))
+                    "{} has no entries for tag '{}' (expected {})".format(
+                        self.__class__.__name__, tag, self.tag_map.keys()
+                    )
+                )
         return list(matching)
 
     def get_random_entry(self, macro):
@@ -306,7 +318,9 @@ class _WordList(object):
         word = entry[word_form]
         if word is False:
             # For example trying to apply the `:plural` modifier on an uncountable noun
-            raise ApplyTemplateError("Could not apply {} on entry {}".format(macro, entry))
+            raise ApplyTemplateError(
+                "Could not apply {} on entry {}".format(macro, entry)
+            )
 
         if "an" in modifiers:
             if word[0].lower() in ("a", "e", "i", "o"):
@@ -410,11 +424,12 @@ class AdjList(_WordList):
         path (str): Path to CSV source file (loaded on demand or when :meth:`_WordList.load`)
             is called.
     """
+
     word_type = "adj"
     csv_format = ("lemma", "comp", "super", "antonym", "tags")
     computable_modifiers = frozenset(("comp", "super"))
-    form_modifiers = frozenset(csv_format).difference(("tags", ))
-    extra_modifiers = frozenset(("an", ))
+    form_modifiers = frozenset(csv_format).difference(("tags",))
+    extra_modifiers = frozenset(("an",))
     all_modifiers = form_modifiers.union(extra_modifiers)
 
     def __init__(self, path):
@@ -431,11 +446,12 @@ class AdvList(_WordList):
         path (str): Path to CSV source file (loaded on demand or when :meth:`_WordList.load`)
             is called.
     """
+
     word_type = "adv"
     csv_format = ("lemma", "comp", "super", "antonym", "tags")
     computable_modifiers = frozenset(("comp", "super"))
-    form_modifiers = frozenset(csv_format).difference(("tags", ))
-    extra_modifiers = frozenset(("an", ))
+    form_modifiers = frozenset(csv_format).difference(("tags",))
+    extra_modifiers = frozenset(("an",))
     all_modifiers = form_modifiers.union(extra_modifiers)
 
     def __init__(self, path):
@@ -450,6 +466,7 @@ class FirstnameList(_WordList):
 
     Internally used by :py:class:`NameList`, not intended to be instantiated directly.
     """
+
     csv_format = ("lemma", "tags")
 
     def __init__(self, path):
@@ -472,7 +489,8 @@ class LastnameList(_WordList):
     Note:
         Internally used by :py:class:`NameList`, not intended to be instantiated directly.
     """
-    csv_format = ("lemma", )
+
+    csv_format = ("lemma",)
 
     def __init__(self, path):
         super(LastnameList, self).__init__(path)
@@ -494,6 +512,7 @@ class NameList(_WordList):
         firstname_list (list[FirstnameList]):
         lastname_list (list[LastnameList]):
     """
+
     word_type = "name"
     csv_format = None
     computable_modifiers = frozenset()
@@ -508,7 +527,9 @@ class NameList(_WordList):
         assert path is None
         super(NameList, self).__init__(path)
         root = os.path.dirname(__file__)
-        self.firstname_list = FirstnameList(os.path.join(root, "data/firstname_list.txt"))
+        self.firstname_list = FirstnameList(
+            os.path.join(root, "data/firstname_list.txt")
+        )
         self.lastname_list = LastnameList(os.path.join(root, "data/lastname_list.txt"))
 
     def load(self, path=None):
@@ -545,7 +566,7 @@ class NameList(_WordList):
             "first": random.choice(first_name_list),
             "middle": "",
             "last": random.choice(self.lastname_list.key_list),
-            }
+        }
         if random.random() <= self.middle_name_probability:
             entry["middle"] = random.choice(self.middle_initials) + "."
 
@@ -580,11 +601,12 @@ class NounList(_WordList):
         path (str): Path to CSV source file (loaded on demand or when :meth:`_WordList.load`)
             is called.
     """
+
     word_type = "noun"
     csv_format = ("lemma", "plural", "tags")
-    computable_modifiers = frozenset(("plural", ))
-    form_modifiers = frozenset(csv_format).difference(("tags", ))
-    extra_modifiers = frozenset(("an", ))
+    computable_modifiers = frozenset(("plural",))
+    form_modifiers = frozenset(csv_format).difference(("tags",))
+    extra_modifiers = frozenset(("an",))
     all_modifiers = form_modifiers.union(extra_modifiers)
 
     def __init__(self, path):
@@ -601,11 +623,12 @@ class VerbList(_WordList):
         path (str): Path to CSV source file (loaded on demand or when :meth:`_WordList.load`)
             is called.
     """
+
     word_type = "verb"
     csv_format = ("lemma", "past", "pp", "s", "ing", "tags")
     computable_modifiers = frozenset(("pp", "s", "ing"))
-    form_modifiers = frozenset(csv_format).difference(("tags", ))
-    extra_modifiers = frozenset(("an", ))
+    form_modifiers = frozenset(csv_format).difference(("tags",))
+    extra_modifiers = frozenset(("an",))
     all_modifiers = form_modifiers.union(extra_modifiers)
 
     def __init__(self, path):
@@ -622,6 +645,7 @@ class Fabulist(object):
         list_map (list): Dictionary with one :class:`_WordList` entry per word-type.
         lorem (:class:`fabulist.lorem_ipsum.LoremGenerator`):
     """
+
     def __init__(self):
         root = os.path.dirname(__file__)
         data_folder = os.path.join(root, "data")
@@ -632,7 +656,7 @@ class Fabulist(object):
             "noun": NounList(os.path.join(data_folder, "noun_list.txt")),
             "verb": VerbList(os.path.join(data_folder, "verb_list.txt")),
             "name": NameList(None),
-            }
+        }
 
     def load(self):
         """Load all word lists into memory (lazy loading otherwise)."""
@@ -672,8 +696,10 @@ class Fabulist(object):
             # print("parts", min, max, width)
         except Exception:
             raise ValueError(
-                "`num` modifier must be formatted like '[min,]max[,width]': '{}'"
-                .format(modifiers))
+                "`num` modifier must be formatted like '[min,]max[,width]': '{}'".format(
+                    modifiers
+                )
+            )
         num = random.randrange(min, max)
         return "{}".format(num).zfill(width)
 
@@ -714,8 +740,10 @@ class Fabulist(object):
                 choices = [p.strip().replace(r"\,", ",") for p in choices]
         except Exception:
             raise ValueError(
-                "`pick` modifier must be formatted like 'value[,value]*': '{}'"
-                .format(modifiers))
+                "`pick` modifier must be formatted like 'value[,value]*': '{}'".format(
+                    modifiers
+                )
+            )
         return random.choice(choices)
 
     def get_word(self, word_type, modifiers=None, context=None):
@@ -739,7 +767,9 @@ class Fabulist(object):
             # print("Back-ref", word_type, ref_map)
             ref_entry = ref_map.get(word_type)
             if not ref_entry:
-                raise ValueError("Reference to undefined variable: '{}'".format(word_type))
+                raise ValueError(
+                    "Reference to undefined variable: '{}'".format(word_type)
+                )
             word_type = ref_entry["word_type"]
             entry = ref_entry["entry"]
             word_list = self.list_map.get(word_type.lower())
@@ -761,7 +791,9 @@ class Fabulist(object):
         word = word_list.apply_macro(macro, entry)
         if macro.var_name:
             if macro.var_name in ref_map:
-                raise ValueError("Duplicate variable assignment: '{}'".format(macro.var_name))
+                raise ValueError(
+                    "Duplicate variable assignment: '{}'".format(macro.var_name)
+                )
             ref_map[macro.var_name] = {"entry": entry, "word_type": word_type}
         if macro.is_caps:
             word = word.capitalize()
@@ -803,12 +835,13 @@ class Fabulist(object):
 
         i = 0
         fail = 0  # Prevent infinite loops
-        max_fail = max(1000, 10*count) if count else 1000
+        max_fail = max(1000, 10 * count) if count else 1000
         while count is None or i < count:
             fail += 1
             if fail > max_fail:
                 msg = "Max fail count ({}) exceeded: produced {}/{} strings.".format(
-                        max_fail, i, count)
+                    max_fail, i, count
+                )
                 raise RuntimeError(msg)
 
             if isinstance(template, (list, tuple)):
@@ -913,12 +946,18 @@ class Fabulist(object):
             str: One random sentence.
         """
         res = self.lorem.generate_sentences(
-            1, dialect, entropy, keep_first=False, words_per_sentence=word_count)
+            1, dialect, entropy, keep_first=False, words_per_sentence=word_count
+        )
         return next(res)
 
     def get_lorem_paragraph(
-            self, sentence_count=(2, 6), dialect="ipsum", entropy=2, keep_first=False,
-            words_per_sentence=(3, 15)):
+        self,
+        sentence_count=(2, 6),
+        dialect="ipsum",
+        entropy=2,
+        keep_first=False,
+        words_per_sentence=(3, 15),
+    ):
         """Return one random paragraph.
 
         See also :class:`fabulist.lorem_ipsum.LoremGenerator` for more flexible and efficient
@@ -947,12 +986,19 @@ class Fabulist(object):
             str: One paragraph made of random sentences.
         """
         res = self.lorem.generate_paragraphs(
-            1, dialect, entropy, keep_first, words_per_sentence, sentence_count)
+            1, dialect, entropy, keep_first, words_per_sentence, sentence_count
+        )
         return next(res)
 
     def get_lorem_text(
-            self, para_count, dialect="ipsum", entropy=2, keep_first=False,
-            words_per_sentence=(3, 15), sentences_per_para=(2, 6)):
+        self,
+        para_count,
+        dialect="ipsum",
+        entropy=2,
+        keep_first=False,
+        words_per_sentence=(3, 15),
+        sentences_per_para=(2, 6),
+    ):
         """Generate a number of paragraphs, made up from random sentences.
 
         Paragraphs are seperated by newline.
@@ -985,5 +1031,11 @@ class Fabulist(object):
             str: Text made of one or more paragraphs.
         """
         res = self.lorem.generate_paragraphs(
-            para_count, dialect, entropy, keep_first, words_per_sentence, sentences_per_para)
+            para_count,
+            dialect,
+            entropy,
+            keep_first,
+            words_per_sentence,
+            sentences_per_para,
+        )
         return "\n".join(res)
