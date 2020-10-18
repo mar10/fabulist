@@ -16,7 +16,7 @@ from .lorem_ipsum import LoremGenerator
 
 
 # Find `$(TYPE)` or `$(TYPE:MODIFIERS)`
-rex_macro = re.compile("\$\(\s*(@?\w+)\s*(\:[^\)]*)?\s*\)")
+rex_macro = re.compile(r"\$\(\s*(@?\w+)\s*(\:[^\)]*)?\s*\)")
 
 
 # -------------------------------------------------------------------------------------------------
@@ -700,7 +700,7 @@ class Fabulist(object):
             modifiers = modifiers.lstrip(":")
             # Split by ':' but not '\:'
             modifier_list = re.split(r"(?<!\\):", modifiers)
-            modifier_list = [m.replace("\:", ":") for m in modifier_list]
+            modifier_list = [m.replace(r"\:", ":") for m in modifier_list]
             assert len(modifier_list) == 1
             choices = modifier_list[0]
             # print("ch2", modifiers, modifier_list, choices)
@@ -708,10 +708,10 @@ class Fabulist(object):
             choices = re.split(r"(?<!\\),", choices)
             if len(choices) == 1 and len(choices[0]) > 1:
                 # Only one string was passed: use single characters
-                choices = choices[0].replace("\,", ",")
+                choices = choices[0].replace(r"\,", ",")
                 choices = tuple(choices)
             else:
-                choices = [p.strip().replace("\,", ",") for p in choices]
+                choices = [p.strip().replace(r"\,", ",") for p in choices]
         except Exception:
             raise ValueError(
                 "`pick` modifier must be formatted like 'value[,value]*': '{}'"
@@ -808,7 +808,7 @@ class Fabulist(object):
             fail += 1
             if fail > max_fail:
                 msg = "Max fail count ({}) exceeded: produced {}/{} strings.".format(
-                        max_fail, i, count, file=sys.stderr)
+                        max_fail, i, count)
                 raise RuntimeError(msg)
 
             if isinstance(template, (list, tuple)):
