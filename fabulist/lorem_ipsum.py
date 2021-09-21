@@ -30,6 +30,7 @@ class LoremDialect(object):
     Examples:
         $(TYPE:MODS:#foo|bar:=NUM)
     """
+
     def __init__(self, dialect, path):
         self.dialect = dialect
         self.path = path
@@ -133,6 +134,7 @@ class LoremGenerator(object):
         dialect_map (dict(dialect, LoremDialect)):
             Holds all available lorem-ipsum dialects
     """
+
     def __init__(self, data_folder):
         self.dialect_map = {}
         self.root_path = data_folder
@@ -151,8 +153,10 @@ class LoremGenerator(object):
         lorem = self.dialect_map.get(dialect)
         if not lorem:
             raise ValueError(
-                "Unknown dialect {!r} (expected {})"
-                .format(dialect, ", ".join(self.dialect_map.keys())))
+                "Unknown dialect {!r} (expected {})".format(
+                    dialect, ", ".join(self.dialect_map.keys())
+                )
+            )
         if lorem.paragraphs is None:
             lorem.load()
         return lorem
@@ -202,8 +206,13 @@ class LoremGenerator(object):
         return
 
     def generate_sentences(
-            self, count=None, dialect="ipsum", entropy=2, keep_first=False,
-            words_per_sentence=(3, 15)):
+        self,
+        count=None,
+        dialect="ipsum",
+        entropy=2,
+        keep_first=False,
+        words_per_sentence=(3, 15),
+    ):
         """Yield <count> random sentences.
 
         Args:
@@ -239,7 +248,8 @@ class LoremGenerator(object):
 
             if not words_per_sentence:
                 raise ValueError(
-                    "entropy=3 requires words_per_sentence arg: int or a tuple(min, max)")
+                    "entropy=3 requires words_per_sentence arg: int or a tuple(min, max)"
+                )
 
             while count is None or i < count:
                 n_words = _get_count(words_per_sentence)
@@ -249,15 +259,23 @@ class LoremGenerator(object):
                 i += 1
             return
         # entropy = 0..2: use sentences from original text
-        for i, s in enumerate(lorem._generate_sentences(keep_first=keep_first, entropy=entropy)):
+        for i, s in enumerate(
+            lorem._generate_sentences(keep_first=keep_first, entropy=entropy)
+        ):
             if i >= count:
                 break
             yield s
         return
 
     def generate_paragraphs(
-            self, count=None, dialect="ipsum", entropy=2, keep_first=False,
-            words_per_sentence=(3, 15), sentences_per_para=(2, 6)):
+        self,
+        count=None,
+        dialect="ipsum",
+        entropy=2,
+        keep_first=False,
+        words_per_sentence=(3, 15),
+        sentences_per_para=(2, 6),
+    ):
         """Generate a number of paragraphs, made up from random sentences.
 
         Args:
@@ -289,7 +307,8 @@ class LoremGenerator(object):
         while count is None or i < count:
             n_sents = _get_count(sentences_per_para)
             para = self.generate_sentences(
-                n_sents, dialect, entropy, keep_first, words_per_sentence)
+                n_sents, dialect, entropy, keep_first, words_per_sentence
+            )
             para = " ".join(para)
             yield para
             i += 1

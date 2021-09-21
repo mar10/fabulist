@@ -12,18 +12,27 @@ def demo_quotes():
 
     print("Friendly warnings:")
     for i in range(3):
-        print("- ", fab.get_quote("Don't $(verb) with my $(noun) or I'll $(verb) your $(noun:plural)."))
+        print(
+            "- ",
+            fab.get_quote(
+                "Don't $(verb) with my $(noun) or I'll $(verb) your $(noun:plural)."
+            ),
+        )
 
     print("Software release names:")
     for q in fab.generate_quotes("$(adj)-$(noun:#animal)", count=3):
         print("- ", q)
 
     print("Passwords:")
-    for q in fab.generate_quotes(r"$(Adj)-$(Noun)-$(num:1,9999,4)$(pick:\:\,$%?!)", count=10):
+    for q in fab.generate_quotes(
+        r"$(Adj)-$(Noun)-$(num:1,9999,4)$(pick:\:\,$%?!)", count=10
+    ):
         print("- ", q)
 
     print("Compare:")
-    for q in fab.generate_quotes("One $(noun:=1) may be $(adj:=2), but two $(@1:plural) are $(@2:comp).", count=3):
+    for q in fab.generate_quotes(
+        "One $(noun:=1) may be $(adj:=2), but two $(@1:plural) are $(@2:comp).", count=3
+    ):
         print("- ", q)
 
     print("Names:")
@@ -32,17 +41,23 @@ def demo_quotes():
         print("-", q)
 
     print("Introduction:")
-    template = ("Friends call me $(name:#m:first:=1), you can call me $(@1:mr:middle).\n" +
-                "  May I introduce you to my wife $(name:#f:mr:first) $(@1:last)?")
+    template = (
+        "Friends call me $(name:#m:first:=1), you can call me $(@1:mr:middle).\n"
+        + "  May I introduce you to my wife $(name:#f:mr:first) $(@1:last)?"
+    )
     for q in fab.generate_quotes(template, count=3):
         print("-", q)
 
     print("Compliments:")
-    for q in fab.generate_quotes("You have very $(adj:#positive) $(noun:plural).", count=3):
+    for q in fab.generate_quotes(
+        "You have very $(adj:#positive) $(noun:plural).", count=3
+    ):
         print("- ", q)
 
     print("Blessings:")
-    for q in fab.generate_quotes("May your $(noun:plural) $(verb) $(adv:super:#positive).", count=3):
+    for q in fab.generate_quotes(
+        "May your $(noun:plural) $(verb) $(adv:super:#positive).", count=3
+    ):
         print("- ", q)
 
     print("Fortune cookies:")
@@ -51,7 +66,7 @@ def demo_quotes():
         "$(Noun:an) a day keeps the $(noun:plural) away.",
         "If you want to $(verb) $(adv:#positive), $(verb) $(adv:#positive)!",
         'Confucius says: "The one who wants to $(verb) must $(verb) $(adv) the $(noun)!"',
-        ]
+    ]
     for q in fab.generate_quotes(templates, count=5):
         print("- ", q)
 
@@ -59,14 +74,14 @@ def demo_quotes():
     templates = [
         "$(Verb) $(noun)",
         "Provide $(adj:#positive) $(noun:plural)",
-        ]
+    ]
     for q in fab.generate_quotes(templates, count=3):
         print("- ", q)
 
     print("Potential failures:")
     templates = [
         "$(Noun) does not $(verb) $(adv:#positive)",
-        "$(Noun) $(verb:s) $(adv:#negative)"
+        "$(Noun) $(verb:s) $(adv:#negative)",
     ]
     for q in fab.generate_quotes(templates, count=3):
         print("- ", q)
@@ -76,5 +91,5 @@ def demo_quotes():
         print("- ", q)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     demo_quotes()

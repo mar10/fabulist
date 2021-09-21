@@ -6,14 +6,13 @@ Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.p
 """
 from __future__ import print_function
 
-from collections import defaultdict
 import os
 import random
 import re
 import sys
+from collections import defaultdict
 
 from .lorem_ipsum import LoremGenerator
-
 
 # Find `$(TYPE)` or `$(TYPE:MODIFIERS)`
 rex_macro = re.compile(r"\$\(\s*(@?\w+)\s*(\:[^\)]*)?\s*\)")
@@ -214,7 +213,7 @@ class _WordList(object):
         return s
 
     def _process_entry(self, lemma, entry):
-        """Expand empty values ("") if they are computable. """
+        """Expand empty values ("") if they are computable."""
         for modifier in self.computable_modifiers:
             # e.g. "super", "plural", ...
             if entry.get(modifier) is None:

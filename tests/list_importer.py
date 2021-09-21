@@ -2,6 +2,7 @@
 Import a plain text file, add tags to the existing words or add new words altogether.
 """
 import os
+
 from fabulist import Fabulist
 
 
@@ -31,7 +32,7 @@ def merge_word_list_for_tag(src_path, dest_path=None, create_new_entries=False):
                 print("Add tag {!r} to {!r}: {}".format(tag_name, word, entry["tags"]))
         elif create_new_entries:
             if tag_name:
-                entry = {"lemma": word, "tags": set((tag_name, ))}
+                entry = {"lemma": word, "tags": set((tag_name,))}
             else:
                 entry = {"lemma": word}
             print("Create new entry {}".format(entry))

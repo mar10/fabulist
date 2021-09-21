@@ -9,6 +9,7 @@ from .context import fabulist
 
 class BasicTestSuite(unittest.TestCase):
     """Basic test cases."""
+
     def setUp(self):
         self.fab = fabulist.Fabulist()
         self.temp_path = None
@@ -27,6 +28,7 @@ class BasicTestSuite(unittest.TestCase):
 
     def test_quotes(self):
         from .demo import demo_quotes
+
         demo_quotes()
 
     def test_names(self):
@@ -140,23 +142,29 @@ class BasicTestSuite(unittest.TestCase):
 
     def test_lorem_demo(self):
         from .demo_lorem import demo_lorem
+
         demo_lorem()
 
     def test_infinite(self):
         # We can produce endless quotes
-        for i, quote in enumerate(self.fab.generate_quotes("$(noun)", count=None, dedupe=False)):
+        for i, quote in enumerate(
+            self.fab.generate_quotes("$(noun)", count=None, dedupe=False)
+        ):
             if i > 5000:
                 break
 
         # but dedupe may raise RuntimeError
         with self.assertRaises(RuntimeError):
-            for i, s in enumerate(self.fab.generate_quotes("$(noun)", count=None, dedupe=True)):
+            for i, s in enumerate(
+                self.fab.generate_quotes("$(noun)", count=None, dedupe=True)
+            ):
                 if i > 5000:
                     break
 
 
 class LoremTestSuite(unittest.TestCase):
     """Test LoremGenerator and LoremDialect."""
+
     def setUp(self):
         self.fab = fabulist.Fabulist()
         self.lorem = self.fab.lorem
@@ -194,7 +202,11 @@ class LoremTestSuite(unittest.TestCase):
         assert len(res) == 3
         assert res[0].startswith("Lorem ipsum")
 
-        res = list(self.lorem.generate_sentences(3, keep_first=True, words_per_sentence=(3, 10)))
+        res = list(
+            self.lorem.generate_sentences(
+                3, keep_first=True, words_per_sentence=(3, 10)
+            )
+        )
         assert len(res) == 3
         assert res[0].startswith("Lorem ipsum")
 
@@ -217,5 +229,5 @@ class LoremTestSuite(unittest.TestCase):
                 break
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
