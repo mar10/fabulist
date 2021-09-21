@@ -1,6 +1,6 @@
 # Fabulist
 [![Powered by You](http://sapegin.github.io/powered-by-you/badge.svg)](http://sapegin.github.io/powered-by-you/)
-[![Build Status](https://travis-ci.org/mar10/fabulist.svg?branch=master)](https://travis-ci.org/mar10/fabulist)
+[![Build Status](https://travis-ci.com/mar10/fabulist.svg?branch=master)](https://travis-ci.com/mar10/fabulist)
 [![Latest Version](https://img.shields.io/pypi/v/fabulist.svg)](https://pypi.python.org/pypi/fabulist/)
 [![License](https://img.shields.io/pypi/l/fabulist.svg)](https://github.com/mar10/fabulist/blob/master/LICENSE)
 [![Documentation Status](https://readthedocs.org/projects/fabulist/badge/?version=latest)](http://fabulist.readthedocs.io/)
@@ -46,5 +46,5 @@ Fortune cookies:
 -  Confucius says: "The one who wants to vanish must swear terribly the punch!"
 ```
 
-See also the [Introduction Slides](https://rawgit.com/mar10/fabulist/master/docs/intro_slides.html) 
+See also the [Introduction Slides](https://rawgit.com/mar10/fabulist/master/docs/intro_slides.html)
 and [Read The Docs](http://fabulist.readthedocs.org/en/latest/) for details.
