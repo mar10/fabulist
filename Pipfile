@@ -1,30 +1,22 @@
 [[source]]
-url = "https://pypi.python.org/simple"
+url = "https://pypi.org/simple"
 verify_ssl = true
+name = "pypi"
+
+[requires]
+python_version = "3.12"
 
 [dev-packages]
-black = "==21.9b0"
-check-manifest = "*"
-# cx_Freeze = {version = "*", os_name = "== 'windows'"}
-flake8 = "*"
-flake8-bugbear = "*"
-flake8-quotes = "*"
-isort = "*"
-# pyftpsync = {editable = true, path = "."}
-pylint = "*"
 pyftpdlib = "*"
 pytest = "*"
 pytest-cov = "*"
-pytest-sftpserver = "*"
 recommonmark = "*"
 sphinx_rtd_theme = "*"
 sphinx = "*"
 tox = "*"
 twine = "*"
 wheel = "*"
-# yabs = "*"
+yabs = "*"
+fabulist = {path = ".", editable = true}
 
 [packages]
-#PyInstaller = "==3.2"
-#colorama = "==0.3.3"
-#distribute = "==0.7.3"

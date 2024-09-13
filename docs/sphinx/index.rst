@@ -14,7 +14,7 @@ Overview
 :Project:   https://github.com/mar10/fabulist/
 :Version:   |version|, |today|
 
-.. :License:   `The MIT License <https://github.com/mar10/fabulist/blob/master/LICENSE>`_
+.. :License:   `The MIT License <https://github.com/mar10/fabulist/blob/master/LICENSE.txt>`_
 .. :Author:    Martin Wendt
 
 .. toctree::
@@ -144,7 +144,7 @@ and Read the `User Guide <user_guide.html>`_ for details.
 
 .. |lic_badge| image:: https://img.shields.io/pypi/l/fabulist.svg
 	 :alt: License
-	 :target: https://github.com/mar10/fabulist/blob/master/LICENSE
+	 :target: https://github.com/mar10/fabulist/blob/master/LICENSE.txt
 
 .. |rtd_badge| image:: https://readthedocs.org/projects/fabulist/badge/?version=latest
 	 :target: http://fabulist.readthedocs.io/

@@ -1,13 +1,12 @@
 # Run `check-manifest -u` to check and update this settings.
 
 include .editorconfig
-include .flake8
 include *.md
 include *.png
 include *.rst
 include *.txt
 include *.yml
-include LICENSE
+include LICENSE.txt
 include Pipfile
 include TODO
 include tox.ini
