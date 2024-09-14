@@ -162,10 +162,18 @@ class TestBasic:
                 if i > 5000:
                     break
 
-    # def test_plurals(self):
-    #     assert self.fab.get_default_word_form("plural", "holiday", ":plural") == ""
-    #     assert self.fab.get_word("cowboy", ":plural") == "cowboys"
-    #     assert self.fab.get_word("baby", ":plural") == "babies"
+    def test_plurals(self):
+        
+        noun_list = self.fab.list_map["noun"]
+        noun_list.load()
+        nouns = noun_list.data
+
+        # print(nouns["holiday"].plural == "holidays")
+
+        assert nouns["holiday"]["plural"] == "holidays"
+        # assert nouns["cowboy"]["plural"] == "cowboys"
+        assert nouns["baby"]["plural"] == "babies"
+        assert nouns["child"]["plural"] == "children"
 
 
 class TestLorem:
