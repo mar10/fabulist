@@ -1,6 +1,6 @@
 """
 """
-from .context import fabulist
+import fabulist
 
 
 def demo_quotes():

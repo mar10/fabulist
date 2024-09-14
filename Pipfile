@@ -7,9 +7,11 @@ name = "pypi"
 python_version = "3.12"
 
 [dev-packages]
-pyftpdlib = "*"
+# pyftpdlib = "*"
+ruff="*"
 pytest = "*"
 pytest-cov = "*"
+pytest-html = "*"
 recommonmark = "*"
 sphinx_rtd_theme = "*"
 sphinx = "*"

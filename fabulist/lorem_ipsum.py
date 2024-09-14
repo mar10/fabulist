@@ -1,11 +1,9 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 (c) 2017 Martin Wendt; see https://github.com/mar10/fabulist
 
 Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 """
-from __future__ import print_function
 
 import os
 import random
@@ -21,7 +19,7 @@ def _get_count(int_or_range):
 # -------------------------------------------------------------------------------------------------
 # LoremDialect
 # -------------------------------------------------------------------------------------------------
-class LoremDialect(object):
+class LoremDialect:
     """Generate lorem ipsum text.
 
     Args:
@@ -45,7 +43,7 @@ class LoremDialect(object):
         self.sentences = []
         self.words = set()
         para = []
-        for line in open(self.path, "rt"):
+        for line in open(self.path):
             # Skip empty lines and comments (i.e. starting with '#')
             line = line.strip()
             if not line or line.startswith("#"):
@@ -127,7 +125,7 @@ class LoremDialect(object):
 # -------------------------------------------------------------------------------------------------
 # LoremGenerator
 # -------------------------------------------------------------------------------------------------
-class LoremGenerator(object):
+class LoremGenerator:
     """Generate lorem ipsum text in a given dialect.
 
     Attributes:

@@ -22,13 +22,14 @@
 # [tool.isort]
 # # See https://black.readthedocs.io/en/stable/compatible_configs.html
 # profile = "black"
-# src_paths = ["nutree", "tests"]
+# src_paths = ["fabulist", "tests"]
 
 [tool.ruff]
 # Decrease the maximum line length to 79 characters.
 # line-length = 79
 # Support Python 3.10+.
 target-version = "py38"
+
 src = ["fabulist", "tests"]
 
 [tool.ruff.lint]
@@ -53,17 +54,17 @@ ignore = [
 
 # --- Coverage Settings --------------------------------------------------------
 [tool.pytest.ini_options]
-# addopts = "-ra -q --cov=nutree --cov-report=html"
-addopts = "-ra -q --cov=nutree"
-# addopts = "--cov=nutree --cov-report=html --cov-report=term-missing"
+# addopts = "-ra -q --cov=fabulist --cov-report=html"
+addopts = "-ra -q --cov=fabulist"
+# addopts = "--cov=fabulist --cov-report=html --cov-report=term-missing"
 
 [tool.coverage.run]
 # branch = true
 omit = [
     "tests/*",
-    # nutree/leaves_cli.py
-    # nutree/cli_common.py
-    # nutree/monitor/*  
+    # fabulist/leaves_cli.py
+    # fabulist/cli_common.py
+    # fabulist/monitor/*  
 ]
 
 [tool.coverage.report]

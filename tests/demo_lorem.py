@@ -1,6 +1,9 @@
 """
 """
-from .context import fabulist
+# ruff: noqa: T201
+
+import fabulist
+
 
 
 def demo_lorem():

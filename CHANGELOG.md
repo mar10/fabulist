@@ -1,4 +1,4 @@
-## 2.0.0 / 2024-13-09
+## 2.0.0 / unreleased
 
 - Drop support for Python 2. Use Python 3.8+ instead.
 - Use ruff

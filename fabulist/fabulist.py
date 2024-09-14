@@ -1,10 +1,8 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 (c) 2017 Martin Wendt; see https://github.com/mar10/fabulist
 Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 """
-from __future__ import print_function
 
 import os
 import random
@@ -78,7 +76,7 @@ class ApplyTemplateError(RuntimeError):
 # -------------------------------------------------------------------------------------------------
 # Macro
 # -------------------------------------------------------------------------------------------------
-class Macro(object):
+class Macro:
     """Parses and represents a macro with type, modifiers, tags, and references.
 
     Note:
@@ -116,7 +114,7 @@ class Macro(object):
                     for tag in m[1:].split("|"):
                         tag = tag.strip()
                         if tag in self.tags:
-                            raise ValueError("Duplicate tag '{}'.".format(tag))
+                            raise ValueError(f"Duplicate tag '{tag}'.")
                         self.tags.add(tag)
                 elif m.startswith("="):
                     # Variable assignment
@@ -124,11 +122,11 @@ class Macro(object):
                         raise ValueError(
                             "Only one `:=NUM` assignment entry is allowed in macro modifiers."
                         )
-                    self.var_name = "@{:d}".format(int(m[1:]))
+                    self.var_name = f"@{int(m[1:]):d}"
                 elif m:
                     # Modifier
                     if m in self.modifiers:
-                        raise ValueError("Duplicate modifier '{}'.".format(m))
+                        raise ValueError(f"Duplicate modifier '{m}'.")
                     if m in word_list.form_modifiers:
                         # Word-form modifier ('plural', 'pp', 's', 'ing', ...)
                         if self.word_form:
@@ -142,10 +140,10 @@ class Macro(object):
                         # Additional modifier ('an', 'mr', ...)
                         self.modifiers.add(m)
                     else:
-                        raise ValueError("Unsupported modifier: '{}'".format(m))
+                        raise ValueError(f"Unsupported modifier: '{m}'")
                 else:
                     # empty modifier (`::`)
-                    raise ValueError("Empty modifier: {!r}".format(modifiers))
+                    raise ValueError(f"Empty modifier: {modifiers!r}")
         return
 
     def __str__(self):
@@ -157,14 +155,14 @@ class Macro(object):
         if self.tags:
             res.append("#" + "|".join(self.tags))
         if self.var_name:
-            res.append("={}".format(self.var_name))
+            res.append(f"={self.var_name}")
         return "$({})".format(":".join(res))
 
 
 # -------------------------------------------------------------------------------------------------
 # _WordList
 # -------------------------------------------------------------------------------------------------
-class _WordList(object):
+class _WordList:
     """Common base class for all word lists.
 
     Note:
@@ -232,7 +230,7 @@ class _WordList(object):
         """Parse a text file and yield entry-dicts."""
         csv_format = self.csv_format
 
-        for line in open(path, "rt"):
+        for line in open(path):
             line = line.strip()
             if not line:
                 continue
@@ -242,9 +240,7 @@ class _WordList(object):
 
             entry = {}
             fields = line.split(",")
-            assert len(fields) == len(csv_format), "token count mismatch in {}".format(
-                line
-            )
+            assert len(fields) == len(csv_format), f"token count mismatch in {line}"
             for idx, name in enumerate(csv_format):
                 value = fields[idx].strip()
                 if name == "tags":
@@ -276,9 +272,7 @@ class _WordList(object):
                 matching.update(self.tag_map[tag])
             else:
                 raise ValueError(
-                    "{} has no entries for tag '{}' (expected {})".format(
-                        self.__class__.__name__, tag, self.tag_map.keys()
-                    )
+                    f"{self.__class__.__name__} has no entries for tag '{tag}' (expected {self.tag_map.keys()})"
                 )
         return list(matching)
 
@@ -318,7 +312,7 @@ class _WordList(object):
         if word is False:
             # For example trying to apply the `:plural` modifier on an uncountable noun
             raise ApplyTemplateError(
-                "Could not apply {} on entry {}".format(macro, entry)
+                f"Could not apply {macro} on entry {entry}"
             )
 
         if "an" in modifiers:
@@ -387,7 +381,7 @@ class _WordList(object):
             path (str): path to CSV file.
         """
         self.update_data()
-        with open(path, "wt") as fs:
+        with open(path, "w") as fs:
             for line in self.file_comments:
                 fs.write(line + "\n")
             for lemma in sorted(self.key_list, key=str.lower):
@@ -432,7 +426,7 @@ class AdjList(_WordList):
     all_modifiers = form_modifiers.union(extra_modifiers)
 
     def __init__(self, path):
-        super(AdjList, self).__init__(path)
+        super().__init__(path)
 
 
 # -------------------------------------------------------------------------------------------------
@@ -454,7 +448,7 @@ class AdvList(_WordList):
     all_modifiers = form_modifiers.union(extra_modifiers)
 
     def __init__(self, path):
-        super(AdvList, self).__init__(path)
+        super().__init__(path)
 
 
 # -------------------------------------------------------------------------------------------------
@@ -469,11 +463,11 @@ class FirstnameList(_WordList):
     csv_format = ("lemma", "tags")
 
     def __init__(self, path):
-        super(FirstnameList, self).__init__(path)
+        super().__init__(path)
 
     def update_data(self):
         """Update internal structures after entries have been added or modified."""
-        super(FirstnameList, self).update_data()
+        super().update_data()
         # Convert to lists for efficient access
         self.key_list_male = list(self.tag_map["m"])
         self.key_list_female = list(self.tag_map["f"])
@@ -492,7 +486,7 @@ class LastnameList(_WordList):
     csv_format = ("lemma",)
 
     def __init__(self, path):
-        super(LastnameList, self).__init__(path)
+        super().__init__(path)
 
 
 # -------------------------------------------------------------------------------------------------
@@ -524,7 +518,7 @@ class NameList(_WordList):
 
     def __init__(self, path):
         assert path is None
-        super(NameList, self).__init__(path)
+        super().__init__(path)
         root = os.path.dirname(__file__)
         self.firstname_list = FirstnameList(
             os.path.join(root, "data/firstname_list.txt")
@@ -609,7 +603,7 @@ class NounList(_WordList):
     all_modifiers = form_modifiers.union(extra_modifiers)
 
     def __init__(self, path):
-        super(NounList, self).__init__(path)
+        super().__init__(path)
 
 
 # -------------------------------------------------------------------------------------------------
@@ -631,13 +625,13 @@ class VerbList(_WordList):
     all_modifiers = form_modifiers.union(extra_modifiers)
 
     def __init__(self, path):
-        super(VerbList, self).__init__(path)
+        super().__init__(path)
 
 
 # -------------------------------------------------------------------------------------------------
 # Fabulist
 # -------------------------------------------------------------------------------------------------
-class Fabulist(object):
+class Fabulist:
     """Random string factory.
 
     Attributes:
@@ -693,14 +687,12 @@ class Fabulist(object):
             else:
                 min, max, width = parts
             # print("parts", min, max, width)
-        except Exception:
+        except Exception as e:
             raise ValueError(
-                "`num` modifier must be formatted like '[min,]max[,width]': '{}'".format(
-                    modifiers
-                )
-            )
+                f"`num` modifier must be formatted like '[min,]max[,width]': '{modifiers}'"
+            ) from e
         num = random.randrange(min, max)
-        return "{}".format(num).zfill(width)
+        return f"{num}".zfill(width)
 
     def get_choice(self, modifiers, context=None):
         """Return a random entry from a list of values.
@@ -737,12 +729,10 @@ class Fabulist(object):
                 choices = tuple(choices)
             else:
                 choices = [p.strip().replace(r"\,", ",") for p in choices]
-        except Exception:
+        except Exception as e:
             raise ValueError(
-                "`pick` modifier must be formatted like 'value[,value]*': '{}'".format(
-                    modifiers
-                )
-            )
+                f"`pick` modifier must be formatted like 'value[,value]*': '{modifiers}'"
+            ) from e
         return random.choice(choices)
 
     def get_word(self, word_type, modifiers=None, context=None):
@@ -767,7 +757,7 @@ class Fabulist(object):
             ref_entry = ref_map.get(word_type)
             if not ref_entry:
                 raise ValueError(
-                    "Reference to undefined variable: '{}'".format(word_type)
+                    f"Reference to undefined variable: '{word_type}'"
                 )
             word_type = ref_entry["word_type"]
             entry = ref_entry["entry"]
@@ -783,7 +773,7 @@ class Fabulist(object):
 
         word_list = self.list_map.get(word_type.lower())
         if not word_list:
-            raise ValueError("Invalid word type: '{}'".format(word_type))
+            raise ValueError(f"Invalid word type: '{word_type}'")
 
         macro = Macro(word_type, modifiers, word_list)
         entry = word_list.get_random_entry(macro)
@@ -791,7 +781,7 @@ class Fabulist(object):
         if macro.var_name:
             if macro.var_name in ref_map:
                 raise ValueError(
-                    "Duplicate variable assignment: '{}'".format(macro.var_name)
+                    f"Duplicate variable assignment: '{macro.var_name}'"
                 )
             ref_map[macro.var_name] = {"entry": entry, "word_type": word_type}
         if macro.is_caps:
@@ -838,9 +828,7 @@ class Fabulist(object):
         while count is None or i < count:
             fail += 1
             if fail > max_fail:
-                msg = "Max fail count ({}) exceeded: produced {}/{} strings.".format(
-                    max_fail, i, count
-                )
+                msg = f"Max fail count ({max_fail}) exceeded: produced {i}/{count} strings."
                 raise RuntimeError(msg)
 
             if isinstance(template, (list, tuple)):
@@ -851,7 +839,7 @@ class Fabulist(object):
             try:
                 q = self._format_quote(t)
             except ApplyTemplateError as e:
-                print("{}".format(e), file=sys.stderr)
+                print(f"{e}", file=sys.stderr)
                 continue
 
             if dedupe is not False:
