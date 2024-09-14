@@ -28,7 +28,7 @@
 # Decrease the maximum line length to 79 characters.
 # line-length = 79
 # Support Python 3.10+.
-target-version = "py38"
+target-version = "py39"
 
 src = ["fabulist", "tests"]
 

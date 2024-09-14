@@ -1,7 +1,7 @@
 ## 2.0.0 / unreleased
 
-- Drop support for Python 2. Use Python 3.8+ instead.
-- Use ruff
+- Drop support for Python 2. Use Python 3.9+ instead.
+- Use ruff for formatting and linting.
 - Fix plural form for nouns ending on -y
 
 ## 1.2.0 / 2018-01-01
