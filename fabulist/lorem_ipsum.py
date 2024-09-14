@@ -16,9 +16,9 @@ def _get_count(int_or_range):
     return random.randint(*int_or_range)
 
 
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # LoremDialect
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 class LoremDialect:
     """Generate lorem ipsum text.
 
@@ -122,9 +122,9 @@ class LoremDialect:
         return
 
 
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # LoremGenerator
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 class LoremGenerator:
     """Generate lorem ipsum text in a given dialect.
 
@@ -167,7 +167,8 @@ class LoremGenerator:
                 Number of words. Pass None for infinite.
                 Default: None.
             dialect (str, optional):
-                For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a random dialect.
+                For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a
+                random dialect.
                 Default: "ipsum" (i.e. lorem-ipsum).
             entropy (int, optional):
                 0: iterate words from original text
@@ -218,7 +219,8 @@ class LoremGenerator:
                 Number of sentences. Pass None for infinite.
                 Default: None.
             dialect (str, optional):
-                For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a random dialect.
+                For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a
+                random dialect.
                 Default: "ipsum" (i.e. lorem-ipsum).
             entropy (int, optional):
                 0: iterate sentences from original text
@@ -246,7 +248,8 @@ class LoremGenerator:
 
             if not words_per_sentence:
                 raise ValueError(
-                    "entropy=3 requires words_per_sentence arg: int or a tuple(min, max)"
+                    "entropy=3 requires words_per_sentence arg: int "
+                    "or a tuple(min, max)"
                 )
 
             while count is None or i < count:
@@ -281,7 +284,8 @@ class LoremGenerator:
                 Number of paragraphs. Pass None for infinite.
                 Default: None.
             dialect (str, optional):
-                For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a random dialect.
+                For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a
+                random dialect.
                 Default: "ipsum".
             keep_first (bool, optional):
                 Always return the first sentence as first result. Default: False.
@@ -314,35 +318,39 @@ class LoremGenerator:
         return
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    data_folder = os.path.join(os.path.dirname(__file__), "data")
-    lorem = LoremGenerator(data_folder)
-    # print(list(lorem.generate_words(10)))
-    # print(list(lorem.generate_words(10, entropy=0)))
-    # print(list(lorem.generate_words(10, entropy=1)))
-    # print(list(lorem.generate_words(10, entropy=2)))
-    # print(list(lorem.generate_words(10, entropy=3)))
-    #
-    # print(list(lorem.generate_sentences(3, entropy=3, words_per_sentence=(5,8))))
-    # print(list(lorem.generate_sentences(3, entropy=3, words_per_sentence=5)))
-    # print(list(lorem.generate_sentences(3, entropy=3, words_per_sentence=5, keep_first=True)))
-    #
-    # print(list(lorem.generate_sentences(3, dialect="pulp", entropy=2, keep_first=True)))
-    #
-    #
-    # print()
-    # print("\n".join(lorem.generate_paragraphs(3)))
-    # print()
-    # print("\n".join(lorem.generate_paragraphs(3, dialect="pulp", entropy=2, keep_first=True)))
-    # print()
-    # print("\n".join(lorem.generate_paragraphs(3, dialect="pulp", entropy=3, keep_first=True)))
+#     data_folder = os.path.join(os.path.dirname(__file__), "data")
+#     lorem = LoremGenerator(data_folder)
+#     # print(list(lorem.generate_words(10)))
+#     # print(list(lorem.generate_words(10, entropy=0)))
+#     # print(list(lorem.generate_words(10, entropy=1)))
+#     # print(list(lorem.generate_words(10, entropy=2)))
+#     # print(list(lorem.generate_words(10, entropy=3)))
+#     #
+#     # print(list(lorem.generate_sentences(3, entropy=3, words_per_sentence=(5,8))))
+#     # print(list(lorem.generate_sentences(3, entropy=3, words_per_sentence=5)))
+#     # print(list(lorem.generate_sentences(3, entropy=3, words_per_sentence=5,
+#       keep_first=True)))
+#     #
+#     # print(list(lorem.generate_sentences(3, dialect="pulp", entropy=2,
+# keep_first=True)))
+#     #
+#     #
+#     # print()
+#     # print("\n".join(lorem.generate_paragraphs(3)))
+#     # print()
+#     # print("\n".join(lorem.generate_paragraphs(3, dialect="pulp", entropy=2,
+# keep_first=True)))
+#     # print()
+#     # print("\n".join(lorem.generate_paragraphs(3, dialect="pulp", entropy=3,
+# keep_first=True)))
 
-    exit()
-    # s = lorem.generate(None, 20)
-    # gen = lorem.dialect_map["pulp"].generate_sentences(3)
-    gen = lorem.generate_sentences(10, keep_first=False, entropy=2)
-    for s in gen:
-        print("-", s)
-    # s = lorem.generate("pulp", 20)
-    # print(s)
+#     exit()
+#     # s = lorem.generate(None, 20)
+#     # gen = lorem.dialect_map["pulp"].generate_sentences(3)
+#     gen = lorem.generate_sentences(10, keep_first=False, entropy=2)
+#     for s in gen:
+#         print("-", s)
+#     # s = lorem.generate("pulp", 20)
+#     # print(s)

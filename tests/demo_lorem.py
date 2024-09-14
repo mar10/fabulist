@@ -1,9 +1,7 @@
-"""
-"""
-# ruff: noqa: T201
+""" """
+# ruff: noqa: T201 (`print` found)
 
 import fabulist
-
 
 
 def demo_lorem():

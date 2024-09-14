@@ -4,10 +4,10 @@
 Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 """
 
+import logging
 import os
 import random
 import re
-import sys
 from collections import defaultdict
 
 from .lorem_ipsum import LoremGenerator
@@ -15,10 +15,14 @@ from .lorem_ipsum import LoremGenerator
 # Find `$(TYPE)` or `$(TYPE:MODIFIERS)`
 rex_macro = re.compile(r"\$\(\s*(@?\w+)\s*(\:[^\)]*)?\s*\)")
 
+#: The base logger (silent by default)
+_logger = logging.getLogger(__name__)
+_logger.addHandler(logging.NullHandler())
 
-# -------------------------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
 # Helper Functions
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 def get_default_word_form(word_form, lemma, entry):
     """Use standard rules to compute a word form for a given lemma.
 
@@ -73,9 +77,9 @@ class ApplyTemplateError(RuntimeError):
     """Raised when a template could not be resolved."""
 
 
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Macro
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 class Macro:
     """Parses and represents a macro with type, modifiers, tags, and references.
 
@@ -120,7 +124,8 @@ class Macro:
                     # Variable assignment
                     if self.var_name:
                         raise ValueError(
-                            "Only one `:=NUM` assignment entry is allowed in macro modifiers."
+                            "Only one `:=NUM` assignment entry is allowed in "
+                            "macro modifiers."
                         )
                     self.var_name = f"@{int(m[1:]):d}"
                 elif m:
@@ -159,15 +164,15 @@ class Macro:
         return "$({})".format(":".join(res))
 
 
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # _WordList
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 class _WordList:
     """Common base class for all word lists.
 
     Note:
-        This class is not instantiated directly, but provides common implementations for reading,
-        writing and processing of word list data.
+        This class is not instantiated directly, but provides common
+        implementations for reading, writing, and processing of word list data.
 
     Args:
         path (str): Location of dictionary csv file.
@@ -190,7 +195,8 @@ class _WordList:
     """frozenset: Set of supported word form modifiers (e.g. {'plural'}).
     Set by derived classes."""
     extra_modifiers = None
-    """frozenset: Set of supported additional modifiers (e.g. {'an'}). Set by derived classes."""
+    """frozenset: Set of supported additional modifiers (e.g. {'an'}). 
+    Set by derived classes."""
     all_modifiers = None
     """frozenset: Set of all supported modifiers (word-form and additional).
     Set by derived classes."""
@@ -272,7 +278,8 @@ class _WordList:
                 matching.update(self.tag_map[tag])
             else:
                 raise ValueError(
-                    f"{self.__class__.__name__} has no entries for tag '{tag}' (expected {self.tag_map.keys()})"
+                    f"{self.__class__.__name__} has no entries for tag '{tag}' "
+                    f"(expected {self.tag_map.keys()})"
                 )
         return list(matching)
 
@@ -311,9 +318,7 @@ class _WordList:
         word = entry[word_form]
         if word is False:
             # For example trying to apply the `:plural` modifier on an uncountable noun
-            raise ApplyTemplateError(
-                f"Could not apply {macro} on entry {entry}"
-            )
+            raise ApplyTemplateError(f"Could not apply {macro} on entry {entry}")
 
         if "an" in modifiers:
             if word[0].lower() in ("a", "e", "i", "o"):
@@ -331,13 +336,13 @@ class _WordList:
 
         The `entry` argument should have the same keys as the current CSV file format
         (see :attr:`csv_format`).
-        If `entry` values are omitted or `None`, they are passed to :meth:`_process_entry`
-        in order to compute a default.
-        If `entry` values are set to `False`, they are considered 'not available'. For example
-        There is no `plural` form of 'information'.
+        If `entry` values are omitted or `None`, they are passed to
+        :meth:`_process_entry` in order to compute a default.
+        If `entry` values are set to `False`, they are considered 'not available'.
+        For example There is no `plural` form of 'information'.
 
-        Callers should also call :meth:`update_data` later, to make sure that :attr:`key_list`
-        is up-to-date.
+        Callers should also call :meth:`update_data` later, to make sure that
+        :attr:`key_list` is up-to-date.
 
         Args:
             entry (dict): Word data.
@@ -353,8 +358,8 @@ class _WordList:
     def load(self, path=None):
         """Load and add list of entries from text file.
 
-        Normally, we don't have to call this method explicitly, because entries are loaded
-        lazily on demand.
+        Normally, we don't have to call this method explicitly, because entries
+        are loaded lazily on demand.
         It may be useful however to add supplemental word  lists however.
 
         This method also calls :meth:`update_data`.
@@ -374,7 +379,8 @@ class _WordList:
         """Write current data to a text file.
 
         The resulting CSV file has the format as defined in :attr:`csv_format`.
-        For better compression, word forms that are computable are stored as empty strings ('').
+        For better compression, word forms that are computable are stored as empty
+        strings ('').
         Comments from the original file are retained at the top.
 
         Args:
@@ -407,15 +413,16 @@ class _WordList:
         return
 
 
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # AdjList
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 class AdjList(_WordList):
     """Implement a collection of adjectives.
 
     Args:
-        path (str): Path to CSV source file (loaded on demand or when :meth:`_WordList.load`)
-            is called.
+        path (str):
+            Path to CSV source file (loaded on demand or when
+            :meth:`_WordList.load`) is called.
     """
 
     word_type = "adj"
@@ -429,15 +436,16 @@ class AdjList(_WordList):
         super().__init__(path)
 
 
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # AdvList
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 class AdvList(_WordList):
     """Implement a collection of adverbs.
 
     Args:
-        path (str): Path to CSV source file (loaded on demand or when :meth:`_WordList.load`)
-            is called.
+        path (str):
+            Path to CSV source file (loaded on demand or when
+            :meth:`_WordList.load`) is called.
     """
 
     word_type = "adv"
@@ -451,9 +459,9 @@ class AdvList(_WordList):
         super().__init__(path)
 
 
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # FirstnameList
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 class FirstnameList(_WordList):
     """List of first names, tagged by gender.
 
@@ -473,14 +481,15 @@ class FirstnameList(_WordList):
         self.key_list_female = list(self.tag_map["f"])
 
 
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # LastnameList
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 class LastnameList(_WordList):
     """List of last names.
 
     Note:
-        Internally used by :py:class:`NameList`, not intended to be instantiated directly.
+        Internally used by :py:class:`NameList`, not intended to be instantiated
+        directly.
     """
 
     csv_format = ("lemma",)
@@ -489,18 +498,19 @@ class LastnameList(_WordList):
         super().__init__(path)
 
 
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # NameList
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 class NameList(_WordList):
     """Implement a virtual collection of person names.
 
-    Internally uses :class:`FirstnameList` and :class:`LastnameList` to generate different
-    variants.
+    Internally uses :class:`FirstnameList` and :class:`LastnameList` to generate
+    different variants.
 
     Args:
-        path (str): Path to CSV source file (loaded on demand or when :meth:`_WordList.load`)
-            is called.
+        path (str):
+            Path to CSV source file (loaded on demand or when
+            :meth:`_WordList.load`) is called.
     Attributes:
         firstname_list (list[FirstnameList]):
         lastname_list (list[LastnameList]):
@@ -539,8 +549,8 @@ class NameList(_WordList):
 
         # If neither m nor f are given, assume both
         if bool("m" in tags) == bool("f" in tags):
-            # If both genders are allowed, we have to randomize here, because the resulting
-            # firstname may be ambigous
+            # If both genders are allowed, we have to randomize here, because
+            # the resulting firstname may be ambigous
             is_male = bool(random.getrandbits(1))
         else:
             # The modifier contains either 'm' or 'f' (not both)
@@ -552,8 +562,8 @@ class NameList(_WordList):
             first_name_list = self.firstname_list.key_list_female
 
         # We generate a complete entry from our first- and last-name lists.
-        # The entry contains all values (even if they are not required by current macro)
-        # in case we back-reference with other filters later:
+        # The entry contains all values (even if they are not required by current
+        # macro) in case we back-reference with other filters later:
         entry = {
             "mr": "Mr." if is_male else "Mrs.",
             "first": random.choice(first_name_list),
@@ -584,15 +594,16 @@ class NameList(_WordList):
         return name
 
 
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # NounList
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 class NounList(_WordList):
     """Implement a collection of nouns.
 
     Args:
-        path (str): Path to CSV source file (loaded on demand or when :meth:`_WordList.load`)
-            is called.
+        path (str):
+            Path to CSV source file (loaded on demand or when
+            :meth:`_WordList.load`) is called.
     """
 
     word_type = "noun"
@@ -606,15 +617,16 @@ class NounList(_WordList):
         super().__init__(path)
 
 
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # VerbList
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 class VerbList(_WordList):
     """Implement a collection of verbs.
 
     Args:
-        path (str): Path to CSV source file (loaded on demand or when :meth:`_WordList.load`)
-            is called.
+        path (str):
+            Path to CSV source file (loaded on demand or when
+            :meth:`_WordList.load`) is called.
     """
 
     word_type = "verb"
@@ -628,9 +640,9 @@ class VerbList(_WordList):
         super().__init__(path)
 
 
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Fabulist
-# -------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 class Fabulist:
     """Random string factory.
 
@@ -662,8 +674,8 @@ class Fabulist:
         Args:
             modifiers (str):
                 Additional modifiers, separated by ':'.
-                Only one modifier is accepted with a comma separated list of min, max, and
-                width.
+                Only one modifier is accepted with a comma separated list of
+                min, max, and width.
                 Example: "0,99,2".
 
             context (dict, optional):
@@ -689,7 +701,8 @@ class Fabulist:
             # print("parts", min, max, width)
         except Exception as e:
             raise ValueError(
-                f"`num` modifier must be formatted like '[min,]max[,width]': '{modifiers}'"
+                "`num` modifier must be formatted like "
+                f"'[min,]max[,width]': '{modifiers}'"
             ) from e
         num = random.randrange(min, max)
         return f"{num}".zfill(width)
@@ -701,7 +714,8 @@ class Fabulist:
             modifiers (str):
                 Additional modifiers, separated by ':'.
                 Only one modifier is accepted with a comma separated list of choices.
-                If a single string is passed (i.e. no comma), one random character is returned.
+                If a single string is passed (i.e. no comma), one random character
+                is returned.
                 Use a backslash to escape comma or colons.
 
             context (dict, optional):
@@ -731,7 +745,8 @@ class Fabulist:
                 choices = [p.strip().replace(r"\,", ",") for p in choices]
         except Exception as e:
             raise ValueError(
-                f"`pick` modifier must be formatted like 'value[,value]*': '{modifiers}'"
+                "`pick` modifier must be formatted like "
+                f"'value[,value]*': '{modifiers}'"
             ) from e
         return random.choice(choices)
 
@@ -756,9 +771,7 @@ class Fabulist:
             # print("Back-ref", word_type, ref_map)
             ref_entry = ref_map.get(word_type)
             if not ref_entry:
-                raise ValueError(
-                    f"Reference to undefined variable: '{word_type}'"
-                )
+                raise ValueError(f"Reference to undefined variable: '{word_type}'")
             word_type = ref_entry["word_type"]
             entry = ref_entry["entry"]
             word_list = self.list_map.get(word_type.lower())
@@ -780,9 +793,7 @@ class Fabulist:
         word = word_list.apply_macro(macro, entry)
         if macro.var_name:
             if macro.var_name in ref_map:
-                raise ValueError(
-                    f"Duplicate variable assignment: '{macro.var_name}'"
-                )
+                raise ValueError(f"Duplicate variable assignment: '{macro.var_name}'")
             ref_map[macro.var_name] = {"entry": entry, "word_type": word_type}
         if macro.is_caps:
             word = word.capitalize()
@@ -813,8 +824,8 @@ class Fabulist:
                 Number of results to generate. Pass None for infinite.
                 Default: None.
             dedupe (bool | set, optional):
-                Pass `True` to prevent duplicate results. If a `set` instance is passed, it
-                will be used to add and check for generated entries.
+                Pass `True` to prevent duplicate results. If a `set` instance is
+                passed, it will be used to add and check for generated entries.
                 Default: False.
         Yields:
             str: Random variants of `template`.
@@ -828,7 +839,10 @@ class Fabulist:
         while count is None or i < count:
             fail += 1
             if fail > max_fail:
-                msg = f"Max fail count ({max_fail}) exceeded: produced {i}/{count} strings."
+                msg = (
+                    f"Max fail count ({max_fail}) exceeded: "
+                    f"produced {i}/{count} strings."
+                )
                 raise RuntimeError(msg)
 
             if isinstance(template, (list, tuple)):
@@ -839,7 +853,7 @@ class Fabulist:
             try:
                 q = self._format_quote(t)
             except ApplyTemplateError as e:
-                print(f"{e}", file=sys.stderr)
+                _logger.error("%s", e)
                 continue
 
             if dedupe is not False:
@@ -884,15 +898,16 @@ class Fabulist:
     def get_lorem_words(self, count=None, dialect="ipsum", entropy=3, keep_first=False):
         """Return a list of random words.
 
-        See also :class:`fabulist.lorem_ipsum.LoremGenerator` for more flexible and efficient
-        generators (accessible as :attr:`Fabulist.lorem`).
+        See also :class:`fabulist.lorem_ipsum.LoremGenerator` for more flexible
+        and efficient generators (accessible as :attr:`Fabulist.lorem`).
 
         Args:
             count (int, optional):
                 Number of words. Pass None for infinite.
                 Default: None.
             dialect (str, optional):
-                For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a random dialect.
+                For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a
+                random dialect.
                 Default: "ipsum" (i.e. lorem-ipsum).
             entropy (int, optional):
                 0: iterate words from original text
@@ -912,8 +927,8 @@ class Fabulist:
     def get_lorem_sentence(self, word_count=(3, 15), dialect="ipsum", entropy=3):
         """Return one random sentence.
 
-        See also :class:`fabulist.lorem_ipsum.LoremGenerator` for more flexible and efficient
-        generators (accessible as :attr:`Fabulist.lorem`).
+        See also :class:`fabulist.lorem_ipsum.LoremGenerator` for more flexible
+        and efficient generators (accessible as :attr:`Fabulist.lorem`).
 
         Args:
             word_count (int or tuple(min, max), optional):
@@ -921,7 +936,8 @@ class Fabulist:
                 This argument is only used for entropy=3.
                 Default: (3, 15).
             dialect (str, optional):
-                For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a random dialect.
+                For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a
+                random dialect.
                 Default: "ipsum" (i.e. lorem-ipsum).
             entropy (int):
                 0: use first sentence from original text
@@ -947,14 +963,15 @@ class Fabulist:
     ):
         """Return one random paragraph.
 
-        See also :class:`fabulist.lorem_ipsum.LoremGenerator` for more flexible and efficient
-        generators (accessible as :attr:`Fabulist.lorem`).
+        See also :class:`fabulist.lorem_ipsum.LoremGenerator` for more flexible
+        and efficient generators (accessible as :attr:`Fabulist.lorem`).
 
         Args:
             sentence_count (int or tuple(min, max)):
                 Number of sentences. Default: (2, 6).
             dialect (str, optional):
-                For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a random dialect.
+                For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a
+                random dialect.
                 Default: "ipsum" (i.e. lorem-ipsum).
             entropy (int):
                 0: iterate sentences from original text
@@ -990,14 +1007,15 @@ class Fabulist:
 
         Paragraphs are seperated by newline.
 
-        See also :class:`fabulist.lorem_ipsum.LoremGenerator` for more flexible and efficient
-        generators (accessible as :attr:`Fabulist.lorem`).
+        See also :class:`fabulist.lorem_ipsum.LoremGenerator` for more flexible
+        and efficient generators (accessible as :attr:`Fabulist.lorem`).
 
         Args:
             para_count (int or tuple(min, max)):
                 Number of paragraphs.
             dialect (str, optional):
-                For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a random dialect.
+                For example "ipsum", "pulp", "trappatoni". Pass `None` to pick a
+                random dialect.
                 Default: "ipsum".
             keep_first (bool, optional):
                 Always return the first sentence as first result. Default: False.

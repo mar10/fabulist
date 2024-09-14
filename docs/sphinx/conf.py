@@ -11,7 +11,7 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-# ruff: noqa: T201
+# ruff: noqa: T201 (`print` found)
 
 import sys
 import os

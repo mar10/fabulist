@@ -1,5 +1,5 @@
-"""
-"""
+""" """
+
 import os
 import tempfile
 
@@ -161,12 +161,11 @@ class TestBasic:
             ):
                 if i > 5000:
                     break
-    
+
     # def test_plurals(self):
     #     assert self.fab.get_default_word_form("plural", "holiday", ":plural") == ""
     #     assert self.fab.get_word("cowboy", ":plural") == "cowboys"
     #     assert self.fab.get_word("baby", ":plural") == "babies"
-
 
 
 class TestLorem:

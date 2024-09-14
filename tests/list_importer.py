@@ -1,6 +1,8 @@
 """
 Import a plain text file, add tags to the existing words or add new words altogether.
 """
+# ruff: noqa: T201 (`print` found)
+
 import os
 
 from fabulist import Fabulist
