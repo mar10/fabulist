@@ -2,13 +2,14 @@
 
 - Drop support for Python 2. Use Python 3.9+ instead.
 - Use ruff for formatting and linting.
+- Add typing information.
 - Fix plural form for nouns ending on -y
 
 ## 1.2.0 / 2018-01-01
 
 - Add `num` word type.
 - Add `pick` word type.
-- Add lorem_tao  dialect.
+- Add lorem_tao dialect.
 
 ## 1.1.1 / 2017-09-22
 

@@ -11,6 +11,8 @@ import re
 from collections import defaultdict
 
 from .lorem_ipsum import LoremGenerator
+from typing import Optional, Union
+from collections.abc import Iterator
 
 # Find `$(TYPE)` or `$(TYPE:MODIFIERS)`
 rex_macro = re.compile(r"\$\(\s*(@?\w+)\s*(\:[^\)]*)?\s*\)")
@@ -20,14 +22,22 @@ _logger = logging.getLogger(__name__)
 _logger.addHandler(logging.NullHandler())
 
 
+# class FixedKeysDict(TypedDict):
+#     key1: str
+#     key2: int
+#     key3: Optional[float]
+#: A dictionary with a 'lemma' and additional values, depending on the wordlist type.
+TWordListEntry = dict[str, Optional[str]]
+
+
 # ------------------------------------------------------------------------------
 # Helper Functions
 # ------------------------------------------------------------------------------
-def get_default_word_form(word_form, lemma, entry):
+def get_default_word_form(word_form: str, lemma: str, entry: TWordListEntry) -> str:
     """Use standard rules to compute a word form for a given lemma.
 
     Args:
-        word_form (str): Requested wor form, e.g. 'plural', 'ing', ...
+        word_form (str): Requested word form, e.g. 'plural', 'ing', ...
         lemma (str): The word's base form.
         entry (dict): Word's data as stored in `_WordList.data`.
     Returns:
@@ -97,11 +107,11 @@ class Macro:
         $(TYPE:MODS:#foo|bar:=NUM)
     """
 
-    def __init__(self, word_type, modifiers, word_list):
+    def __init__(self, word_type: str, modifiers: str, word_list: "_WordList"):
         self.word_type = word_type.lower()  #: lowercase word type ('adv', 'adj', ...)
         self.word_form = None
-        self.modifiers = set()
-        self.tags = set()
+        self.modifiers: set = set()
+        self.tags: set = set()
         self.var_name = None
         self.ref_lemma = None
         self.is_caps = word_type[0].isupper()
@@ -154,7 +164,7 @@ class Macro:
                     raise ValueError(f"Empty modifier: {modifiers!r}")
         return
 
-    def __str__(self):
+    def __repr__(self) -> str:
         res = [self.word_type]
         if self.word_form:
             res.append(self.word_form)
@@ -186,47 +196,47 @@ class _WordList:
         tag_map (dict): Maps tag names to sets of word lemmas.
     """
 
-    word_type = None
+    word_type: str = None
     """str: Type of word list (e.g. 'adj', 'adv', ...). Set by derived classes."""
-    csv_format = None
+    csv_format: tuple = None
     """tuple: Ordered list of CSV file columns (e.g. ('lemma', 'plural', 'tags')).
     Set by derived classes."""
-    computable_modifiers = frozenset()
+    computable_modifiers: frozenset = frozenset()
     """frozenset: Set of word forms that can potentially be computed from a lemma
     (e.g. {'ing', 's', ...}). Set by derived classes."""
-    form_modifiers = None
+    form_modifiers: frozenset = None
     """frozenset: Set of supported word form modifiers (e.g. {'plural'}).
     Set by derived classes."""
-    extra_modifiers = None
+    extra_modifiers: frozenset = None
     """frozenset: Set of supported additional modifiers (e.g. {'an'}). 
     Set by derived classes."""
-    all_modifiers = None
+    all_modifiers: frozenset = None
     """frozenset: Set of all supported modifiers (word-form and additional).
     Set by derived classes."""
 
-    def __init__(self, path):
-        self.path = path
-        self.data = {}
+    def __init__(self, path: str):
+        self.path: str = path
+        self.data: dict[str, TWordListEntry] = {}
         self.key_list = []
         # { tagname: set(lemma_1, lemma_2, ...) }
-        self.tag_map = defaultdict(set)
+        self.tag_map: dict[str, set] = defaultdict(set)
         # Used to restore comments in save_as():
-        self.file_comments = []
+        self.file_comments: list[str] = []
 
-    def __str__(self):
+    def __repr__(self) -> str:
         s = "{}(len={}, tags:{})".format(
             self.__class__.__name__, len(self.key_list), ", ".join(self.tag_map.keys())
         )
         return s
 
-    def _process_entry(self, lemma, entry):
+    def _process_entry(self, lemma: str, entry: TWordListEntry) -> None:
         """Expand empty values ("") if they are computable."""
         for modifier in self.computable_modifiers:
             # e.g. "super", "plural", ...
             if entry.get(modifier) is None:
                 entry[modifier] = get_default_word_form(modifier, lemma, entry)
 
-    def _un_process_entry(self, lemma, entry):
+    def _un_process_entry(self, lemma: str, entry: TWordListEntry) -> None:
         """Squash values to `None` if they are re-computable."""
         for modifier in self.computable_modifiers:
             # e.g. "super", "plural", ...
@@ -235,7 +245,7 @@ class _WordList:
             ):
                 entry[modifier] = None
 
-    def _iter_file(self, path):
+    def _iter_file(self, path: str) -> Iterator[TWordListEntry]:
         """Parse a text file and yield entry-dicts."""
         csv_format = self.csv_format
 
@@ -271,7 +281,7 @@ class _WordList:
             yield entry
         return
 
-    def _filter_key_list(self, tags):
+    def _filter_key_list(self, tags: set) -> list[str]:
         """Return key_list filtered by tags (if any)."""
         if not tags:
             return self.key_list
@@ -286,7 +296,7 @@ class _WordList:
                 )
         return list(matching)
 
-    def get_random_entry(self, macro):
+    def get_random_entry(self, macro: Macro) -> TWordListEntry:
         """Return a random entry dict, according to modifiers.
 
         Args:
@@ -303,7 +313,7 @@ class _WordList:
         entry = self.data[key]
         return entry
 
-    def apply_macro(self, macro, entry):
+    def apply_macro(self, macro: Macro, entry: TWordListEntry) -> str:
         """Return a word-form for an entry dict, according to macro modifiers.
 
         Args:
@@ -330,11 +340,11 @@ class _WordList:
                 word = "a " + word
         return word
 
-    def update_data(self):
+    def update_data(self) -> None:
         """Update internal structures after entries have been added or modified."""
         self.key_list = list(self.data.keys())
 
-    def add_entry(self, entry):
+    def add_entry(self, entry: TWordListEntry) -> None:
         """Add a single entry to the word list.
 
         The `entry` argument should have the same keys as the current CSV file format
@@ -358,7 +368,7 @@ class _WordList:
             for tag in tags:
                 self.tag_map[tag].add(lemma)
 
-    def load(self, path=None):
+    def load(self, path: Optional[str] = None) -> None:
         """Load and add list of entries from text file.
 
         Normally, we don't have to call this method explicitly, because entries
@@ -378,7 +388,7 @@ class _WordList:
         self.update_data()
         # print("Loaded {}".format(self))
 
-    def save_as(self, path):
+    def save_as(self, path: str) -> None:
         """Write current data to a text file.
 
         The resulting CSV file has the format as defined in :attr:`csv_format`.
@@ -435,7 +445,7 @@ class AdjList(_WordList):
     extra_modifiers = frozenset(("an",))
     all_modifiers = form_modifiers.union(extra_modifiers)
 
-    def __init__(self, path):
+    def __init__(self, path: str):
         super().__init__(path)
 
 
@@ -458,7 +468,7 @@ class AdvList(_WordList):
     extra_modifiers = frozenset(("an",))
     all_modifiers = form_modifiers.union(extra_modifiers)
 
-    def __init__(self, path):
+    def __init__(self, path: str):
         super().__init__(path)
 
 
@@ -473,10 +483,10 @@ class FirstnameList(_WordList):
 
     csv_format = ("lemma", "tags")
 
-    def __init__(self, path):
+    def __init__(self, path: str):
         super().__init__(path)
 
-    def update_data(self):
+    def update_data(self) -> None:
         """Update internal structures after entries have been added or modified."""
         super().update_data()
         # Convert to lists for efficient access
@@ -497,7 +507,7 @@ class LastnameList(_WordList):
 
     csv_format = ("lemma",)
 
-    def __init__(self, path):
+    def __init__(self, path: str):
         super().__init__(path)
 
 
@@ -526,10 +536,10 @@ class NameList(_WordList):
     extra_modifiers = frozenset(("first", "last", "middle", "mr"))
     all_modifiers = form_modifiers.union(extra_modifiers)
 
-    middle_initials = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    middle_name_probability = 0.5
+    middle_initials: str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    middle_name_probability: float = 0.5
 
-    def __init__(self, path):
+    def __init__(self, path: str):
         assert path is None
         super().__init__(path)
         root = os.path.dirname(__file__)
@@ -538,13 +548,13 @@ class NameList(_WordList):
         )
         self.lastname_list = LastnameList(os.path.join(root, "data/lastname_list.txt"))
 
-    def load(self, path=None):
+    def load(self, path: Optional[str] = None) -> None:
         """Load and add list of entries from text file."""
         assert path is None
         self.firstname_list.load()
         self.lastname_list.load()
 
-    def get_random_entry(self, macro):
+    def get_random_entry(self, macro: Macro) -> TWordListEntry:
         if not self.firstname_list.data:
             self.load()
 
@@ -578,7 +588,7 @@ class NameList(_WordList):
 
         return entry
 
-    def apply_macro(self, macro, entry):
+    def apply_macro(self, macro: Macro, entry: TWordListEntry) -> str:
         # Build a name from the requested modifiers
         modifiers = macro.modifiers
         # If neither first nor last are given, assume both
@@ -616,7 +626,7 @@ class NounList(_WordList):
     extra_modifiers = frozenset(("an",))
     all_modifiers = form_modifiers.union(extra_modifiers)
 
-    def __init__(self, path):
+    def __init__(self, path: str):
         super().__init__(path)
 
 
@@ -639,7 +649,7 @@ class VerbList(_WordList):
     extra_modifiers = frozenset(("an",))
     all_modifiers = form_modifiers.union(extra_modifiers)
 
-    def __init__(self, path):
+    def __init__(self, path: str):
         super().__init__(path)
 
 
@@ -655,10 +665,10 @@ class Fabulist:
     """
 
     def __init__(self):
-        root = os.path.dirname(__file__)
-        data_folder = os.path.join(root, "data")
-        self.lorem = LoremGenerator(data_folder)
-        self.list_map = {
+        root: str = os.path.dirname(__file__)
+        data_folder: str = os.path.join(root, "data")
+        self.lorem: LoremGenerator = LoremGenerator(data_folder)
+        self.list_map: dict[str, _WordList] = {
             "adj": AdjList(os.path.join(data_folder, "adj_list.txt")),
             "adv": AdvList(os.path.join(data_folder, "adv_list.txt")),
             "noun": NounList(os.path.join(data_folder, "noun_list.txt")),
@@ -666,12 +676,14 @@ class Fabulist:
             "name": NameList(None),
         }
 
-    def load(self):
+    def load(self) -> None:
         """Load all word lists into memory (lazy loading otherwise)."""
         for word_list in self.list_map.values():
             word_list.load()
 
-    def get_number(self, modifiers=None, context=None):
+    def get_number(
+        self, modifiers: Optional[str] = None, context: Optional[dict] = None
+    ) -> str:
         """Return a string-formatted random number.
 
         Args:
@@ -710,7 +722,7 @@ class Fabulist:
         num = random.randrange(min, max)
         return f"{num}".zfill(width)
 
-    def get_choice(self, modifiers, context=None):
+    def get_choice(self, modifiers: str, context: Optional[dict] = None) -> str:
         """Return a random entry from a list of values.
 
         Args:
@@ -739,7 +751,7 @@ class Fabulist:
             choices = modifier_list[0]
             # print("ch2", modifiers, modifier_list, choices)
             # Split by ',' but not '\,'
-            choices = re.split(r"(?<!\\),", choices)
+            choices: list[str] = re.split(r"(?<!\\),", choices)
             if len(choices) == 1 and len(choices[0]) > 1:
                 # Only one string was passed: use single characters
                 choices = choices[0].replace(r"\,", ",")
@@ -753,7 +765,12 @@ class Fabulist:
             ) from e
         return random.choice(choices)
 
-    def get_word(self, word_type, modifiers=None, context=None):
+    def get_word(
+        self,
+        word_type: str,
+        modifiers: Optional[str] = None,
+        context: Optional[dict] = None,
+    ) -> str:
         """Return a random word.
 
         Args:
@@ -802,8 +819,8 @@ class Fabulist:
             word = word.capitalize()
         return word
 
-    def _format_quote(self, template):
-        # assert type(template) is str
+    def _format_quote(self, template: str) -> str:
+        assert type(template) is str, template
         res = template
         context = {}
         # TODO: pre-compile & cache the template somehow:
@@ -816,7 +833,12 @@ class Fabulist:
 
         return res
 
-    def generate_quotes(self, template, count=None, dedupe=False):
+    def generate_quotes(
+        self,
+        template: Union[str, list[str]],
+        count: Optional[int] = None,
+        dedupe: Optional[bool] = False,
+    ) -> Iterator[str]:
         """Return a generator for random strings.
 
         Args:
@@ -869,7 +891,7 @@ class Fabulist:
 
         return
 
-    def get_quote(self, template):
+    def get_quote(self, template: Union[str, list[str]]) -> str:
         """Return a single random string.
 
         This is a convenience variant of :meth:`generate_quotes`.
@@ -883,7 +905,9 @@ class Fabulist:
         """
         return next(self.generate_quotes(template, count=1, dedupe=False))
 
-    def get_name(self, modifiers=None, context=None):
+    def get_name(
+        self, modifiers: Optional[str] = None, context: Optional[dict] = None
+    ) -> str:
         """Return a single name string.
 
         This is a convenience variant of :meth:`get_word` with word_type="name".
@@ -898,7 +922,13 @@ class Fabulist:
         """
         return self.get_word("name", modifiers, context)
 
-    def get_lorem_words(self, count=None, dialect="ipsum", entropy=3, keep_first=False):
+    def get_lorem_words(
+        self,
+        count: Optional[int] = None,
+        dialect: Optional[str] = "ipsum",
+        entropy: Optional[int] = 3,
+        keep_first: Optional[bool] = False,
+    ) -> list[str]:
         """Return a list of random words.
 
         See also :class:`fabulist.lorem_ipsum.LoremGenerator` for more flexible
@@ -927,7 +957,12 @@ class Fabulist:
         res = self.lorem.generate_words(count, dialect, entropy, keep_first)
         return list(res)
 
-    def get_lorem_sentence(self, word_count=(3, 15), dialect="ipsum", entropy=3):
+    def get_lorem_sentence(
+        self,
+        word_count: Optional[Union[int, tuple[int, int]]] = (3, 15),
+        dialect: Optional[str] = "ipsum",
+        entropy: Optional[int] = 3,
+    ) -> str:
         """Return one random sentence.
 
         See also :class:`fabulist.lorem_ipsum.LoremGenerator` for more flexible
@@ -958,12 +993,12 @@ class Fabulist:
 
     def get_lorem_paragraph(
         self,
-        sentence_count=(2, 6),
-        dialect="ipsum",
-        entropy=2,
-        keep_first=False,
-        words_per_sentence=(3, 15),
-    ):
+        sentence_count: Optional[Union[int, tuple[int, int]]] = (2, 6),
+        dialect: Optional[str] = "ipsum",
+        entropy: Optional[int] = 2,
+        keep_first: Optional[bool] = False,
+        words_per_sentence: Optional[Union[int, tuple[int, int]]] = (3, 15),
+    ) -> str:
         """Return one random paragraph.
 
         See also :class:`fabulist.lorem_ipsum.LoremGenerator` for more flexible
@@ -999,13 +1034,13 @@ class Fabulist:
 
     def get_lorem_text(
         self,
-        para_count,
-        dialect="ipsum",
-        entropy=2,
-        keep_first=False,
-        words_per_sentence=(3, 15),
-        sentences_per_para=(2, 6),
-    ):
+        para_count: Union[int, tuple[int, int]],
+        dialect: Optional[str] = "ipsum",
+        entropy: Optional[int] = 2,
+        keep_first: Optional[bool] = False,
+        words_per_sentence: Optional[Union[int, tuple[int, int]]] = (3, 15),
+        sentences_per_para: Optional[Union[int, tuple[int, int]]] = (2, 6),
+    ) -> str:
         """Generate a number of paragraphs, made up from random sentences.
 
         Paragraphs are seperated by newline.

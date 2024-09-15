@@ -163,7 +163,6 @@ class TestBasic:
                     break
 
     def test_plurals(self):
-        
         noun_list = self.fab.list_map["noun"]
         noun_list.load()
         nouns = noun_list.data

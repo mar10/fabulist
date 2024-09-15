@@ -7,9 +7,11 @@ Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.p
 
 import os
 import random
+from typing import Optional, Union
+from collections.abc import Iterator
 
 
-def _get_count(int_or_range):
+def _get_count(int_or_range: Union[int, tuple[int, int]]) -> int:
     """Return random int for given range (or int if a simple value was passed)."""
     if type(int_or_range) is int:
         return int_or_range
@@ -29,15 +31,15 @@ class LoremDialect:
         $(TYPE:MODS:#foo|bar:=NUM)
     """
 
-    def __init__(self, dialect, path):
-        self.dialect = dialect
-        self.path = path
-        self.paragraphs = None
-        self.sentences = None
-        self.words = None
+    def __init__(self, dialect: str, path: str):
+        self.dialect: str = dialect
+        self.path: str = path
+        self.paragraphs: Union[list, None] = None
+        self.sentences: Union[list, None] = None
+        self.words: Union[set, None] = None
         # self.load()
 
-    def load(self):
+    def load(self) -> None:
         sentence_set = set()
         self.paragraphs = []
         self.sentences = []
@@ -68,7 +70,12 @@ class LoremDialect:
             self.paragraphs.append(para)
         return
 
-    def _generate_sentences(self, entropy=0, keep_first=True, count=None):
+    def _generate_sentences(
+        self,
+        entropy: Optional[int] = 0,
+        keep_first: Optional[bool] = True,
+        count: Optional[int] = None,
+    ) -> Iterator[str]:
         """Generate a sequence of sentences.
 
         Args:
@@ -133,9 +140,9 @@ class LoremGenerator:
             Holds all available lorem-ipsum dialects
     """
 
-    def __init__(self, data_folder):
-        self.dialect_map = {}
-        self.root_path = data_folder
+    def __init__(self, data_folder: str):
+        self.dialect_map: dict[str, LoremDialect] = {}
+        self.root_path: str = data_folder
         # Find all available dialects and add to map(dialect => path)
         for name in os.listdir(self.root_path):
             if name.startswith("lorem_"):
@@ -144,7 +151,7 @@ class LoremGenerator:
                 self.dialect_map[dialect] = LoremDialect(dialect, path)
         return
 
-    def _get_lorem(self, dialect):
+    def _get_lorem(self, dialect: str) -> LoremDialect:
         """Return a LoremDialect instance and load data or raise ValueError."""
         if dialect is None:
             dialect = random.choice(list(self.dialect_map.keys()))
@@ -159,7 +166,13 @@ class LoremGenerator:
             lorem.load()
         return lorem
 
-    def generate_words(self, count=None, dialect="ipsum", entropy=3, keep_first=False):
+    def generate_words(
+        self,
+        count: Union[int, None] = None,
+        dialect: Optional[str] = "ipsum",
+        entropy: Optional[int] = 3,
+        keep_first: Optional[bool] = False,
+    ) -> Iterator[str]:
         """Yield <count> random words.
 
         Args:
@@ -206,12 +219,12 @@ class LoremGenerator:
 
     def generate_sentences(
         self,
-        count=None,
-        dialect="ipsum",
-        entropy=2,
-        keep_first=False,
-        words_per_sentence=(3, 15),
-    ):
+        count: Union[int, None] = None,
+        dialect: Optional[str] = "ipsum",
+        entropy: Optional[int] = 2,
+        keep_first: Optional[bool] = False,
+        words_per_sentence: Optional[Union[int, tuple[int, int]]] = (3, 15),
+    ) -> Iterator[str]:
         """Yield <count> random sentences.
 
         Args:
@@ -270,13 +283,13 @@ class LoremGenerator:
 
     def generate_paragraphs(
         self,
-        count=None,
-        dialect="ipsum",
-        entropy=2,
-        keep_first=False,
-        words_per_sentence=(3, 15),
-        sentences_per_para=(2, 6),
-    ):
+        count: Union[int, None] = None,
+        dialect: Optional[str] = "ipsum",
+        entropy: Optional[int] = 2,
+        keep_first: Optional[bool] = False,
+        words_per_sentence: Optional[Union[int, tuple[int, int]]] = (3, 15),
+        sentences_per_para: Optional[Union[int, tuple[int, int]]] = (2, 6),
+    ) -> Iterator[str]:
         """Generate a number of paragraphs, made up from random sentences.
 
         Args:
