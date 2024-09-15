@@ -14,7 +14,7 @@ Overview
 :Project:   https://github.com/mar10/fabulist/
 :Version:   |version|, |today|
 
-.. :License:   `The MIT License <https://github.com/mar10/fabulist/blob/master/LICENSE.txt>`_
+.. :License:   `The MIT License <https://github.com/mar10/fabulist/blob/main/LICENSE.txt>`_
 .. :Author:    Martin Wendt
 
 .. toctree::
@@ -162,24 +162,3 @@ and Read the `User Guide <user_guide.html>`_ for details.
    :height: 48px
    :width: 48px
    :alt: fabulist
-
-.. .. |test_badge| image:: https://github.com/mar10/fabulist/actions/workflows/tests.yml/badge.svg
-.. 	 :alt: Build Status
-.. 	 :target: https://github.com/mar10/fabulist/actions/workflows/tests.yml
-
-.. .. |pypi_badge| image:: https://img.shields.io/pypi/v/fabulist.svg
-.. 	 :alt: PyPI Version
-.. 	 :target: https://pypi.python.org/pypi/fabulist/
-
-.. .. |dl_badge| image:: https://img.shields.io/pypi/dm/fabulist.svg
-.. 	 :alt: Downloads
-.. 	 :target: https://pypi.python.org/pypi/fabulist/
-
-.. .. |lic_badge| image:: https://img.shields.io/pypi/l/fabulist.svg
-.. 	 :alt: License
-.. 	 :target: https://github.com/mar10/fabulist/blob/master/LICENSE.txt
-
-.. .. |rtd_badge| image:: https://readthedocs.org/projects/fabulist/badge/?version=latest
-.. 	 :target: http://fabulist.readthedocs.io/
-.. 	 :alt: Documentation Status
-

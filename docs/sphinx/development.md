@@ -10,13 +10,13 @@ If you like to contribute, here's what you can do:
   Please let me know (and send your cool templates).
 
 - Missing some words, irregular word forms, or tags?<br>
-  [Edit the word lists](https://github.com/mar10/fabulist/tree/master/fabulist/data)
+  [Edit the word lists](https://github.com/mar10/fabulist/tree/main/fabulist/data)
   and send a pull request.<br>
   NOTE: this is not about collecting as much words as possible, so do not simply dump the
   [wordnet database](http://wordnet.princeton.edu) here!
   Instead we should try to have frequently used words, with high quality tagging. Get in touch if
   you are in doubt.<br>
-  [This little script](https://github.com/mar10/fabulist/blob/master/tests/list_importer.py)
+  [This little script](https://github.com/mar10/fabulist/blob/main/tests/list_importer.py)
   may help to merge word-lists or tags into the existing data base.
 
 - Have an idea for improvement?<br>
