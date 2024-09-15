@@ -3,6 +3,7 @@
 - Drop support for Python 2. Use Python 3.9+ instead.
 - Use ruff for formatting and linting.
 - Add typing information.
+- Force some keyword arguments to be named.
 - Fix plural form for nouns ending on -y
 
 ## 1.2.0 / 2018-01-01

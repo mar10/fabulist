@@ -27,7 +27,7 @@ _logger.addHandler(logging.NullHandler())
 #     key2: int
 #     key3: Optional[float]
 #: A dictionary with a 'lemma' and additional values, depending on the wordlist type.
-TWordListEntry = dict[str, Optional[str]]
+TWordListEntry = dict[str, str]
 
 
 # ------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ def get_default_word_form(word_form: str, lemma: str, entry: TWordListEntry) -> 
     Returns:
         str: The computed word form.
     """
-    word = lemma
+    word: str = lemma
     if word_form == "comp":
         if word[-1] in ("e",):
             word += "r"
@@ -682,7 +682,7 @@ class Fabulist:
             word_list.load()
 
     def get_number(
-        self, modifiers: Optional[str] = None, context: Optional[dict] = None
+        self, modifiers: Optional[str] = None, *, context: Optional[dict] = None
     ) -> str:
         """Return a string-formatted random number.
 
@@ -722,7 +722,7 @@ class Fabulist:
         num = random.randrange(min, max)
         return f"{num}".zfill(width)
 
-    def get_choice(self, modifiers: str, context: Optional[dict] = None) -> str:
+    def get_choice(self, modifiers: str, *, context: Optional[dict] = None) -> str:
         """Return a random entry from a list of values.
 
         Args:
@@ -769,6 +769,7 @@ class Fabulist:
         self,
         word_type: str,
         modifiers: Optional[str] = None,
+        *,
         context: Optional[dict] = None,
     ) -> str:
         """Return a random word.
@@ -800,9 +801,9 @@ class Fabulist:
             return word
 
         if word_type == "num":
-            return self.get_number(modifiers, context)
+            return self.get_number(modifiers, context=context)
         elif word_type == "pick":
-            return self.get_choice(modifiers, context)
+            return self.get_choice(modifiers, context=context)
 
         word_list = self.list_map.get(word_type.lower())
         if not word_list:
@@ -826,7 +827,9 @@ class Fabulist:
         # TODO: pre-compile & cache the template somehow:
         for m in rex_macro.finditer(template):
             term, word_type, modifiers = m.group(0), m.group(1), m.group(2)
-            word = self.get_word(word_type, modifiers, context)
+            word = self.get_word(
+                word_type=word_type, modifiers=modifiers, context=context
+            )
             # Only replace one (this) match
             # print(term, word, modifiers)
             res = res.replace(term, word, 1)
@@ -836,6 +839,7 @@ class Fabulist:
     def generate_quotes(
         self,
         template: Union[str, list[str]],
+        *,
         count: Optional[int] = None,
         dedupe: Optional[bool] = False,
     ) -> Iterator[str]:
@@ -906,7 +910,7 @@ class Fabulist:
         return next(self.generate_quotes(template, count=1, dedupe=False))
 
     def get_name(
-        self, modifiers: Optional[str] = None, context: Optional[dict] = None
+        self, modifiers: Optional[str] = None, *, context: Optional[dict] = None
     ) -> str:
         """Return a single name string.
 
@@ -920,11 +924,12 @@ class Fabulist:
         Returns:
             str: A random name of the requested form.
         """
-        return self.get_word("name", modifiers, context)
+        return self.get_word("name", modifiers, context=context)
 
     def get_lorem_words(
         self,
         count: Optional[int] = None,
+        *,
         dialect: Optional[str] = "ipsum",
         entropy: Optional[int] = 3,
         keep_first: Optional[bool] = False,
@@ -954,12 +959,18 @@ class Fabulist:
         Returns:
             list[str]:
         """
-        res = self.lorem.generate_words(count, dialect, entropy, keep_first)
+        res = self.lorem.generate_words(
+            count,
+            dialect=dialect,
+            entropy=entropy,
+            keep_first=keep_first,
+        )
         return list(res)
 
     def get_lorem_sentence(
         self,
         word_count: Optional[Union[int, tuple[int, int]]] = (3, 15),
+        *,
         dialect: Optional[str] = "ipsum",
         entropy: Optional[int] = 3,
     ) -> str:
@@ -987,13 +998,18 @@ class Fabulist:
             str: One random sentence.
         """
         res = self.lorem.generate_sentences(
-            1, dialect, entropy, keep_first=False, words_per_sentence=word_count
+            1,
+            dialect=dialect,
+            entropy=entropy,
+            keep_first=False,
+            words_per_sentence=word_count,
         )
         return next(res)
 
     def get_lorem_paragraph(
         self,
         sentence_count: Optional[Union[int, tuple[int, int]]] = (2, 6),
+        *,
         dialect: Optional[str] = "ipsum",
         entropy: Optional[int] = 2,
         keep_first: Optional[bool] = False,
@@ -1028,12 +1044,18 @@ class Fabulist:
             str: One paragraph made of random sentences.
         """
         res = self.lorem.generate_paragraphs(
-            1, dialect, entropy, keep_first, words_per_sentence, sentence_count
+            1,
+            dialect=dialect,
+            entropy=entropy,
+            keep_first=keep_first,
+            words_per_sentence=words_per_sentence,
+            sentences_per_para=sentence_count,
         )
         return next(res)
 
     def get_lorem_text(
         self,
+        *,
         para_count: Union[int, tuple[int, int]],
         dialect: Optional[str] = "ipsum",
         entropy: Optional[int] = 2,
@@ -1075,10 +1097,10 @@ class Fabulist:
         """
         res = self.lorem.generate_paragraphs(
             para_count,
-            dialect,
-            entropy,
-            keep_first,
-            words_per_sentence,
-            sentences_per_para,
+            dialect=dialect,
+            entropy=entropy,
+            keep_first=keep_first,
+            words_per_sentence=words_per_sentence,
+            sentences_per_para=sentences_per_para,
         )
         return "\n".join(res)

@@ -72,6 +72,7 @@ class LoremDialect:
 
     def _generate_sentences(
         self,
+        *,
         entropy: Optional[int] = 0,
         keep_first: Optional[bool] = True,
         count: Optional[int] = None,
@@ -169,6 +170,7 @@ class LoremGenerator:
     def generate_words(
         self,
         count: Union[int, None] = None,
+        *,
         dialect: Optional[str] = "ipsum",
         entropy: Optional[int] = 3,
         keep_first: Optional[bool] = False,
@@ -220,6 +222,7 @@ class LoremGenerator:
     def generate_sentences(
         self,
         count: Union[int, None] = None,
+        *,
         dialect: Optional[str] = "ipsum",
         entropy: Optional[int] = 2,
         keep_first: Optional[bool] = False,
@@ -284,6 +287,7 @@ class LoremGenerator:
     def generate_paragraphs(
         self,
         count: Union[int, None] = None,
+        *,
         dialect: Optional[str] = "ipsum",
         entropy: Optional[int] = 2,
         keep_first: Optional[bool] = False,
@@ -322,7 +326,11 @@ class LoremGenerator:
         while count is None or i < count:
             n_sents = _get_count(sentences_per_para)
             para = self.generate_sentences(
-                n_sents, dialect, entropy, keep_first, words_per_sentence
+                n_sents,
+                dialect=dialect,
+                entropy=entropy,
+                keep_first=keep_first,
+                words_per_sentence=words_per_sentence,
             )
             para = " ".join(para)
             yield para

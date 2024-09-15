@@ -136,7 +136,7 @@ class TestBasic:
     def test_lorem_text(self):
         fab = self.fab
 
-        res = fab.get_lorem_text(3, keep_first=True, entropy=3)
+        res = fab.get_lorem_text(para_count=3, keep_first=True, entropy=3)
         assert res.count("\n") == 2
         assert res.startswith("Lorem ipsum")
 

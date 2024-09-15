@@ -1,4 +1,5 @@
 """ """
+
 # ruff: noqa: T201 (`print` found)
 
 import fabulist
@@ -25,8 +26,8 @@ def demo_lorem():
     print('\n>>> fab.get_lorem_paragraph(3, dialect="romeo")')
     print(fab.get_lorem_paragraph(3, dialect="romeo"))
 
-    print("\n>>> fab.get_lorem_text(3, keep_first=True)")
-    print(fab.get_lorem_text(3, keep_first=True))
+    print("\n>>> fab.get_lorem_text(para_count=3, keep_first=True)")
+    print(fab.get_lorem_text(para_count=3, keep_first=True))
 
 
 if __name__ == "__main__":
