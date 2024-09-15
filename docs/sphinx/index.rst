@@ -28,7 +28,7 @@ Overview
 	 changes
 
 
-|powered_badge| |nbsp| |travis_badge| |nbsp| |pypi_badge| |nbsp| |lic_badge| |nbsp| |rtd_badge|
+|powered_badge| |nbsp| |test_badge| |nbsp| |pypi_badge| |nbsp| |lic_badge| |nbsp| |rtd_badge|
 
 
 Status
@@ -130,9 +130,13 @@ and Read the `User Guide <user_guide.html>`_ for details.
 	 :alt: Build Status
 	 :target: http://sapegin.github.io/powered-by-you/
 
-.. |travis_badge| image:: https://travis-ci.org/mar10/fabulist.svg?branch=master
+.. |test_badge| image:: https://github.com/mar10/fabulist/actions/workflows/tests.yml/badge.svg
 	 :alt: Build Status
-	 :target: https://travis-ci.org/mar10/fabulist
+	 :target: https://github.com/mar10/fabulist/actions/workflows/tests.yml
+
+.. .. |travis_badge| image:: https://travis-ci.org/mar10/fabulist.svg?branch=master
+.. 	 :alt: Build Status
+.. 	 :target: https://travis-ci.org/mar10/fabulist
 
 .. |pypi_badge| image:: https://img.shields.io/pypi/v/fabulist.svg
 	 :alt: PyPI Version
@@ -150,5 +154,5 @@ and Read the `User Guide <user_guide.html>`_ for details.
 	 :target: http://fabulist.readthedocs.io/
 	 :alt: Documentation Status
 
-.. |nbsp| unicode:: 0xA0
-	 :trim:
+.. .. |nbsp| unicode:: 0xA0
+.. 	 :trim:

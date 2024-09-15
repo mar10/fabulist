@@ -4,6 +4,7 @@
 - Use ruff for formatting and linting.
 - Add typing information.
 - Force some keyword arguments to be named.
+- Switch Sphinx theme to Furo.
 - Fix plural form for nouns ending on -y
 
 ## 1.2.0 / 2018-01-01

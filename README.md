@@ -1,9 +1,13 @@
 # Fabulist
 [![Powered by You](http://sapegin.github.io/powered-by-you/badge.svg)](http://sapegin.github.io/powered-by-you/)
-[![Build Status](https://travis-ci.com/mar10/fabulist.svg?branch=master)](https://travis-ci.com/mar10/fabulist)
+[![Tests](https://github.com/mar10/fabulist/actions/workflows/tests.yml/badge.svg)](https://github.com/mar10/fabulist/actions/workflows/tests.yml)
 [![Latest Version](https://img.shields.io/pypi/v/fabulist.svg)](https://pypi.python.org/pypi/fabulist/)
 [![License](https://img.shields.io/pypi/l/fabulist.svg)](https://github.com/mar10/fabulist/blob/master/LICENSE.txt)
 [![Documentation Status](https://readthedocs.org/projects/fabulist/badge/?version=latest)](http://fabulist.readthedocs.io/)
+[![codecov](https://codecov.io/github/mar10/fabulist/branch/main/graph/badge.svg?token=9xmAFm8Icl)](https://codecov.io/github/mar10/fabulist)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+[![Released with: Yabs](https://img.shields.io/badge/released%20with-yabs-yellowgreen)](https://github.com/mar10/yabs)
+[![StackOverflow: fabulist](https://img.shields.io/badge/StackOverflow-fabulist-blue.svg)](https://stackoverflow.com/questions/tagged/fabulist)
 
 
 > Generate meaningful test data based on string templates.

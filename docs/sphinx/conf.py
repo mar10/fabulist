@@ -13,52 +13,47 @@
 
 # ruff: noqa: T201 (`print` found)
 
-import sys
-import os
 import importlib
-
-
-from recommonmark.parser import CommonMarkParser
+import os
+import sys
 
 on_rtd = os.environ.get("READTHEDOCS", None) == "True"
-
-# import sphinx_bootstrap_theme
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-# package_root = os.path.abspath('../../fabulist')
 package_root = os.path.abspath("../..")
 sys.path.insert(0, package_root)
-print(f"Add package root to sys.path: {package_root!r}")
+print("Add package root to sys.path: %r" % package_root)
 # for fn in os.listdir(package_root):
-#     print "-", fn
+#   print("-", fn)
+
+sys.path.insert(0, os.path.abspath("_themes"))
 
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
-# MW 2017-08-01: need this fix: https://github.com/sphinx-doc/sphinx/issues/3657
-# needs_sphinx = '1.6'
+# needs_sphinx = '1.0'
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "myst_parser",
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
-    "sphinx.ext.graphviz",
-    "sphinx.ext.ifconfig",
-    "sphinx.ext.inheritance_diagram",
     "sphinx.ext.intersphinx",
-    "sphinx.ext.napoleon",
     "sphinx.ext.todo",
+    "sphinx.ext.ifconfig",
     "sphinx.ext.viewcode",
+    "sphinx.ext.graphviz",
+    "sphinx.ext.inheritance_diagram",
+    "sphinx.ext.napoleon",
+    "sphinxcontrib.mermaid",
 ]
 
-# A string of reStructuredText that will be included at the end of every source
-# file that is read.
-# This is the right place to add substitutions that should be available in every file.
-# An example:
+# A string of reStructuredText that will be included at the end of every source file that is read.
+# This is the right place to add substitutions that should be available in every file. An example:
 rst_epilog = """
 .. |br| raw:: html
 
@@ -67,28 +62,56 @@ rst_epilog = """
 .. |nbsp| unicode:: 0xA0
    :trim:
 
+.. role:: bash(code)
+   :language: bash
 """
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
-source_parsers = {
-    ".md": CommonMarkParser,
+source_suffix = {
+    ".rst": "restructuredtext",
+    ".txt": "markdown",
+    ".md": "markdown",
 }
+# source_parsers = {
+#     '.md': CommonMarkParser,
+# }
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
-source_suffix = [".rst", ".md"]
+# source_suffix = ['.rst', '.md']
 # source_suffix = '.rst'
 
 # The encoding of source files.
 # source_encoding = 'utf-8-sig'
+
+# MyST Markdown Support
+myst_enable_extensions = [
+    "dollarmath",
+    "amsmath",
+    "deflist",
+    "fieldlist",
+    "html_admonition",
+    "html_image",
+    "colon_fence",
+    "smartquotes",
+    "replacements",
+    "linkify",
+    "strikethrough",
+    "substitution",
+    "tasklist",
+]
+myst_number_code_blocks = ["typescript"]
+myst_heading_anchors = 2
+myst_footnote_transition = True
+myst_dmath_double_inline = True
 
 # The master toctree document.
 master_doc = "index"
 
 # General information about the project.
 project = "fabulist"
-copyright = "2017, Martin Wendt"
+copyright = '2017, <a href="https://wwwendt.de">Martin Wendt</a>'
 author = "Martin Wendt"
 
 # The version info for the project you're documenting, acts as replacement for
@@ -101,25 +124,20 @@ author = "Martin Wendt"
 # release = '1.0'
 
 try:
+    # release = pkg_resources.get_distribution("fabulist").version
     release = importlib.metadata.version("fabulist")
 except importlib.metadata.PackageNotFoundError:
-    # del importlib
     print("To build the documentation, The distribution information")
-    print("Has to be available.  Either install the package into your")
+    print("has to be available. Either install the package into your")
     print('development environment or run "setup.py develop" to setup the')
-    print("metadata.  A virtualenv is recommended!")
-    # g_dict = {}
-    # exec(open("../../fabulist/__init__.py").read(), g_dict)
-    # release = g_dict["__version__"]
-    # del g_dict
-    for line in open("../../fabulist/__init__.py"):
-        line = line.strip()
-        if line.startswith("__version__"):
-            _, release = line.split("=", 1)
-            release = release.strip().strip("\"'")
-            break
-    print(f"Using workaround (direct read): {release}")
-    assert release
+    print("metadata. A virtualenv is recommended!")
+
+    print(f"sys.path: {sys.path}")
+    print(f"package_root: {package_root}")
+    for fn in os.listdir(package_root):
+        print("-", fn)
+    sys.exit(1)
+
 
 version = ".".join(release.split(".")[:2])
 
@@ -128,7 +146,8 @@ version = ".".join(release.split(".")[:2])
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = "en"
+# language = None
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -138,7 +157,7 @@ language = None
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ["_build"]
+exclude_patterns = ["_build", "build", "dist"]
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -150,13 +169,15 @@ exclude_patterns = ["_build"]
 # If true, the current module name will be prepended to all description
 # unit titles (such as .. function::).
 # add_module_names = True
+add_module_names = False
 
 # If true, sectionauthor and moduleauthor directives will be shown in the
 # output. They are ignored by default.
 # show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = "sphinx"
+# pygments_style = 'sphinx'
+pygments_style = "flask_theme_support.FlaskyStyle"
 
 # A list of ignored prefixes for module index sorting.
 # modindex_common_prefix = []
@@ -167,25 +188,36 @@ pygments_style = "sphinx"
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
 
+# Configuration of sphinx.ext.coverage
+coverage_show_missing_items = True
 
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-# html_theme = 'alabaster'
-if not on_rtd:
-    # only import and set the theme if we're building docs locally
-    # otherwise, readthedocs.org uses their theme by default, so no need to specify it
-    import sphinx_rtd_theme
-
-    html_theme = "sphinx_rtd_theme"
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-
+html_theme = "furo"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 # html_theme_options = {}
+html_theme_options = {
+    # "logo": "favicon-32x32.png",
+    # "logo_text_align": "left",
+    "show_powered_by": False,
+    "github_user": "mar10",
+    "github_repo": "fabulist",
+    "github_banner": True,
+    "github_button": True,
+    "github_type": "star",
+    # "github_size": "small",
+    "github_count": "true",
+    # "travis_button": True,
+    # "codecov_button": True,
+    "show_related": False,
+    "note_bg": "#FFF59C",
+}
+
 
 # Add any paths that contain custom themes here, relative to this directory.
 # html_theme_path = []
@@ -202,11 +234,13 @@ if not on_rtd:
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
 # html_logo = None
+html_logo = "../logo.png"
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-# html_favicon = None
+html_favicon = None
+# html_favicon = "favicon.ico"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -216,7 +250,7 @@ html_static_path = ["_static"]
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
 # directly to the root of the documentation.
-html_extra_path = ["../intro_slides.html"]
+html_extra_path = ["../intro_slides.html", "../logo.png"]
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
@@ -224,7 +258,7 @@ html_extra_path = ["../intro_slides.html"]
 
 # If true, SmartyPants will be used to convert quotes and dashes to
 # typographically correct entities.
-# html_use_smartypants = True
+html_use_smartypants = False
 
 # Custom sidebar templates, maps document names to template names.
 # html_sidebars = {}
@@ -244,12 +278,14 @@ html_extra_path = ["../intro_slides.html"]
 
 # If true, links to the reST sources are added to the pages.
 # html_show_sourcelink = True
+html_show_sourcelink = False
 
 # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
 # html_show_sphinx = True
+html_show_sphinx = False
 
 # If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
-# html_show_copyright = True
+html_show_copyright = True
 
 # If true, an OpenSearch description file will be output, and all pages will
 # contain a <link> tag referring to it.  The value of this option must be the
@@ -437,3 +473,11 @@ napoleon_use_admonition_for_references = False
 napoleon_use_ivar = False
 napoleon_use_param = False
 napoleon_use_rtype = False
+
+# -- Extension configuration -------------------------------------------------
+autosummary_generate = True
+autodoc_default_options = {
+    "members": True,
+    "inherited-members": True,
+    "exclude-members": "with_traceback",
+}
