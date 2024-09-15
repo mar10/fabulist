@@ -1,6 +1,8 @@
 """
 Import a plain text file, add tags to the existing words or add new words altogether.
 """
+# ruff: noqa: T201 (`print` found)
+
 import os
 
 from fabulist import Fabulist
@@ -12,7 +14,7 @@ def merge_word_list_for_tag(src_path, dest_path=None, create_new_entries=False):
     fab = Fabulist()
     fab.load()
     word_list = None
-    for line in open(path, "rt").readlines():
+    for line in open(path).readlines():
         line = line.strip()
         if not line or line.startswith("#"):
             continue
@@ -35,10 +37,10 @@ def merge_word_list_for_tag(src_path, dest_path=None, create_new_entries=False):
                 entry = {"lemma": word, "tags": set((tag_name,))}
             else:
                 entry = {"lemma": word}
-            print("Create new entry {}".format(entry))
+            print(f"Create new entry {entry}")
             word_list.add_entry(entry)
 
-    print("Saving result as {}".format(dest_path))
+    print(f"Saving result as {dest_path}")
     word_list.save_as(dest_path)
 
 

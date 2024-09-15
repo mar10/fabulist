@@ -1,0 +1,83 @@
+# [tool.black]
+# line-length = 88
+# target-version = ['py38', 'py39', 'py310', 'py311']
+# include = '\.pyi?$'
+# exclude = '''
+# /(
+#     \.git
+#   | \.hg
+#   | \.tox
+#   | \.venv
+#   | \.eggs
+#   | \.cache
+#   | build
+#   | __pycache__
+#   | dist
+#   | \.*
+
+# )/
+# '''
+
+
+# [tool.isort]
+# # See https://black.readthedocs.io/en/stable/compatible_configs.html
+# profile = "black"
+# src_paths = ["fabulist", "tests"]
+
+[tool.ruff]
+# Decrease the maximum line length to 79 characters.
+# line-length = 79
+# Support Python 3.10+.
+target-version = "py39"
+
+src = ["fabulist", "tests"]
+
+[tool.ruff.lint]
+select = [
+  "B",  # bugbear
+  "E",  # pycodestyle
+  "F",  # pyflakes
+  "G",  # flake8-logging-format
+  "UP", # pyupgrade
+  "T",  # print, ...
+  # "D",   # pydocstyle
+]
+ignore = [
+  # We need the old syntax for python <= 3.9
+  "UP006", # Use `list` instead of `List` for type annotations (since Py39)
+  "UP007", # Use `X | Y` for type annotations (since Py310)
+  "E721",  #  Do not compare types, use `isinstance()`
+]
+
+# [tool.ruff.pydocstyle]
+# convention = "google"
+
+# --- Coverage Settings --------------------------------------------------------
+[tool.pytest.ini_options]
+# addopts = "-ra -q --cov=fabulist --cov-report=html"
+addopts = "-ra -q --cov=fabulist"
+# addopts = "--cov=fabulist --cov-report=html --cov-report=term-missing"
+
+[tool.coverage.run]
+# branch = true
+omit = [
+    "tests/*",
+    # fabulist/leaves_cli.py
+    # fabulist/cli_common.py
+    # fabulist/monitor/*  
+]
+
+[tool.coverage.report]
+precision = 1
+# show_missing = true
+sort = "Name"
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+[tool.coverage.html]
+directory = "build/coverage"
+

@@ -1,20 +1,20 @@
-"""
-"""
+""" """
+
 import os
 import tempfile
-import unittest
 
-from .context import fabulist
+import pytest
+import fabulist
 
 
-class BasicTestSuite(unittest.TestCase):
+class TestBasic:
     """Basic test cases."""
 
-    def setUp(self):
+    def setup_method(self):
         self.fab = fabulist.Fabulist()
         self.temp_path = None
 
-    def tearDown(self):
+    def teardown_method(self):
         self.fab = None
         if self.temp_path:
             os.remove(self.temp_path)
@@ -71,15 +71,15 @@ class BasicTestSuite(unittest.TestCase):
         return
 
     def test_validations(self):
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             self.fab.get_word("unkonwn_type")
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             self.fab.get_word("noun", "unkonwn_mod")
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             self.fab.get_word("noun", "an:an")
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             self.fab.get_word("noun", "an:#animal:#animal")
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             self.fab.get_word("noun", "#unknown_tag")
 
     def test_to_string(self):
@@ -136,7 +136,7 @@ class BasicTestSuite(unittest.TestCase):
     def test_lorem_text(self):
         fab = self.fab
 
-        res = fab.get_lorem_text(3, keep_first=True, entropy=3)
+        res = fab.get_lorem_text(para_count=3, keep_first=True, entropy=3)
         assert res.count("\n") == 2
         assert res.startswith("Lorem ipsum")
 
@@ -147,33 +147,46 @@ class BasicTestSuite(unittest.TestCase):
 
     def test_infinite(self):
         # We can produce endless quotes
-        for i, quote in enumerate(
+        for i, _quote in enumerate(
             self.fab.generate_quotes("$(noun)", count=None, dedupe=False)
         ):
             if i > 5000:
                 break
+        assert i == 5001
 
         # but dedupe may raise RuntimeError
-        with self.assertRaises(RuntimeError):
-            for i, s in enumerate(
+        with pytest.raises(RuntimeError):
+            for i, _s in enumerate(
                 self.fab.generate_quotes("$(noun)", count=None, dedupe=True)
             ):
                 if i > 5000:
                     break
 
+    def test_plurals(self):
+        noun_list = self.fab.list_map["noun"]
+        noun_list.load()
+        nouns = noun_list.data
 
-class LoremTestSuite(unittest.TestCase):
+        # print(nouns["holiday"].plural == "holidays")
+
+        assert nouns["holiday"]["plural"] == "holidays"
+        # assert nouns["cowboy"]["plural"] == "cowboys"
+        assert nouns["baby"]["plural"] == "babies"
+        assert nouns["child"]["plural"] == "children"
+
+
+class TestLorem:
     """Test LoremGenerator and LoremDialect."""
 
-    def setUp(self):
+    def setup_method(self):
         self.fab = fabulist.Fabulist()
         self.lorem = self.fab.lorem
 
-    def tearDown(self):
+    def teardown_method(self):
         self.lorem = None
 
     def test_validations(self):
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             list(self.lorem.generate_words(2, dialect="unknown_dialect"))
 
     def test_words(self):
@@ -224,10 +237,7 @@ class LoremTestSuite(unittest.TestCase):
 
     def test_infinite(self):
         # Words are flowing out like endless rain into a paper cup...
-        for i, word in enumerate(self.lorem.generate_words()):
+        for i, _word in enumerate(self.lorem.generate_words()):
             if i > 1000:
                 break
-
-
-if __name__ == "__main__":
-    unittest.main()
+        assert i == 1001

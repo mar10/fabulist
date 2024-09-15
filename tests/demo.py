@@ -1,17 +1,18 @@
-"""
-"""
-from .context import fabulist
+""" """
+# ruff: noqa: T201 (`print` found)
+
+import fabulist
 
 
 def demo_quotes():
     fab = fabulist.Fabulist()
 
     print("get_word('verb'):")
-    for i in range(3):
+    for _ in range(3):
         print("- ", fab.get_word("verb"))
 
     print("Friendly warnings:")
-    for i in range(3):
+    for _ in range(3):
         print(
             "- ",
             fab.get_quote(
@@ -65,7 +66,7 @@ def demo_quotes():
         "$(Verb:ing) is better than $(verb:ing).",
         "$(Noun:an) a day keeps the $(noun:plural) away.",
         "If you want to $(verb) $(adv:#positive), $(verb) $(adv:#positive)!",
-        'Confucius says: "The one who wants to $(verb) must $(verb) $(adv) the $(noun)!"',
+        'Confucius says: "The one who wants to $(verb) must $(verb) $(adv) the $(noun)!"',  # noqa: E501
     ]
     for q in fab.generate_quotes(templates, count=5):
         print("- ", q)

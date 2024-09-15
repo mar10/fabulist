@@ -1,7 +1,7 @@
-Changes
-=======
+CHANGELOG
+=========
 
 .. toctree::
    :maxdepth: 2
 
-.. include:: ../../CHANGES.md
+.. include:: ../../CHANGELOG.md

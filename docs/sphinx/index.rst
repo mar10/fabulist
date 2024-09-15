@@ -14,7 +14,7 @@ Overview
 :Project:   https://github.com/mar10/fabulist/
 :Version:   |version|, |today|
 
-.. :License:   `The MIT License <https://github.com/mar10/fabulist/blob/master/LICENSE>`_
+.. :License:   `The MIT License <https://github.com/mar10/fabulist/blob/master/LICENSE.txt>`_
 .. :Author:    Martin Wendt
 
 .. toctree::
@@ -28,7 +28,7 @@ Overview
 	 changes
 
 
-|powered_badge| |nbsp| |travis_badge| |nbsp| |pypi_badge| |nbsp| |lic_badge| |nbsp| |rtd_badge|
+|powered_badge| |nbsp| |test_badge| |nbsp| |pypi_badge| |nbsp| |lic_badge| |nbsp| |rtd_badge|
 
 
 Status
@@ -130,25 +130,56 @@ and Read the `User Guide <user_guide.html>`_ for details.
 	 :alt: Build Status
 	 :target: http://sapegin.github.io/powered-by-you/
 
-.. |travis_badge| image:: https://travis-ci.org/mar10/fabulist.svg?branch=master
-	 :alt: Build Status
-	 :target: https://travis-ci.org/mar10/fabulist
+.. |gha_badge| image:: https://github.com/mar10/fabulist/actions/workflows/tests.yml/badge.svg
+   :alt: Build Status
+   :target: https://github.com/mar10/fabulist/actions/workflows/tests.yml
 
 .. |pypi_badge| image:: https://img.shields.io/pypi/v/fabulist.svg
-	 :alt: PyPI Version
-	 :target: https://pypi.python.org/pypi/fabulist/
-
-.. |dl_badge| image:: https://img.shields.io/pypi/dm/fabulist.svg
-	 :alt: Downloads
-	 :target: https://pypi.python.org/pypi/fabulist/
+   :alt: PyPI Version
+   :target: https://pypi.python.org/pypi/fabulist/
 
 .. |lic_badge| image:: https://img.shields.io/pypi/l/fabulist.svg
-	 :alt: License
-	 :target: https://github.com/mar10/fabulist/blob/master/LICENSE
+   :alt: License
+   :target: https://github.com/mar10/fabulist/blob/main/LICENSE.txt
 
 .. |rtd_badge| image:: https://readthedocs.org/projects/fabulist/badge/?version=latest
-	 :target: http://fabulist.readthedocs.io/
-	 :alt: Documentation Status
+   :target: https://fabulist.readthedocs.io/
+   :alt: Documentation Status
 
-.. |nbsp| unicode:: 0xA0
-	 :trim:
+.. |coverage_badge| image:: https://coveralls.io/repos/github/mar10/fabulist/badge.svg?branch=main
+   :target: https://coveralls.io/github/mar10/fabulist?branch=main
+   :alt: Coverage Status
+
+.. |black_badge| image:: https://img.shields.io/badge/code%20style-black-000000.svg
+   :target: https://github.com/ambv/black
+   :alt: Code style: black
+
+.. |so_badge| image:: https://img.shields.io/badge/StackOverflow-fabulist-blue.svg
+   :target: https://stackoverflow.com/questions/tagged/fabulist
+   :alt: StackOverflow: fabulist
+
+.. |logo| image:: ../logo_48x48.png
+   :height: 48px
+   :width: 48px
+   :alt: fabulist
+
+.. .. |test_badge| image:: https://github.com/mar10/fabulist/actions/workflows/tests.yml/badge.svg
+.. 	 :alt: Build Status
+.. 	 :target: https://github.com/mar10/fabulist/actions/workflows/tests.yml
+
+.. .. |pypi_badge| image:: https://img.shields.io/pypi/v/fabulist.svg
+.. 	 :alt: PyPI Version
+.. 	 :target: https://pypi.python.org/pypi/fabulist/
+
+.. .. |dl_badge| image:: https://img.shields.io/pypi/dm/fabulist.svg
+.. 	 :alt: Downloads
+.. 	 :target: https://pypi.python.org/pypi/fabulist/
+
+.. .. |lic_badge| image:: https://img.shields.io/pypi/l/fabulist.svg
+.. 	 :alt: License
+.. 	 :target: https://github.com/mar10/fabulist/blob/master/LICENSE.txt
+
+.. .. |rtd_badge| image:: https://readthedocs.org/projects/fabulist/badge/?version=latest
+.. 	 :target: http://fabulist.readthedocs.io/
+.. 	 :alt: Documentation Status
+
