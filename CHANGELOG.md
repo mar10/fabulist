@@ -1,6 +1,7 @@
 ## 2.0.0 / unreleased
 
 - Drop support for Python 2. Use Python 3.9+ instead.
+- Rename branch `master` to `main`.
 - Use ruff for formatting and linting.
 - Add typing information.
 - Force some keyword arguments to be named.
