@@ -12,7 +12,7 @@ config:
       file: fabulist/__init__.py
   max_increment: minor
   branches:                  # Allowed git branches
-    - master
+    - main
 
 tasks:
   # 'check': Assert preconditons and fail otherwise
