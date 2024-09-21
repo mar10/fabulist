@@ -9,10 +9,10 @@ import os
 import random
 import re
 from collections import defaultdict
+from collections.abc import Iterator
+from typing import Optional, Union
 
 from .lorem_ipsum import LoremGenerator
-from typing import Optional, Union
-from collections.abc import Iterator
 
 # Find `$(TYPE)` or `$(TYPE:MODIFIERS)`
 rex_macro = re.compile(r"\$\(\s*(@?\w+)\s*(\:[^\)]*)?\s*\)")
