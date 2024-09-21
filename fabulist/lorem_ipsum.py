@@ -5,10 +5,14 @@
 Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 """
 
+import logging
 import os
 import random
-from typing import Optional, Union
 from collections.abc import Iterator
+from typing import Optional, Union
+
+_logger = logging.getLogger(__name__)
+_logger.addHandler(logging.NullHandler())
 
 
 def _get_count(int_or_range: Union[int, tuple[int, int]]) -> int:
@@ -158,11 +162,16 @@ class LoremGenerator:
             dialect = random.choice(list(self.dialect_map.keys()))
         lorem = self.dialect_map.get(dialect)
         if not lorem:
-            raise ValueError(
-                "Unknown dialect {!r} (expected {})".format(
-                    dialect, ", ".join(self.dialect_map.keys())
+            if dialect == "lorem":
+                _logger.warning(f"Using 'ipsum' instead of alias {dialect}")
+                dialect = "ipsum"
+                lorem = self.dialect_map.get(dialect)
+            else:
+                raise ValueError(
+                    "Unknown dialect {!r} (expected {})".format(
+                        dialect, ", ".join(self.dialect_map.keys())
+                    )
                 )
-            )
         if lorem.paragraphs is None:
             lorem.load()
         return lorem

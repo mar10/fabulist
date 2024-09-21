@@ -21,7 +21,6 @@ rex_macro = re.compile(r"\$\(\s*(@?\w+)\s*(\:[^\)]*)?\s*\)")
 _logger = logging.getLogger(__name__)
 _logger.addHandler(logging.NullHandler())
 
-
 # class FixedKeysDict(TypedDict):
 #     key1: str
 #     key2: int

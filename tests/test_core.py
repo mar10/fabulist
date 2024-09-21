@@ -42,7 +42,7 @@ class TestBasic:
 
     def test_pick(self):
         for _ in range(100):
-            val = self.fab.get_quote("$(pick:foo,bar,b\,az)")
+            val = self.fab.get_quote("$(pick:foo,bar,b\\,az)")
             assert val in ("foo", "bar", "b,az"), "Pick value"
 
             val = self.fab.get_quote("$(pick:abc)")
@@ -101,6 +101,12 @@ class TestBasic:
         fab = self.fab
 
         res = fab.get_lorem_sentence(entropy=0)
+        assert res.startswith("Lorem ipsum")
+
+        res = fab.get_lorem_sentence(dialect="lorem", entropy=0)
+        assert res.startswith("Lorem ipsum")
+
+        res = fab.get_lorem_sentence(dialect="ipsum", entropy=0)
         assert res.startswith("Lorem ipsum")
 
         res = fab.get_lorem_sentence(entropy=1)
