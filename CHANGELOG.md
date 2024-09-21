@@ -1,4 +1,8 @@
-## 2.0.1 / unreleased
+## 2.0.2 / unreleased
+
+## 2.0.1 / 2024-09-21
+
+- Add missing data files
 
 ## 2.0.0 / 2024-09-21
 
