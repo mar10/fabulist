@@ -28,7 +28,7 @@ Overview
 	 changes
 
 
-|powered_badge| |nbsp| |test_badge| |nbsp| |pypi_badge| |nbsp| |lic_badge| |nbsp| |rtd_badge|
+|powered_badge| |nbsp| |gha_badge| |nbsp| |pypi_badge| |nbsp| |lic_badge| |nbsp| |rtd_badge|
 
 
 Status
