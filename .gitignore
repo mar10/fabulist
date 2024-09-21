@@ -106,6 +106,7 @@ ENV/
 .settings/org.eclipse.core.resources.prefs
 .idea/
 .vscode/
+dist/
 
 .ruff_cache/
 .pytest_cache/
