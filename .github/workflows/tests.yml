@@ -24,7 +24,7 @@ jobs:
         # Python 3.10 # EOL 2026-10-04
         # Python 3.11 # EOL 2027-10-24
         # Python 3.12 # EOL 2028-10-02
-        # Python 3.13 # EOL
+        # Python 3.13 # EOL 2029-10
         python-version: ["3.9", "3.10", "3.11", "3.12"]
 
     steps:
@@ -44,14 +44,8 @@ jobs:
       - name: Lint with ruff
         run: |
           ruff -V
-          ruff check fabulist tests setup.py
-
-      # - name: Lint with flake8
-      #   run: |
-      #     # stop the build if there are Python syntax errors or undefined names
-      #     flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-      #     # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-      #     flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+          ruff check --output-format=github fabulist tests setup.py
+          ruff format --check fabulist tests setup.py
 
       - name: Test with pytest
         run: |
