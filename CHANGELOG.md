@@ -1,4 +1,6 @@
-## 2.0.0 / unreleased
+## 2.0.1 / unreleased
+
+## 2.0.0 / 2024-09-21
 
 - Drop support for Python 2. Use Python 3.9+ instead.
 - Rename branch `master` to `main`.
