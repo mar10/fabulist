@@ -28,14 +28,8 @@ Overview
 	 changes
 
 
-|powered_badge| |nbsp| |gha_badge| |nbsp| |pypi_badge| |nbsp| |lic_badge| |nbsp| |rtd_badge|
-
-
-Status
-======
-
-This is a hobby project in its early phase. I am not planning to invest vast efforts here,
-but I am curious to get your feedback.
+|powered_badge| |nbsp| |pypi_badge| |nbsp| |gha_badge| |nbsp| |coverage_badge| |nbsp| 
+|lic_badge| |nbsp| |rtd_badge| |nbsp| |so_badge|
 
 
 Features
@@ -146,13 +140,13 @@ and Read the `User Guide <user_guide.html>`_ for details.
    :target: https://fabulist.readthedocs.io/
    :alt: Documentation Status
 
-.. |coverage_badge| image:: https://coveralls.io/repos/github/mar10/fabulist/badge.svg?branch=main
-   :target: https://coveralls.io/github/mar10/fabulist?branch=main
+.. |coverage_badge| image:: https://codecov.io/github/mar10/fabulist/branch/main/graph/badge.svg?token=9xmAFm8Icl
+   :target: https://app.codecov.io/github/mar10/fabulist?branch=main
    :alt: Coverage Status
 
-.. |black_badge| image:: https://img.shields.io/badge/code%20style-black-000000.svg
-   :target: https://github.com/ambv/black
-   :alt: Code style: black
+.. .. |black_badge| image:: https://img.shields.io/badge/code%20style-black-000000.svg
+..    :target: https://github.com/ambv/black
+..    :alt: Code style: black
 
 .. |so_badge| image:: https://img.shields.io/badge/StackOverflow-fabulist-blue.svg
    :target: https://stackoverflow.com/questions/tagged/fabulist
